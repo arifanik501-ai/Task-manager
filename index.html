@@ -19,7 +19,13 @@
     <header class="top-bar">
         <h1 class="app-title">TaskFlow</h1>
         <div class="top-actions">
-            <!-- Theme switcher moved to sidebar -->
+            <button class="icon-button cloud-sync-btn" id="cloud-sync-btn" aria-label="Sync to Cloud"
+                title="Sync to Cloud">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="cloud-icon" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"></path>
+                </svg>
+            </button>
             <button class="icon-button settings-btn" aria-label="Settings">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="gear-icon" stroke="currentColor"
                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -355,28 +361,108 @@
 
     <script src="app.js"></script>
     <script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-analytics.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
 
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyB0m0RnL66ad2YmPkEb7mGocN7zfmw8vtA",
-    authDomain: "task-manager-4b27d.firebaseapp.com",
-    projectId: "task-manager-4b27d",
-    storageBucket: "task-manager-4b27d.firebasestorage.app",
-    messagingSenderId: "231912940312",
-    appId: "1:231912940312:web:515b653c667339360b346d",
-    measurementId: "G-QDVYDL5SBN"
-  };
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+            apiKey: "AIzaSyB0m0RnL66ad2YmPkEb7mGocN7zfmw8vtA",
+            authDomain: "task-manager-4b27d.firebaseapp.com",
+            projectId: "task-manager-4b27d",
+            storageBucket: "task-manager-4b27d.firebasestorage.app",
+            messagingSenderId: "231912940312",
+            appId: "1:231912940312:web:515b653c667339360b346d",
+            measurementId: "G-QDVYDL5SBN"
+        };
 
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-</script>
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+
+        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+        const db = getFirestore(app);
+
+        // Single document for syncing user tasks
+        const syncDocRef = doc(db, "syncData", "my-tasks");
+
+        const syncBtn = document.getElementById('cloud-sync-btn');
+        let syncEnabled = localStorage.getItem('taskflow_sync') === 'true';
+        let unsubscribe = null;
+
+        function updateSyncBtnIcon() {
+            if (syncEnabled) {
+                syncBtn.classList.add('sync-active');
+                syncBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="cloud-icon" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>'; // Refresh/Sync icon
+            } else {
+                syncBtn.classList.remove('sync-active');
+                syncBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="cloud-icon" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"></path></svg>';
+            }
+        }
+
+        function startListening() {
+            if (unsubscribe) return;
+            unsubscribe = onSnapshot(syncDocRef, (docSnap) => {
+                if (docSnap.exists() && window.loadDataFromCloud && !window.isSavingDataLocally) {
+                    const data = docSnap.data();
+                    if (data.tasks) {
+                        window.loadDataFromCloud(data.tasks);
+                    }
+                }
+            });
+        }
+
+        function stopListening() {
+            if (unsubscribe) {
+                unsubscribe();
+                unsubscribe = null;
+            }
+        }
+
+        function toggleSync() {
+            syncEnabled = !syncEnabled;
+            localStorage.setItem('taskflow_sync', syncEnabled.toString());
+            updateSyncBtnIcon();
+
+            if (syncEnabled) {
+                // Initial push
+                if (window.getTasks) {
+                    window.isSavingDataLocally = true;
+                    setDoc(syncDocRef, { tasks: window.getTasks() }).then(() => {
+                        window.isSavingDataLocally = false;
+                    }).catch(() => {
+                        window.isSavingDataLocally = false;
+                    });
+                }
+                startListening();
+            } else {
+                stopListening();
+            }
+        }
+
+        syncBtn.addEventListener('click', toggleSync);
+
+        window.addEventListener('taskDataChanged', (e) => {
+            if (syncEnabled) {
+                window.isSavingDataLocally = true;
+                setDoc(syncDocRef, { tasks: e.detail }).then(() => {
+                    window.isSavingDataLocally = false;
+                }).catch(() => {
+                    window.isSavingDataLocally = false;
+                });
+            }
+        });
+
+        // Initialize state on load
+        updateSyncBtnIcon();
+        if (syncEnabled) {
+            startListening();
+        }
+    </script>
 </body>
 
 </html>

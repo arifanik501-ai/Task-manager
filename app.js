@@ -126,7 +126,15 @@ function loadData() {
 
 function saveData() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    window.dispatchEvent(new CustomEvent('taskDataChanged', { detail: state.tasks }));
 }
+
+window.getTasks = () => state.tasks;
+window.loadDataFromCloud = (newTasks) => {
+    state.tasks = newTasks;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    renderAll();
+};
 
 function uuid() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
