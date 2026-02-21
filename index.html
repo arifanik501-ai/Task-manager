@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <header class="top-bar">
+        <h1 class="app-title">TaskFlow</h1>
+        <div class="top-actions">
+            <!-- Theme switcher moved to sidebar -->
+            <button class="icon-button settings-btn" aria-label="Settings">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="gear-icon" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path
+                        d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+                    </path>
+                </svg>
+            </button>
+            <div class="avatar">
+                <div class="avatar-border"></div>
+            </div>
+        </div>
+    </header>
+
+    <div class="layout-container">
+        <!-- Left Sidebar -->
+        <aside class="sidebar left-sidebar">
+            <div class="panel calendar-panel">
+                <div class="panel-corner-dot tl"></div>
+                <div class="panel-corner-dot tr"></div>
+                <div class="panel-corner-dot bl"></div>
+                <div class="panel-corner-dot br"></div>
+                <div class="calendar-header">
+                    <button class="icon-btn prev-month"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg></button>
+                    <span class="month-year" id="cal-month-year">June 2025</span>
+                    <button class="icon-btn next-month"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg></button>
+                </div>
+                <div class="calendar-week-header">
+                    <span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span><span>Su</span>
+                </div>
+                <div class="calendar-divider"></div>
+                <div class="calendar-view-container">
+                    <div class="calendar-grid" id="cal-grid">
+                        <!-- Dates JS generated -->
+                    </div>
+                </div>
+                <div class="calendar-summary" id="cal-summary">Today: Saturday, 14 June 2025</div>
+            </div>
+
+            <div class="panel stats-panel">
+                <div class="panel-corner-dot tl"></div>
+                <div class="panel-corner-dot tr"></div>
+                <div class="panel-corner-dot bl"></div>
+                <div class="panel-corner-dot br"></div>
+                <div class="stat-item">
+                    <div class="stat-left">
+                        <div class="stat-dot dot-active"></div>
+                        <span class="stat-label">Active</span>
+                    </div>
+                    <div class="stat-number-wrapper">
+                        <span class="stat-number" id="stat-active">0</span>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-left">
+                        <div class="stat-dot dot-success"></div>
+                        <span class="stat-label">Done Today</span>
+                    </div>
+                    <div class="stat-number-wrapper">
+                        <span class="stat-number stat-success" id="stat-done">0</span>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-left">
+                        <div class="stat-dot dot-warning" id="stat-overdue-dot"></div>
+                        <span class="stat-label">Overdue</span>
+                    </div>
+                    <div class="stat-number-wrapper">
+                        <span class="stat-number stat-warning" id="stat-overdue">0</span>
+                    </div>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-track">
+                        <div class="progress-fill" id="stat-progress" style="width: 0%"></div>
+                    </div>
+                    <div class="progress-text" id="stat-progress-text">0 of 0 tasks completed</div>
+                </div>
+            </div>
+
+            <div class="panel theme-panel">
+                <div class="panel-corner-dot tl"></div>
+                <div class="panel-corner-dot tr"></div>
+                <div class="panel-corner-dot bl"></div>
+                <div class="panel-corner-dot br"></div>
+                <div class="theme-switcher-container">
+                    <span class="theme-label"
+                        style="font-family: var(--font-body); font-size: 13px; color: var(--text-secondary); margin-right: auto;">Theme</span>
+                    <button class="icon-button theme-trigger-btn" id="theme-trigger-btn" aria-label="Themes"
+                        title="Themes">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83">
+                            </path>
+                        </svg>
+                    </button>
+                    <div class="theme-dropdown" id="theme-dropdown">
+                        <div class="theme-grid">
+                            <button class="theme-btn theme-ember active" data-theme="ember" title="Ember"></button>
+                            <button class="theme-btn theme-arctic" data-theme="arctic" title="Arctic"></button>
+                            <button class="theme-btn theme-verdant" data-theme="verdant" title="Verdant"></button>
+                            <button class="theme-btn theme-obsidian" data-theme="obsidian" title="Obsidian"></button>
+                            <button class="theme-btn theme-amethyst" data-theme="amethyst" title="Amethyst"></button>
+                            <button class="theme-btn theme-ruby" data-theme="ruby" title="Ruby"></button>
+                            <button class="theme-btn theme-sapphire" data-theme="sapphire" title="Sapphire"></button>
+                            <button class="theme-btn theme-amber" data-theme="amber" title="Amber"></button>
+                            <button class="theme-btn theme-neon" data-theme="neon" title="Neon"></button>
+                            <button class="theme-btn theme-pine" data-theme="pine" title="Pine"></button>
+                            <button class="theme-btn theme-aurelia" data-theme="aurelia" title="Aurelia"></button>
+                            <button class="theme-btn theme-quartz" data-theme="quartz" title="Quartz"></button>
+                            <button class="theme-btn theme-graphite" data-theme="graphite" title="Graphite"></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Center Main Content -->
+        <main class="center-content">
+            <!-- Task Input -->
+            <div class="input-bar-container" id="input-container">
+                <div class="input-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                </div>
+                <input type="text" class="task-input" id="new-task-input" placeholder="Add a new task...">
+                <button class="add-btn" id="add-task-btn">Add</button>
+            </div>
+
+            <div class="filter-bar" id="filter-bar" style="display: none;">
+                <span class="filter-text" id="filter-text">Showing: Jun 14</span>
+                <button class="clear-filter-btn" id="clear-filter-btn">&times;</button>
+            </div>
+
+            <!-- Active Tasks -->
+            <div class="section-header">
+                <h2>Active Tasks</h2>
+                <div class="count-badge" id="active-count-badge">
+                    <div class="digit-container" id="active-count-text">0</div>
+                </div>
+            </div>
+            <div class="active-tasks-list task-list" id="active-tasks-list">
+                <!-- Empty State -->
+                <div class="empty-state" id="active-empty-state">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="1.5">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <path d="M9 12l2 2 4-4"></path>
+                    </svg>
+                    <div class="empty-title">No active tasks</div>
+                    <div class="empty-subtitle">Add a task above to get started</div>
+                </div>
+                <!-- JS tasks -->
+            </div>
+
+            <!-- Completed Tasks -->
+            <div class="completed-section">
+                <div class="completed-header" id="completed-toggle">
+                    <svg class="chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                    <span class="completed-title-text">Completed</span>
+                    <div class="count-badge badge-success" id="completed-count-badge">
+                        <div class="digit-container" id="completed-count-text">0</div>
+                    </div>
+                </div>
+                <div class="completed-tasks-list-wrapper" id="completed-tasks-list-wrapper">
+                    <div class="completed-tasks-list task-list" id="completed-tasks-list">
+                        <!-- JS filled -->
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Right Sidebar -->
+        <aside class="sidebar right-sidebar">
+            <!-- Reminders ... (moved below clock structurally) -->
+
+            <div class="panel clock-panel" id="clock-panel">
+                <div class="panel-corner-dot tl"></div>
+                <div class="panel-corner-dot tr"></div>
+                <div class="panel-corner-dot bl"></div>
+                <div class="panel-corner-dot br"></div>
+                <div class="clock-label">LOCAL TIME</div>
+                <div class="analog-clock" id="analog-clock">
+                    <div class="clock-front">
+                        <div class="clock-ring bezel-ring"></div>
+                        <div class="clock-ring minute-track-ring"></div>
+
+                        <!-- Minute marks JS generated -->
+                        <div class="minute-markers" id="minute-markers"></div>
+
+                        <!-- Hour Indices Base -->
+                        <div class="hour-indices" id="hour-indices">
+                            <!-- JS generated: 12,3,6,9 major, others minor -->
+                        </div>
+
+                        <div class="clock-ring inner-chapter-ring"></div>
+
+                        <div class="ampm-indicator" id="clock-ampm-ind">AM</div>
+
+                        <div class="sub-dial">
+                            <div class="sub-day" id="sub-day">
+                                <div class="digit-container">
+                                    <span class="digit-slide settled" id="sub-day-text">SAT</span>
+                                </div>
+                            </div>
+                            <div class="sub-date" id="sub-date">14</div>
+                        </div>
+
+                        <!-- Hands -->
+                        <div class="hand hour-hand" id="hour-hand">
+                            <div class="hand-center-line"></div>
+                        </div>
+                        <div class="hand minute-hand" id="minute-hand">
+                            <div class="hand-center-line"></div>
+                        </div>
+                        <div class="hand second-hand" id="second-hand">
+                            <!-- Top part with lollipop -->
+                            <div class="needle">
+                                <div class="lollipop-tip"></div>
+                            </div>
+                            <!-- Tail part -->
+                            <div class="tail">
+                                <div class="teardrop"></div>
+                            </div>
+                        </div>
+
+                        <!-- Center Assembly Stack -->
+                        <div class="center-plate"></div>
+                        <div class="center-hub"></div>
+                        <div class="center-pin"></div>
+                    </div>
+
+                    <div class="clock-back">
+                        <div class="clock-back-label">TOKYO</div>
+                        <div class="clock-back-time" id="clock-back-time">00:00</div>
+                        <div class="clock-back-date" id="clock-back-date">---</div>
+                    </div>
+                </div>
+
+                <div class="digital-time-tooltip" id="digital-tooltip">
+                    <div class="digital-time" id="digital-time">
+                        <div class="secs-container"><span class="digit-col" id="dt-hour-1">0</span><span
+                                class="digit-col" id="dt-hour-2">0</span></div>
+                        <div class="colon">
+                            <div class="colon-dot top-dot"></div>
+                            <div class="colon-dot bottom-dot"></div>
+                        </div>
+                        <div class="secs-container"><span class="digit-col" id="dt-min-1">0</span><span
+                                class="digit-col" id="dt-min-2">0</span></div>
+                        <div class="colon">
+                            <div class="colon-dot top-dot"></div>
+                            <div class="colon-dot bottom-dot"></div>
+                        </div>
+                        <div class="secs-container" id="dt-second"><span class="digit-col" id="dt-sec-1">0</span><span
+                                class="digit-col" id="dt-sec-2">0</span></div>
+                        <span class="dt-ampm" id="dt-ampm">AM</span>
+                    </div>
+                    <div class="digital-date" id="digital-date">Jan 1, 2025</div>
+                    <div class="digital-tz" id="digital-tz">UTC</div>
+                </div>
+
+                <div class="activity-bar-container">
+                    <div class="activity-progress" id="activity-prog"></div>
+                    <div class="activity-dot act-left" id="act-dot-l"></div>
+                    <div class="activity-dot act-right" id="act-dot-r"></div>
+                    <div class="activity-cross-flash" id="act-flash"></div>
+                </div>
+            </div>
+
+            <div class="panel reminders-panel">
+                <div class="panel-corner-dot tl"></div>
+                <div class="panel-corner-dot tr"></div>
+                <div class="panel-corner-dot bl"></div>
+                <div class="panel-corner-dot br"></div>
+                <div class="reminders-header">
+                    <div class="bell-parent"
+                        style="position: relative; display: flex; align-items: center; justify-content: center;">
+                        <div class="satellite-dot sd-1"></div>
+                        <div class="satellite-dot sd-2"></div>
+                        <div class="satellite-dot sd-3"></div>
+                        <div class="bell-icon-wrapper">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" class="bell-icon" id="bell-icon">
+                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                            </svg>
+                            <div class="bell-badge" id="bell-badge" style="display:none;">0</div>
+                        </div>
+                    </div>
+                    <span>Reminders</span>
+                </div>
+                <div class="reminders-list" id="reminders-list">
+                    <!-- Empty State -->
+                    <div class="reminders-empty" id="reminders-empty">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" class="check-circle">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
+                        <div class="reminders-title">All caught up</div>
+                        <div class="reminders-subtitle">No overdue tasks</div>
+                    </div>
+                    <!-- JS filled -->
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Dropdown Menu -->
+    <div class="dropdown-menu" id="task-dropdown" style="display:none;">
+        <div class="dropdown-item" id="dd-edit">Edit Task</div>
+        <div class="dropdown-item" id="dd-priority">Set Priority</div>
+        <div class="dropdown-item" id="dd-duplicate">Duplicate</div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
