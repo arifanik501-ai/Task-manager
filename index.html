@@ -387,16 +387,6 @@
 
         const db = getFirestore(app);
 
-        // --- TEST CODE ---
-        addDoc(collection(db, "test"), {
-            message: "hello world"
-        }).then(() => {
-            console.log("Test document written to 'test' collection!");
-        }).catch((e) => {
-            console.error("Error writing test document: ", e);
-        });
-        // -----------------
-
         // Single document for syncing user tasks
         const syncDocRef = doc(db, "syncData", "my-tasks");
 
@@ -417,11 +407,24 @@
         function startListening() {
             if (unsubscribe) return;
             unsubscribe = onSnapshot(syncDocRef, (docSnap) => {
-                if (docSnap.exists() && window.loadDataFromCloud && !window.isSavingDataLocally) {
+                if (docSnap.exists() && !window.isSavingDataLocally) {
                     const data = docSnap.data();
                     if (data.syncData) {
-                        window.loadDataFromCloud(data.syncData);
+                        // Ensure app.js has loaded its globals
+                        if (window.loadDataFromCloud) {
+                            window.loadDataFromCloud(data.syncData);
+                        } else {
+                            // Wait briefly if app.js is still parsing
+                            setTimeout(() => {
+                                if (window.loadDataFromCloud) window.loadDataFromCloud(data.syncData);
+                            }, 500);
+                        }
                     }
+                }
+            }, (error) => {
+                console.error("Sync listener error:", error);
+                if (error.code === 'permission-denied') {
+                    console.error("Permission denied. Check Firestore rules.");
                 }
             });
         }
