@@ -80,6 +80,7 @@ const els = {
     themeBtns: document.querySelectorAll('.theme-btn'),
 
     taskDropdown: document.getElementById('task-dropdown'),
+    calTooltip: document.getElementById('cal-tooltip'),
     toastContainer: document.getElementById('toast-container')
 };
 
@@ -265,11 +266,11 @@ function setupEventListeners() {
 
     els.prevMonthBtn.addEventListener('click', () => {
         currentDisplayMonth.setMonth(currentDisplayMonth.getMonth() - 1);
-        renderCalendar();
+        renderCalendar('right');
     });
     els.nextMonthBtn.addEventListener('click', () => {
         currentDisplayMonth.setMonth(currentDisplayMonth.getMonth() + 1);
-        renderCalendar();
+        renderCalendar('left');
     });
 
     els.clearFilter.addEventListener('click', () => {
@@ -858,7 +859,7 @@ function renderStats() {
     els.statProgressText.innerText = `${completed} of ${total} tasks completed`;
 }
 
-function renderCalendar() {
+function renderCalendar(direction = null) {
     const year = currentDisplayMonth.getFullYear();
     const month = currentDisplayMonth.getMonth();
 
@@ -908,7 +909,10 @@ function renderCalendar() {
         if (isWeekend) classes.push('weekend');
         if (isToday) classes.push('today');
 
-        html += `<div class="${classes.join(' ')}" data-date="${cellStart}" title="${tasksOnDay} tasks">
+        let msg = `${tasksOnDay} tasks`;
+        if (tasksOnDay === 0) msg = "Free day";
+
+        html += `<div class="${classes.join(' ')}" data-date="${cellStart}" data-tooltip="${msg}">
                     <span class="date-num">${d}</span>
                     ${dots}
                  </div>`;
@@ -916,11 +920,40 @@ function renderCalendar() {
         currentGridDate.setDate(currentGridDate.getDate() + 1);
     }
 
+    if (direction) {
+        els.calGrid.classList.remove('slide-left', 'slide-right');
+        // Force reflow
+        void els.calGrid.offsetWidth;
+        els.calGrid.classList.add(`slide-${direction}`);
+    }
+
     els.calGrid.innerHTML = html;
 
-    // Attach click events for filter
+    // Attach click and hover events for filter and tooltip
+    let tooltipTimeout;
     els.calGrid.querySelectorAll('.cal-cell').forEach(cell => {
+        cell.addEventListener('mouseenter', (e) => {
+            const msg = cell.dataset.tooltip;
+            els.calTooltip.innerText = msg;
+            els.calTooltip.style.display = 'block';
+
+            const rect = cell.getBoundingClientRect();
+            els.calTooltip.style.left = (rect.left + rect.width / 2 - els.calTooltip.offsetWidth / 2) + 'px';
+            els.calTooltip.style.top = (rect.top - 30) + 'px';
+
+            clearTimeout(tooltipTimeout);
+            els.calTooltip.classList.add('show');
+        });
+
+        cell.addEventListener('mouseleave', () => {
+            els.calTooltip.classList.remove('show');
+            tooltipTimeout = setTimeout(() => {
+                els.calTooltip.style.display = 'none';
+            }, 150);
+        });
+
         cell.addEventListener('click', () => {
+
             const cellStart = parseInt(cell.dataset.date);
             const dObj = new Date(cellStart);
             filterDate = dObj;

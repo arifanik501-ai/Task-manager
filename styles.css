@@ -938,28 +938,12 @@ button:active:not(:disabled),
     overflow-y: auto;
     padding-bottom: 24px;
     position: relative;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(107, 96, 86, 0.2) transparent;
 }
 
-.active-tasks-list::-webkit-scrollbar,
-.reminders-list::-webkit-scrollbar {
-    width: 4px;
-}
-
-.active-tasks-list::-webkit-scrollbar-track,
-.reminders-list::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.active-tasks-list::-webkit-scrollbar-thumb,
-.reminders-list::-webkit-scrollbar-thumb {
-    background-color: var(--surface-highest);
-    border-radius: 4px;
-}
-
-.active-tasks-list::-webkit-scrollbar-thumb:hover,
-.reminders-list::-webkit-scrollbar-thumb:hover {
-    width: 6px;
-    background-color: #554e47;
+.active-tasks-list .task-card {
+    margin-right: 10px;
 }
 
 .empty-state {
@@ -1000,6 +984,7 @@ button:active:not(:disabled),
     user-select: none;
     position: relative;
     overflow: hidden;
+    flex-shrink: 0;
     animation: borderGlow 10s ease-in-out infinite;
 }
 
@@ -1597,9 +1582,13 @@ button:active:not(:disabled),
 
 .completed-tasks-list-wrapper {
     max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease;
     opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+}
+
+.completed-tasks-list-wrapper .task-card {
+    margin-right: 10px;
 }
 
 .completed-tasks-list-wrapper.expanded {
@@ -1662,26 +1651,38 @@ button:active:not(:disabled),
 }
 
 .cal-cell {
-    aspect-ratio: 1;
+    width: 24px;
+    height: 24px;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
     font-size: 13px;
-    position: relative;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.1s;
-    user-select: none;
     color: var(--text-primary);
+    border-radius: 50%;
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.2s, transform 0.2s, color 0.2s;
 }
 
 .cal-cell:hover {
     background-color: var(--surface-overlay);
+    animation: cellPulse 1.5s infinite;
+}
+
+@keyframes cellPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
 }
 
 .cal-cell.other-month {
-    color: rgba(107, 96, 86, 0.3);
+    color: var(--text-tertiary);
 }
 
 /* text-tertiary 0.3 */
@@ -1689,11 +1690,29 @@ button:active:not(:disabled),
     color: var(--accent-secondary);
 }
 
-.cal-cell.today .date-num {
-    background-color: var(--accent-primary);
+.cal-cell.today {
+    background-color: var(--accent-secondary);
     color: var(--text-inverse);
-    width: 28px;
-    height: 28px;
+    font-weight: 600;
+    position: relative;
+}
+
+.cal-cell.today::before {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    border: 1px dashed var(--accent-secondary);
+    animation: subDialRotate 10s linear infinite;
+    opacity: 0.6;
+}
+
+.cal-cell.today:hover::before {
+    animation-duration: 3s;
+    opacity: 1;
+}
+
+.cal-cell.today .date-num {
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -1737,9 +1756,43 @@ button:active:not(:disabled),
     color: var(--text-secondary);
     pointer-events: none;
     opacity: 0;
-    transition: opacity 0.15s;
-    z-index: 100;
+    transition: opacity 0.15s, transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform: translateY(4px);
+    z-index: 1000;
     white-space: nowrap;
+}
+
+.cal-tooltip.show {
+    animation: tooltipBounce 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards, shadowBloom 2s infinite 0.3s;
+}
+
+@keyframes tooltipBounce {
+    0% {
+        transform: translateY(8px);
+        opacity: 0;
+    }
+
+    60% {
+        transform: translateY(-2px);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes shadowBloom {
+
+    0%,
+    100% {
+        box-shadow: 0 4px 12px rgba(var(--shadow-color), 0.1);
+    }
+
+    50% {
+        box-shadow: 0 8px 24px rgba(var(--shadow-color), 0.3);
+    }
 }
 
 .filter-bar {
@@ -2322,10 +2375,6 @@ button:active:not(:disabled),
     box-shadow: 0 0 6px #fff !important;
     opacity: 0.8 !important;
     transition: none !important;
-}
-
-.minute-dot:not(.mark-sympathetic-flash) {
-    /* natural fade handled by existing rules */
 }
 
 .ampm-indicator {
@@ -3101,6 +3150,13 @@ button:active:not(:disabled),
     display: flex;
     flex-direction: column;
     gap: 8px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(107, 96, 86, 0.2) transparent;
+}
+
+.reminders-list .reminder-card {
+    margin-right: 10px;
 }
 
 .reminder-card {
@@ -3138,10 +3194,63 @@ button:active:not(:disabled),
 }
 
 .reminder-card.danger {
-    border-left-color: var(--accent-danger);
+    border-left: 3px solid var(--accent-danger);
     background-color: rgba(196, 92, 106, 0.04);
 }
 
+.task-card.urgent {
+    animation: borderGlow 10s ease-in-out infinite, dangerPulse 2s infinite;
+    filter: grayscale(0.8) contrast(1.2);
+}
+
+.task-card.urgent:hover {
+    filter: grayscale(0) contrast(1);
+    transition: filter 0.3s ease;
+}
+
+.task-card.urgent:hover .task-name {
+    animation: textGlitch 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
+}
+
+@keyframes dangerPulse {
+
+    0%,
+    100% {
+        box-shadow: 0 0 0px transparent;
+    }
+
+    50% {
+        box-shadow: inset 0 0 12px rgba(196, 92, 106, 0.15);
+    }
+}
+
+@keyframes textGlitch {
+    0% {
+        transform: translate(0);
+    }
+
+    20% {
+        transform: translate(-1px, 1px);
+    }
+
+    40% {
+        transform: translate(-1px, -1px);
+    }
+
+    60% {
+        transform: translate(1px, 1px);
+    }
+
+    80% {
+        transform: translate(1px, -1px);
+    }
+
+    100% {
+        transform: translate(0);
+    }
+}
+
+/* Anim states */
 @keyframes slideInReminder {
     to {
         opacity: 1;
@@ -3288,25 +3397,185 @@ button:active:not(:disabled),
     background: none;
 }
 
+/* --- Phase 3 Animations --- */
+
+/* Calendar Month Animations */
+.slide-left {
+    animation: slideLeft 0.3s ease-out forwards;
+}
+
+.slide-right {
+    animation: slideRight 0.3s ease-out forwards;
+}
+
+@keyframes slideLeft {
+    0% {
+        transform: translateX(20px);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideRight {
+    0% {
+        transform: translateX(-20px);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Buttons Ripples and Icons */
+.add-btn,
+.action-btn {
+    position: relative;
+    overflow: hidden;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.add-btn::after,
+.action-btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 120px;
+    height: 120px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.add-btn:active::after,
+.action-btn:active::after {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+    transition: transform 0.2s ease-out, opacity 0.2s ease-out;
+}
+
+.add-btn:active svg,
+.action-btn:active svg {
+    animation: iconBounce 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes iconBounce {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(0.7);
+    }
+}
+
+/* Custom Scrollbars */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(168, 154, 136, 0.2) transparent;
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(168, 154, 136, 0.2);
+    border-radius: 3px;
+    transition: background 0.3s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-secondary);
+}
+
+/* Toast Enhancements */
+.toast {
+    position: relative;
+    overflow: hidden;
+}
+
+.toast::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    padding: 1px;
+    border-radius: 10px;
+    background: linear-gradient(90deg, transparent, var(--accent-success), transparent);
+    background-size: 200% 100%;
+    animation: toastBorderTravel 2s linear infinite;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    pointer-events: none;
+}
+
+@keyframes toastBorderTravel {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+.toast .toast-icon {
+    opacity: 0;
+    animation: fadeSegment 0.3s ease-out forwards 0.1s;
+}
+
+.toast .toast-msg {
+    opacity: 0;
+    animation: fadeSegment 0.3s ease-out forwards 0.2s;
+}
+
+.toast .toast-undo {
+    opacity: 0;
+    animation: fadeSegment 0.3s ease-out forwards 0.3s;
+}
+
+@keyframes fadeSegment {
+    to {
+        opacity: 1;
+    }
+}
+
+
 .dropdown-menu {
     position: absolute;
     background-color: var(--surface-top);
-    border: 1px solid rgba(255, 230, 210, 0.10);
+    border: var(--border-default);
     box-shadow: var(--elevation-3);
     border-radius: 8px;
     padding: 4px;
-    z-index: 500;
+    min-width: 140px;
+    z-index: 100;
     opacity: 0;
-    transform: scale(0.95) translateY(-4px);
-    transition: opacity 0.15s ease-out, transform 0.15s ease-out;
+    transform: translateY(4px);
+    transition: opacity 0.15s, transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     pointer-events: none;
-    min-width: 120px;
 }
 
 .dropdown-menu.show {
-    opacity: 1;
-    transform: scale(1) translateY(0);
     pointer-events: auto;
+    animation: tooltipBounce 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards, shadowBloom 2s infinite 0.3s;
 }
 
 .dropdown-item {
