@@ -710,6 +710,45 @@ button:active:not(:disabled),
     color: var(--text-primary);
 }
 
+.cloud-sync-btn {
+    opacity: 0.6;
+}
+
+.cloud-sync-btn:hover {
+    opacity: 1;
+    color: var(--text-primary);
+}
+
+.cloud-sync-btn.sync-active {
+    opacity: 1;
+    background-color: rgba(139, 195, 74, 0.1);
+    /* Subtle green background */
+    border: 1px solid rgba(139, 195, 74, 0.3);
+}
+
+.cloud-sync-btn.sync-active svg {
+    stroke: var(--accent-success);
+    /* Use theme success color */
+    animation: pulseSync 2s ease-in-out infinite;
+}
+
+@keyframes pulseSync {
+    0% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 2px rgba(139, 195, 74, 0.2));
+    }
+
+    50% {
+        transform: scale(1.1);
+        filter: drop-shadow(0 0 6px rgba(139, 195, 74, 0.6));
+    }
+
+    100% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 2px rgba(139, 195, 74, 0.2));
+    }
+}
+
 .layout-container {
     display: flex;
     flex: 1;
@@ -1713,15 +1752,14 @@ button:active:not(:disabled),
 }
 
 .cal-cell.today .date-num {
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    z-index: 1;
+    color: var(--text-inverse);
+    font-weight: 700;
+    position: relative;
+    z-index: 2;
 }
 
 .cal-cell .date-num {
+    position: relative;
     z-index: 2;
 }
 
