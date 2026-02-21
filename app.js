@@ -126,14 +126,26 @@ function loadData() {
 
 function saveData() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    window.dispatchEvent(new CustomEvent('taskDataChanged', { detail: state.tasks }));
+    window.dispatchEvent(new CustomEvent('taskDataChanged', { detail: state }));
 }
 
-window.getTasks = () => state.tasks;
-window.loadDataFromCloud = (newTasks) => {
-    state.tasks = newTasks;
+window.getSyncData = () => state;
+window.loadDataFromCloud = (newData) => {
+    if (newData.tasks) state.tasks = newData.tasks;
+    if (newData.settings && newData.settings.theme) {
+        if (state.settings.theme !== newData.settings.theme) {
+            state.settings.theme = newData.settings.theme;
+            // apply theme directly without animating
+            document.documentElement.className = state.settings.theme === 'ember' ? '' : `theme-${state.settings.theme}`;
+            els.themeBtns.forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.theme === state.settings.theme);
+            });
+            showToast("Theme synced securely", "sync");
+        }
+    }
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     renderAll();
+    showToast("Tasks synced securely", "sync");
 };
 
 function uuid() {

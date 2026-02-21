@@ -383,9 +383,19 @@
         const app = initializeApp(firebaseConfig);
         const analytics = getAnalytics(app);
 
-        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, onSnapshot, addDoc, collection } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
         const db = getFirestore(app);
+
+        // --- TEST CODE ---
+        addDoc(collection(db, "test"), {
+            message: "hello world"
+        }).then(() => {
+            console.log("Test document written to 'test' collection!");
+        }).catch((e) => {
+            console.error("Error writing test document: ", e);
+        });
+        // -----------------
 
         // Single document for syncing user tasks
         const syncDocRef = doc(db, "syncData", "my-tasks");
@@ -409,8 +419,8 @@
             unsubscribe = onSnapshot(syncDocRef, (docSnap) => {
                 if (docSnap.exists() && window.loadDataFromCloud && !window.isSavingDataLocally) {
                     const data = docSnap.data();
-                    if (data.tasks) {
-                        window.loadDataFromCloud(data.tasks);
+                    if (data.syncData) {
+                        window.loadDataFromCloud(data.syncData);
                     }
                 }
             });
@@ -430,9 +440,9 @@
 
             if (syncEnabled) {
                 // Initial push
-                if (window.getTasks) {
+                if (window.getSyncData) {
                     window.isSavingDataLocally = true;
-                    setDoc(syncDocRef, { tasks: window.getTasks() }).then(() => {
+                    setDoc(syncDocRef, { syncData: window.getSyncData() }).then(() => {
                         window.isSavingDataLocally = false;
                     }).catch(() => {
                         window.isSavingDataLocally = false;
@@ -449,7 +459,7 @@
         window.addEventListener('taskDataChanged', (e) => {
             if (syncEnabled) {
                 window.isSavingDataLocally = true;
-                setDoc(syncDocRef, { tasks: e.detail }).then(() => {
+                setDoc(syncDocRef, { syncData: e.detail }).then(() => {
                     window.isSavingDataLocally = false;
                 }).catch(() => {
                     window.isSavingDataLocally = false;
