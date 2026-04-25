@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1a1a2e">
+    <title>ষড়যন্ত্র - ক্ষমতার খেলা</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Galada&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ===== SCREEN: SPLASH ===== -->
+<section class="screen active" id="screen-splash">
+    <div class="splash-bg"></div>
+    <div class="splash-content">
+        <h1 class="logo-bn">ষড়যন্ত্র</h1>
+        <p class="tagline">ক্ষমতার খেলায় আপনার পালা</p>
+        <div class="splash-buttons">
+            <button class="btn btn-primary" data-action="goto-setup">🎮 নতুন খেলা শুরু করুন</button>
+            <button class="btn btn-info" data-action="goto-howto">📖 কিভাবে খেলবেন</button>
+            <button class="btn btn-gold" data-action="goto-leaderboard">🏆 লিডারবোর্ড</button>
+        </div>
+        <div class="splash-footer">
+            <label class="toggle">
+                <input type="checkbox" id="sound-toggle" checked>
+                <span>🔊 সাউন্ড</span>
+            </label>
+            <span class="version">সংস্করণ ১.০</span>
+        </div>
+    </div>
+</section>
+
+<!-- ===== SCREEN: HOW TO PLAY ===== -->
+<section class="screen" id="screen-howto">
+    <header class="screen-header">
+        <button class="back-btn" data-action="back-splash">←</button>
+        <h2>কিভাবে খেলবেন</h2>
+    </header>
+    <div class="screen-body howto-body">
+        <div class="howto-card">
+            <h3>🎯 লক্ষ্য</h3>
+            <p>রাজনৈতিক ষড়যন্ত্র, জোট ও কৌশল ব্যবহার করে সবচেয়ে বেশি ভোট পয়েন্ট অর্জন করুন বা সব মন্ত্রণালয় দখল করুন।</p>
+        </div>
+        <div class="howto-card">
+            <h3>🔄 প্রতি রাউন্ডে ৫টি ফেজ</h3>
+            <ol>
+                <li><strong>ইভেন্ট:</strong> একটি র‍্যান্ডম ইভেন্ট কার্ড উন্মোচিত হয়</li>
+                <li><strong>অ্যাকশন:</strong> প্রতিটি খেলোয়াড় ৩টি অ্যাকশন নেয়</li>
+                <li><strong>নেগোশিয়েশন:</strong> জোট, চুক্তি, বিশ্বাসঘাতকতা</li>
+                <li><strong>ভোটিং:</strong> একটি প্রস্তাব নিয়ে ভোট</li>
+                <li><strong>এন্ড রাউন্ড:</strong> স্কোর আপডেট</li>
+            </ol>
+        </div>
+        <div class="howto-card">
+            <h3>💼 অ্যাকশনসমূহ</h3>
+            <ul>
+                <li>💰 <strong>ফান্ড সংগ্রহ</strong> — টাকা পান, কিন্তু দুর্নীতি বাড়তে পারে</li>
+                <li>🗳️ <strong>ভোট সংগ্রহ</strong> — প্রচারণা চালান</li>
+                <li>🃏 <strong>কার্ড খেলুন</strong> — ষড়যন্ত্র, পাওয়ার, ইভেন্ট</li>
+                <li>🏛️ <strong>মন্ত্রণালয় দখল</strong> — স্থায়ী সুবিধা পান</li>
+                <li>🤝 <strong>জোট করুন</strong> — অন্যের সাথে চুক্তি</li>
+            </ul>
+        </div>
+        <div class="howto-card">
+            <h3>⚠️ দুর্নীতি ও স্ক্যান্ডাল</h3>
+            <p>৫টি দুর্নীতি মার্কার জমলে বড় স্ক্যান্ডাল! সাসপেনশন, ফান্ড হারানো, এমনকি বহিষ্কার হতে পারেন।</p>
+        </div>
+        <div class="howto-card">
+            <h3>🏆 জয়ের শর্ত (ক্যাজুয়াল)</h3>
+            <ul>
+                <li>৩০ ভোট পয়েন্ট অর্জন করুন</li>
+                <li>অথবা ৩টি মন্ত্রণালয় দখল করুন</li>
+                <li>অথবা সব টার্ম শেষে সর্বোচ্চ স্কোর</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- ===== SCREEN: LEADERBOARD ===== -->
+<section class="screen" id="screen-leaderboard">
+    <header class="screen-header">
+        <button class="back-btn" data-action="back-splash">←</button>
+        <h2>🏆 লিডারবোর্ড</h2>
+    </header>
+    <div class="screen-body">
+        <div id="leaderboard-list" class="leaderboard-list">
+            <p class="empty-state">এখনও কোনো খেলা সম্পন্ন হয়নি। প্রথম খেলা খেলুন!</p>
+        </div>
+    </div>
+</section>
+
+<!-- ===== SCREEN: SETUP ===== -->
+<section class="screen" id="screen-setup">
+    <header class="screen-header">
+        <button class="back-btn" data-action="back-splash">←</button>
+        <h2>আপনার রাজনৈতিক যাত্রা শুরু করুন</h2>
+    </header>
+    <div class="screen-body">
+        <div class="setup-section">
+            <h3>খেলোয়াড় সংখ্যা</h3>
+            <div class="player-count-control">
+                <button class="count-btn" data-count-delta="-1">−</button>
+                <span class="count-value" id="player-count">৩</span>
+                <button class="count-btn" data-count-delta="1">+</button>
+            </div>
+            <p class="hint" id="player-count-hint">✅ ভালো, কৌশলী খেলা সম্ভব</p>
+        </div>
+
+        <div class="setup-section">
+            <h3>খেলোয়াড়দের নাম</h3>
+            <div id="player-names-list" class="player-names-list"></div>
+            <p class="hint">প্রথম খেলোয়াড় = আপনি। বাকিরা CPU।</p>
+        </div>
+
+        <div class="setup-section">
+            <h3>গেম মোড</h3>
+            <div class="mode-cards">
+                <label class="mode-card selected">
+                    <input type="radio" name="mode" value="casual" checked>
+                    <div class="mode-icon">🎮</div>
+                    <div class="mode-name">ক্যাজুয়াল</div>
+                    <div class="mode-meta">৩০-৪৫ মিনিট</div>
+                    <div class="mode-meta">৩ টার্ম × ৩ রাউন্ড</div>
+                </label>
+                <label class="mode-card">
+                    <input type="radio" name="mode" value="standard">
+                    <div class="mode-icon">⚔️</div>
+                    <div class="mode-name">স্ট্যান্ডার্ড</div>
+                    <div class="mode-meta">৬০-৯০ মিনিট</div>
+                    <div class="mode-meta">৫ টার্ম × ৫ রাউন্ড</div>
+                </label>
+                <label class="mode-card">
+                    <input type="radio" name="mode" value="hardcore">
+                    <div class="mode-icon">🔥</div>
+                    <div class="mode-name">হার্ডকোর</div>
+                    <div class="mode-meta">৯০+ মিনিট</div>
+                    <div class="mode-meta">৬ টার্ম, কোনো ক্ষমা নেই</div>
+                </label>
+            </div>
+        </div>
+
+        <div class="setup-section">
+            <h3>চরিত্র বন্টন</h3>
+            <div class="dist-options">
+                <label class="dist-option selected">
+                    <input type="radio" name="dist" value="random" checked>
+                    <span>🎲 এলোমেলো</span>
+                </label>
+                <label class="dist-option">
+                    <input type="radio" name="dist" value="manual">
+                    <span>👆 নিজে বাছুন</span>
+                </label>
+            </div>
+        </div>
+
+        <button class="btn btn-primary btn-large" data-action="start-game">খেলা শুরু করুন →</button>
+    </div>
+</section>
+
+<!-- ===== SCREEN: CHARACTER SELECT ===== -->
+<section class="screen" id="screen-character">
+    <header class="screen-header">
+        <h2 id="char-select-title">আপনার রাজনৈতিক পরিচয়</h2>
+    </header>
+    <div class="screen-body character-body">
+        <div class="char-card-wrapper" id="char-card-wrapper"></div>
+        <div class="char-nav">
+            <button class="btn btn-secondary" id="char-prev">← আগের</button>
+            <span class="char-pager" id="char-pager">১/৫</span>
+            <button class="btn btn-secondary" id="char-next">পরের →</button>
+        </div>
+        <button class="btn btn-primary btn-large" id="char-confirm">নিশ্চিত করুন ✓</button>
+    </div>
+</section>
+
+<!-- ===== SCREEN: GAMEPLAY ===== -->
+<section class="screen" id="screen-game">
+    <!-- Top status bar -->
+    <div class="game-status-bar">
+        <div class="status-row">
+            <span>টার্ম: <strong id="status-term">১</strong>/<span id="status-term-max">৩</span></span>
+            <span>রাউন্ড: <strong id="status-round">১</strong>/<span id="status-round-max">৩</span></span>
+            <span class="phase-badge" id="status-phase">ইভেন্ট</span>
+        </div>
+        <div class="status-row">
+            <span class="current-player-label">পালা: <strong id="status-current-player">—</strong></span>
+        </div>
+    </div>
+
+    <!-- Player info strip -->
+    <div class="player-strip" id="player-strip"></div>
+
+    <!-- Main game area (dynamic) -->
+    <div class="game-area" id="game-area"></div>
+
+    <!-- Bottom action bar -->
+    <div class="action-bar">
+        <button class="action-tab" data-tab="hand">
+            <span class="action-icon">🃏</span>
+            <span class="action-label">কার্ড</span>
+        </button>
+        <button class="action-tab" data-tab="ministry">
+            <span class="action-icon">🏛️</span>
+            <span class="action-label">মন্ত্রণালয়</span>
+        </button>
+        <button class="action-tab" data-tab="alliance">
+            <span class="action-icon">🤝</span>
+            <span class="action-label">জোট</span>
+        </button>
+        <button class="action-tab" data-tab="log">
+            <span class="action-icon">📜</span>
+            <span class="action-label">লগ</span>
+        </button>
+        <button class="action-tab" data-tab="menu">
+            <span class="action-icon">⚙️</span>
+            <span class="action-label">মেনু</span>
+        </button>
+    </div>
+</section>
+
+<!-- ===== SCREEN: GAME OVER ===== -->
+<section class="screen" id="screen-end">
+    <header class="screen-header">
+        <h2>🏆 খেলা শেষ</h2>
+    </header>
+    <div class="screen-body end-body">
+        <div id="end-winner" class="end-winner"></div>
+        <div id="end-podium" class="end-podium"></div>
+        <div id="end-stats" class="end-stats"></div>
+        <div class="end-actions">
+            <button class="btn btn-primary btn-large" data-action="play-again">আবার খেলুন</button>
+            <button class="btn btn-secondary" data-action="back-splash">মূল মেনুতে ফিরুন</button>
+        </div>
+    </div>
+</section>
+
+<!-- ===== MODAL OVERLAY ===== -->
+<div class="modal-overlay" id="modal-overlay">
+    <div class="modal" id="modal">
+        <div class="modal-content" id="modal-content"></div>
+        <div class="modal-actions" id="modal-actions"></div>
+    </div>
+</div>
+
+<!-- ===== TOAST ===== -->
+<div class="toast-container" id="toast-container"></div>
+
+<!-- ===== SLIDE PANEL (bottom sheet for tabs) ===== -->
+<div class="sheet-overlay" id="sheet-overlay">
+    <div class="sheet" id="sheet">
+        <div class="sheet-handle"></div>
+        <div class="sheet-header">
+            <h3 id="sheet-title">শিরোনাম</h3>
+            <button class="sheet-close" id="sheet-close">✕</button>
+        </div>
+        <div class="sheet-body" id="sheet-body"></div>
+    </div>
+</div>
+
+<script src="data.js"></script>
+<script src="game.js"></script>
+</body>
+</html>
