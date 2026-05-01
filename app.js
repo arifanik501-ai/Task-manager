@@ -177,7 +177,7 @@ function switchPage(page) {
   $$(".tab-page").forEach((tab) => tab.classList.toggle("active", tab.dataset.page === page));
   $$(".nav-button").forEach((button) => button.classList.toggle("active", button.dataset.target === page));
   window.scrollTo({ top: 0, behavior: "smooth" });
-  if (page === "add") setCurrentDateTime();
+  if (page === "add" && !$("#editing-expense-id").value) setCurrentDateTime();
   renderAll();
 }
 
@@ -192,7 +192,7 @@ function bindExpenseForm() {
 
     const category = getCategory(selectedCategory);
     const expense = {
-      id: $("#editing-expense-id").value || crypto.randomUUID(),
+      id: $("#editing-expense-id").value || createId(),
       amount,
       category: category.id,
       categoryName: category.name,
@@ -229,7 +229,12 @@ function bindExpenseForm() {
   });
   $("#confirm-cancel").addEventListener("click", hideConfirm);
   $("#confirm-action").addEventListener("click", () => {
-    if (pendingDelete?.type === "expense") deleteExpense(pendingDelete.id);
+    if (pendingDelete?.type === "expense") {
+      const { id } = pendingDelete;
+      $("#confirm-modal").classList.add("hidden");
+      deleteExpense(id);
+      return;
+    }
     if (pendingDelete?.type === "reset") resetCurrentMonth();
     hideConfirm();
   });
@@ -299,7 +304,7 @@ function bindCalculator() {
   });
 
   $("#calculator-add-result").addEventListener("click", () => {
-    const result = Number($("#calc-result").textContent);
+    const result = Number($("#calc-result").textContent.replaceAll(",", ""));
     if (!Number.isFinite(result)) {
       showToast("Calculator result is not valid.", "warning");
       return;
@@ -819,6 +824,11 @@ function setCurrentDateTime() {
   const now = new Date();
   $("#expense-date").value = toDateInput(now);
   $("#expense-time").value = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+}
+
+function createId() {
+  if (window.crypto?.randomUUID) return window.crypto.randomUUID();
+  return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 }
 
 function getExpensesForMonth(key) {
