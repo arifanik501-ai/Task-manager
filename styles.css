@@ -2861,3 +2861,423 @@ body.liquid-glass:not(.dark) .calc-button.equals {
 body.liquid-glass:not(.dark) .balance-card .ghost-button {
   color: #fff;
 }
+
+/* ============================================================
+   Premium "More" section + Aurora Silk background upgrade
+   ------------------------------------------------------------
+   Adds a slowly-rotating conic silk shimmer, a soft mesh tint,
+   and a subtle vignette behind the existing aurora layers. All
+   animations are transform-only (composited, no per-frame paint)
+   and fully suppressed under prefers-reduced-motion.
+   ============================================================ */
+
+/* Soft mesh wash sitting just under the aurora bands. Static, paint
+   only happens once. Gives the background richer color depth without
+   adding any animated cost. */
+.liquid-bg .lq-mesh {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 18% 22%, rgba(124, 58, 237, .22), transparent 38%),
+    radial-gradient(circle at 82% 28%, rgba(236, 72, 153, .18), transparent 40%),
+    radial-gradient(circle at 22% 82%, rgba(14, 165, 233, .18), transparent 42%),
+    radial-gradient(circle at 78% 88%, rgba(245, 158, 11, .12), transparent 42%);
+  opacity: .9;
+}
+
+body:not(.dark) .liquid-bg .lq-mesh {
+  background:
+    radial-gradient(circle at 18% 22%, rgba(167, 139, 250, .26), transparent 38%),
+    radial-gradient(circle at 82% 28%, rgba(244, 114, 182, .22), transparent 40%),
+    radial-gradient(circle at 22% 82%, rgba(56, 189, 248, .22), transparent 42%),
+    radial-gradient(circle at 78% 88%, rgba(251, 191, 36, .14), transparent 42%);
+  opacity: .8;
+}
+
+/* Aurora silk — a very slow conic shimmer that drifts behind the
+   blurred orbs. We size it to 200vmax so the rotation never reveals
+   an edge, and we deliberately avoid `filter: blur` here (combining
+   filter with transform forces per-frame paint). The conic gradient
+   is rendered once; rotating it is a pure compositor transform. */
+.liquid-bg .lq-silk {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200vmax;
+  height: 200vmax;
+  margin: -100vmax 0 0 -100vmax;
+  pointer-events: none;
+  transform-origin: 50% 50%;
+  background:
+    conic-gradient(
+      from 0deg at 50% 50%,
+      transparent 0deg,
+      rgba(124, 58, 237, .14) 36deg,
+      transparent 80deg,
+      rgba(236, 72, 153, .16) 130deg,
+      transparent 175deg,
+      rgba(14, 165, 233, .14) 235deg,
+      transparent 280deg,
+      rgba(245, 158, 11, .10) 320deg,
+      transparent 360deg
+    );
+  opacity: .75;
+  transform: rotate(0deg);
+  will-change: transform;
+  animation: lqSilk 140s linear infinite;
+}
+
+body:not(.dark) .liquid-bg .lq-silk {
+  background:
+    conic-gradient(
+      from 0deg at 50% 50%,
+      transparent 0deg,
+      rgba(167, 139, 250, .18) 36deg,
+      transparent 80deg,
+      rgba(244, 114, 182, .18) 130deg,
+      transparent 175deg,
+      rgba(56, 189, 248, .18) 235deg,
+      transparent 280deg,
+      rgba(251, 191, 36, .12) 320deg,
+      transparent 360deg
+    );
+  opacity: .55;
+}
+
+@keyframes lqSilk {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Subtle vignette to focus attention toward the centered phone shell.
+   Static, no animation; helps premium feel without costing GPU. */
+.liquid-bg .lq-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 80% 70% at 50% 45%, transparent 55%, rgba(2, 4, 22, .42) 100%);
+}
+
+body:not(.dark) .liquid-bg .lq-vignette {
+  background:
+    radial-gradient(ellipse 80% 70% at 50% 45%, transparent 60%, rgba(60, 80, 140, .18) 100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .liquid-bg .lq-silk { animation: none !important; }
+}
+
+/* ============================================================
+   Premium "More" section
+   ------------------------------------------------------------
+   Adds an identity hero, two-column chromatic menu grid, and
+   premium specular treatments on each menu card. Tap feedback
+   is transform-only so scrolling stays at 60 fps.
+   ============================================================ */
+
+/* Identity hero — a vibrant gradient card showing brand + cloud
+   sync state at the top of the More page. */
+.identity-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 14px;
+  padding: 18px;
+  margin-bottom: 6px;
+  border-radius: 28px;
+  border: 1px solid rgba(255, 255, 255, .42);
+  color: #fff;
+  background:
+    radial-gradient(circle at 18% 22%, rgba(255, 255, 255, .42), transparent 36%),
+    radial-gradient(circle at 82% 90%, rgba(255, 255, 255, .22), transparent 48%),
+    linear-gradient(135deg,
+      color-mix(in srgb, var(--primary) 82%, transparent),
+      color-mix(in srgb, var(--secondary) 72%, transparent) 55%,
+      color-mix(in srgb, var(--accent) 64%, transparent));
+  box-shadow:
+    0 24px 60px color-mix(in srgb, var(--secondary) 38%, transparent),
+    0 8px 22px color-mix(in srgb, var(--primary) 28%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, .55),
+    inset 0 -1px 0 rgba(0, 0, 0, .12);
+  contain: layout paint;
+}
+
+.identity-hero .identity-shine {
+  position: absolute;
+  top: -55%;
+  right: -25%;
+  width: 90%;
+  height: 220%;
+  pointer-events: none;
+  z-index: 0;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(255, 255, 255, .42), transparent 65%);
+  opacity: .55;
+}
+
+.identity-hero > *:not(.identity-shine) {
+  position: relative;
+  z-index: 1;
+}
+
+.identity-glyph {
+  width: 56px;
+  height: 56px;
+  display: grid;
+  place-items: center;
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -.02em;
+  color: #fff;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, .22);
+  border: 1px solid rgba(255, 255, 255, .55);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .65),
+    inset 0 -1px 0 rgba(0, 0, 0, .14),
+    0 8px 18px rgba(0, 0, 0, .18);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+          backdrop-filter: blur(12px) saturate(140%);
+}
+
+.identity-meta {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.identity-meta strong {
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -.01em;
+  line-height: 1.2;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, .12);
+}
+
+.identity-meta span {
+  font-size: 12px;
+  font-weight: 600;
+  opacity: .88;
+}
+
+.identity-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 11px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .22);
+  border: 1px solid rgba(255, 255, 255, .42);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .55);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.identity-status .status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, .22);
+}
+
+.identity-status[data-status="online"] .status-dot {
+  background: #34d399;
+  box-shadow: 0 0 0 4px rgba(52, 211, 153, .32);
+}
+
+.identity-status[data-status="connecting"] .status-dot,
+.identity-status[data-status="syncing"] .status-dot {
+  background: #fde047;
+  box-shadow: 0 0 0 4px rgba(253, 224, 71, .28);
+  animation: cloudPulse 1.4s ease-in-out infinite;
+}
+
+.identity-status[data-status="error"] .status-dot {
+  background: #fda4af;
+  box-shadow: 0 0 0 4px rgba(253, 164, 175, .32);
+}
+
+/* Section labels between groups of menu cards. */
+.more-section-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 18px 6px 10px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .16em;
+  line-height: 1;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--text) 72%, transparent);
+}
+
+.more-section-label::before,
+.more-section-label::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--line), transparent);
+}
+
+.more-section-label > span {
+  white-space: nowrap;
+}
+
+/* Two-column chromatic menu grid — premium card-on-card layout. */
+.more-menu-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.more-menu-grid .menu-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 132px;
+  padding: 14px 14px 16px;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto auto auto;
+  grid-auto-rows: auto;
+  align-content: start;
+  align-items: start;
+  gap: 8px 0;
+  contain: layout paint;
+  transition: transform .25s cubic-bezier(.2, .9, .3, 1.4);
+}
+
+.more-menu-grid .menu-card:active {
+  transform: scale(.97);
+}
+
+/* Override the existing inherited flow rule that places the .ui-icon
+   inside `.menu-card > .ui-icon` as a chromatic 48px chip. We use
+   our own `.menu-icon` wrapper in the new grid. */
+.more-menu-grid .menu-icon {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  color: #fff;
+  background: linear-gradient(145deg, var(--primary), var(--secondary));
+  box-shadow:
+    0 12px 22px color-mix(in srgb, var(--secondary) 32%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, .5),
+    inset 0 -1px 0 rgba(0, 0, 0, .12);
+  border: 1px solid rgba(255, 255, 255, .35);
+}
+
+.more-menu-grid .menu-icon .ui-icon {
+  width: 22px;
+  height: 22px;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
+  color: inherit;
+}
+
+.more-menu-grid .menu-card strong {
+  align-self: start;
+  margin-top: 2px;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -.005em;
+  line-height: 1.2;
+}
+
+.more-menu-grid .menu-card small {
+  align-self: start;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+/* Per-card chromatic accents. Each card gets its own icon gradient,
+   shadow tint, and a subtle corner glow. */
+.more-menu-grid .menu-card-violet .menu-icon {
+  background: linear-gradient(145deg, #a78bfa, #6d28d9);
+  box-shadow:
+    0 12px 22px rgba(124, 58, 237, .38),
+    inset 0 1px 0 rgba(255, 255, 255, .55),
+    inset 0 -1px 0 rgba(0, 0, 0, .14);
+}
+
+.more-menu-grid .menu-card-orange .menu-icon {
+  background: linear-gradient(145deg, #fb923c, #ea580c);
+  box-shadow:
+    0 12px 22px rgba(249, 115, 22, .38),
+    inset 0 1px 0 rgba(255, 255, 255, .55),
+    inset 0 -1px 0 rgba(0, 0, 0, .14);
+}
+
+.more-menu-grid .menu-card-cyan .menu-icon {
+  background: linear-gradient(145deg, #38bdf8, #0284c7);
+  box-shadow:
+    0 12px 22px rgba(14, 165, 233, .38),
+    inset 0 1px 0 rgba(255, 255, 255, .55),
+    inset 0 -1px 0 rgba(0, 0, 0, .14);
+}
+
+.more-menu-grid .menu-card-emerald .menu-icon {
+  background: linear-gradient(145deg, #34d399, #059669);
+  box-shadow:
+    0 12px 22px rgba(16, 185, 129, .38),
+    inset 0 1px 0 rgba(255, 255, 255, .55),
+    inset 0 -1px 0 rgba(0, 0, 0, .14);
+}
+
+/* Soft chromatic corner wash baked into each card's background.
+   Layers a coloured radial gradient on top of the existing glass
+   tint — no extra DOM, no extra paint cost. */
+body.liquid-glass .more-menu-grid .menu-card-violet,
+body.liquid-glass .more-menu-grid .menu-card-orange,
+body.liquid-glass .more-menu-grid .menu-card-cyan,
+body.liquid-glass .more-menu-grid .menu-card-emerald {
+  background-color: var(--glass-tint);
+  background-image:
+    radial-gradient(circle at 88% -8%, var(--menu-glow), transparent 55%),
+    radial-gradient(circle at 12% 110%, var(--menu-glow-low), transparent 55%);
+}
+
+.more-menu-grid .menu-card-violet  { --menu-glow: rgba(139, 92, 246, .42); --menu-glow-low: rgba(124, 58, 237, .18); }
+.more-menu-grid .menu-card-orange  { --menu-glow: rgba(249, 115, 22, .38); --menu-glow-low: rgba(234, 88, 12,  .16); }
+.more-menu-grid .menu-card-cyan    { --menu-glow: rgba(14, 165, 233, .38); --menu-glow-low: rgba(2, 132, 199,  .16); }
+.more-menu-grid .menu-card-emerald { --menu-glow: rgba(16, 185, 129, .38); --menu-glow-low: rgba(5, 150, 105,  .16); }
+
+body.liquid-glass:not(.dark) .more-menu-grid .menu-card-violet  { --menu-glow: rgba(139, 92, 246, .26); --menu-glow-low: rgba(124, 58, 237, .12); }
+body.liquid-glass:not(.dark) .more-menu-grid .menu-card-orange  { --menu-glow: rgba(249, 115, 22, .24); --menu-glow-low: rgba(234, 88, 12,  .10); }
+body.liquid-glass:not(.dark) .more-menu-grid .menu-card-cyan    { --menu-glow: rgba(14, 165, 233, .24); --menu-glow-low: rgba(2, 132, 199,  .10); }
+body.liquid-glass:not(.dark) .more-menu-grid .menu-card-emerald { --menu-glow: rgba(16, 185, 129, .24); --menu-glow-low: rgba(5, 150, 105,  .10); }
+
+/* Hover lift on capable devices (no jitter on touch). */
+@media (hover: hover) and (pointer: fine) {
+  .more-menu-grid .menu-card:hover {
+    transform: translateY(-2px);
+  }
+}
+
+/* On narrow phones keep two columns but tighten paddings. */
+@media (max-width: 360px) {
+  .more-menu-grid .menu-card {
+    min-height: 124px;
+    padding: 12px;
+  }
+  .more-menu-grid .menu-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+  }
+}
