@@ -1,10 +1,8 @@
 {
   "rules": {
-    "users": {
-      "$syncId": {
-        ".read": "$syncId.length >= 16",
-        ".write": "$syncId.length >= 16"
-      }
+    "shared": {
+      ".read": true,
+      ".write": true
     }
   }
 }

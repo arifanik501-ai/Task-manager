@@ -1,16 +1,14 @@
 /* HisabNikash cloud sync via Firebase Realtime Database.
  *
+ * Single shared bucket: every device reads from and writes to
+ * /shared/state. There is no per-device ID anymore; whoever opens the
+ * app sees and edits the same data.
+ *
  * The Firebase Web API key below is NOT a secret — it identifies the
  * Firebase project on the public web. Real access control lives in the
  * Realtime Database rules; see database.rules.json next to this file
  * for the recommended rule set you should paste into the Firebase
  * console (Build → Realtime Database → Rules).
- *
- * Sync model: every device generates a random "Sync ID" stored in
- * localStorage. All state for that device is written to
- * /users/{syncId}/state. To share data across devices, copy the Sync
- * ID from one device and paste it into Settings → Cloud Sync on the
- * other. Last-writer-wins by `lastUpdatedAt` timestamp.
  */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import {
@@ -32,35 +30,24 @@ const firebaseConfig = {
   measurementId: "G-89Z8WBJ3R0"
 };
 
-const DEVICE_KEY = "hisabnikash_device_id";
-const PATH_PREFIX = "users";
+const SHARED_PATH = "shared/state";
 const PUSH_DEBOUNCE_MS = 120;
 
-const sessionId = newId("s");
+const sessionId = newSessionId();
 const statusListeners = new Set();
 const remoteListeners = new Set();
 let app;
 let db;
-let currentDeviceId;
-let currentRef;
+let sharedRef;
 let unsubscribe;
 let pushTimer = null;
 let pendingPush = null;
 let lastRemoteSnapshot = null;
 let status = "connecting";
 
-function newId(prefix = "d") {
-  if (typeof crypto !== "undefined" && crypto.randomUUID) return prefix + "-" + crypto.randomUUID();
-  return prefix + "-" + Math.random().toString(36).slice(2) + Date.now().toString(36);
-}
-
-function getStoredDeviceId() {
-  let id = localStorage.getItem(DEVICE_KEY);
-  if (!id) {
-    id = newId("d");
-    localStorage.setItem(DEVICE_KEY, id);
-  }
-  return id;
+function newSessionId() {
+  if (typeof crypto !== "undefined" && crypto.randomUUID) return "s-" + crypto.randomUUID();
+  return "s-" + Math.random().toString(36).slice(2) + Date.now().toString(36);
 }
 
 function setStatus(next) {
@@ -85,9 +72,9 @@ function attachListener() {
     try { unsubscribe(); } catch { /* noop */ }
     unsubscribe = null;
   }
-  currentRef = ref(db, `${PATH_PREFIX}/${currentDeviceId}/state`);
+  sharedRef = ref(db, SHARED_PATH);
   unsubscribe = onValue(
-    currentRef,
+    sharedRef,
     (snapshot) => {
       const value = snapshot.exists() ? snapshot.val() : null;
       // Skip echoes of our own writes (same browser tab session).
@@ -109,9 +96,8 @@ async function init() {
   try {
     app = initializeApp(firebaseConfig);
     db = getDatabase(app);
-    currentDeviceId = getStoredDeviceId();
     attachListener();
-    const snapshot = await get(currentRef);
+    const snapshot = await get(sharedRef);
     const value = snapshot.exists() ? snapshot.val() : null;
     lastRemoteSnapshot = value;
     setStatus("online");
@@ -130,7 +116,7 @@ function flushPush() {
     clearTimeout(pushTimer);
     pushTimer = null;
   }
-  if (!pendingPush || !currentRef) return Promise.resolve(false);
+  if (!pendingPush || !sharedRef) return Promise.resolve(false);
   const stateToPush = pendingPush;
   pendingPush = null;
   setStatus("syncing");
@@ -139,7 +125,7 @@ function flushPush() {
     _origin: sessionId,
     _updatedAt: Date.now()
   };
-  return set(currentRef, payload)
+  return set(sharedRef, payload)
     .then(() => { setStatus("online"); return true; })
     .catch((error) => {
       console.warn("[cloud] write error", error);
@@ -155,16 +141,24 @@ function push(stateObj) {
   pushTimer = setTimeout(flushPush, PUSH_DEBOUNCE_MS);
 }
 
+function cancelPending() {
+  if (pushTimer) {
+    clearTimeout(pushTimer);
+    pushTimer = null;
+  }
+  pendingPush = null;
+}
+
 function pushNow(stateObj) {
   if (stateObj && typeof stateObj === "object") pendingPush = stateObj;
   return flushPush();
 }
 
 async function pullNow() {
-  if (!currentRef) return null;
+  if (!sharedRef) return null;
   setStatus("syncing");
   try {
-    const snapshot = await get(currentRef);
+    const snapshot = await get(sharedRef);
     const value = snapshot.exists() ? snapshot.val() : null;
     setStatus("online");
     if (value && value._origin !== sessionId) {
@@ -182,31 +176,10 @@ async function pullNow() {
 
 async function syncNow(stateObj) {
   // Push any pending writes (and the supplied state) immediately, then
-  // re-read the cloud snapshot. The caller decides how to reconcile the
-  // returned value against local state via lastUpdatedAt.
+  // re-read the shared snapshot. The caller decides how to reconcile
+  // the returned value against local state via lastUpdatedAt.
   try { await pushNow(stateObj); } catch { /* surfaced via status */ }
   return pullNow();
-}
-
-async function setDeviceId(rawId) {
-  const id = String(rawId || "").trim();
-  if (!id) return false;
-  if (id === currentDeviceId) return true;
-  localStorage.setItem(DEVICE_KEY, id);
-  currentDeviceId = id;
-  setStatus("connecting");
-  attachListener();
-  try {
-    const snapshot = await get(currentRef);
-    const value = snapshot.exists() ? snapshot.val() : null;
-    setStatus("online");
-    emitRemote(value);
-    return true;
-  } catch (error) {
-    console.warn("[cloud] setDeviceId error", error);
-    setStatus("error");
-    return false;
-  }
 }
 
 window.cloudSync = {
@@ -215,9 +188,8 @@ window.cloudSync = {
   pushNow,
   pullNow,
   syncNow,
+  cancelPending,
   status: () => status,
-  getDeviceId: () => currentDeviceId,
-  setDeviceId,
   onStatusChange(fn) { statusListeners.add(fn); return () => statusListeners.delete(fn); },
   onRemoteUpdate(fn) { remoteListeners.add(fn); return () => remoteListeners.delete(fn); },
   getLastRemote: () => lastRemoteSnapshot
