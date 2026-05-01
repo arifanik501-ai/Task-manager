@@ -16,6 +16,8 @@
 </head>
 <body class="liquid-glass">
   <div class="liquid-bg" aria-hidden="true">
+    <span class="lq-mesh"></span>
+    <span class="lq-silk"></span>
     <span class="lq-aurora lq-aurora-1"></span>
     <span class="lq-aurora lq-aurora-2"></span>
     <span class="lq-aurora lq-aurora-3"></span>
@@ -25,6 +27,7 @@
     <span class="lq-orb lq-orb-4"></span>
     <span class="lq-orb lq-orb-5"></span>
     <span class="lq-grain"></span>
+    <span class="lq-vignette"></span>
   </div>
   <div class="app-shell" id="app-shell">
     <div class="orb orb-one" aria-hidden="true"></div>
@@ -335,19 +338,45 @@
             <h2>More</h2>
           </div>
         </div>
-        <div class="more-menu">
-          <button class="menu-card" data-panel="settings-panel">
-            <span class="ui-icon" data-icon="settings"></span>
+
+        <article class="identity-hero" aria-label="HisabNikash">
+          <div class="identity-shine" aria-hidden="true"></div>
+          <div class="identity-glyph" aria-hidden="true">৳</div>
+          <div class="identity-meta">
+            <strong>HisabNikash</strong>
+            <span>Premium expense tracker · v1.0</span>
+          </div>
+          <div class="identity-status" id="more-cloud-status" data-status="connecting" aria-live="polite">
+            <span class="status-dot" aria-hidden="true"></span>
+            <small>Connecting…</small>
+          </div>
+        </article>
+
+        <p class="more-section-label"><span>Quick Actions</span></p>
+        <div class="more-menu more-menu-grid">
+          <button class="menu-card menu-card-violet" data-panel="settings-panel">
+            <span class="menu-icon"><span class="ui-icon" data-icon="settings"></span></span>
             <strong>Settings</strong>
             <small>Budget, currency, theme, reminders</small>
           </button>
-          <button class="menu-card" id="export-pdf">
-            <span class="ui-icon" data-icon="print"></span>
+          <button class="menu-card menu-card-orange" id="export-pdf">
+            <span class="menu-icon"><span class="ui-icon" data-icon="print"></span></span>
             <strong>Export PDF</strong>
             <small>Open printable monthly report</small>
           </button>
+          <button class="menu-card menu-card-cyan" id="more-open-calculator">
+            <span class="menu-icon"><span class="ui-icon" data-icon="calculator"></span></span>
+            <strong>Calculator</strong>
+            <small>Quick math &amp; add as expense</small>
+          </button>
+          <button class="menu-card menu-card-emerald" id="more-sync-now">
+            <span class="menu-icon"><span class="ui-icon" data-icon="save"></span></span>
+            <strong>Sync Now</strong>
+            <small>Push &amp; pull latest cloud data</small>
+          </button>
         </div>
 
+        <p class="more-section-label"><span>Preferences</span></p>
         <section class="tool-panel" id="settings-panel">
           <h3>Settings & Preferences</h3>
           <label class="input-card">

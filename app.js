@@ -253,12 +253,19 @@ async function hydrateFromCloud() {
 
 function bindCloudSync() {
   const badge = $("#cloud-status-badge");
+  const moreStatus = $("#more-cloud-status");
 
   function applyStatus(next) {
-    if (!badge) return;
-    badge.dataset.status = next;
-    badge.className = `cloud-status ${next}`;
-    badge.textContent = formatCloudStatus(next);
+    if (badge) {
+      badge.dataset.status = next;
+      badge.className = `cloud-status ${next}`;
+      badge.textContent = formatCloudStatus(next);
+    }
+    if (moreStatus) {
+      moreStatus.dataset.status = next;
+      const label = moreStatus.querySelector("small");
+      if (label) label.textContent = formatCloudStatus(next);
+    }
   }
 
   if (window.cloudSync) {
@@ -411,6 +418,17 @@ function bindNavigation() {
 
   $("#open-mini-calculator").addEventListener("click", () => {
     switchPage("calculator");
+  });
+
+  $("#more-open-calculator")?.addEventListener("click", () => {
+    switchPage("calculator");
+  });
+
+  $("#more-sync-now")?.addEventListener("click", () => {
+    switchPage("more");
+    const cloudCard = $(".cloud-sync-card");
+    if (cloudCard) cloudCard.scrollIntoView({ behavior: "smooth", block: "center" });
+    $("#sync-now")?.click();
   });
 
   $$(".quick-actions [data-quick-target]").forEach((button) => {
