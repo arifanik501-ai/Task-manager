@@ -16,9 +16,15 @@
 </head>
 <body class="liquid-glass">
   <div class="liquid-bg" aria-hidden="true">
+    <span class="lq-aurora lq-aurora-1"></span>
+    <span class="lq-aurora lq-aurora-2"></span>
+    <span class="lq-aurora lq-aurora-3"></span>
     <span class="lq-orb lq-orb-1"></span>
     <span class="lq-orb lq-orb-2"></span>
     <span class="lq-orb lq-orb-3"></span>
+    <span class="lq-orb lq-orb-4"></span>
+    <span class="lq-orb lq-orb-5"></span>
+    <span class="lq-grain"></span>
   </div>
   <div class="app-shell" id="app-shell">
     <div class="orb orb-one" aria-hidden="true"></div>
@@ -109,7 +115,7 @@
         <section class="quick-actions" aria-label="Quick actions">
           <button type="button" data-quick-target="add"><span class="ui-icon" data-icon="add"></span><strong>Add</strong></button>
           <button type="button" data-quick-target="reports"><span class="ui-icon" data-icon="chart"></span><strong>Reports</strong></button>
-          <button type="button" data-quick-target="more" data-panel-target="calculator-panel"><span class="ui-icon" data-icon="calculator"></span><strong>Calc</strong></button>
+          <button type="button" data-quick-target="calculator"><span class="ui-icon" data-icon="calculator"></span><strong>Calc</strong></button>
         </section>
 
         <section class="summary-section">
@@ -330,20 +336,10 @@
           </div>
         </div>
         <div class="more-menu">
-          <button class="menu-card" data-panel="calculator-panel">
-            <span class="ui-icon" data-icon="calculator"></span>
-            <strong>Calculator</strong>
-            <small>Calculate and add result as expense</small>
-          </button>
           <button class="menu-card" data-panel="settings-panel">
             <span class="ui-icon" data-icon="settings"></span>
             <strong>Settings</strong>
             <small>Budget, currency, theme, reminders</small>
-          </button>
-          <button class="menu-card" id="export-csv">
-            <span class="ui-icon" data-icon="file"></span>
-            <strong>Export CSV</strong>
-            <small>Download expense data for Excel</small>
           </button>
           <button class="menu-card" id="export-pdf">
             <span class="ui-icon" data-icon="print"></span>
@@ -351,20 +347,6 @@
             <small>Open printable monthly report</small>
           </button>
         </div>
-
-        <section class="tool-panel" id="calculator-panel">
-          <div class="section-head">
-            <h3>Calculator</h3>
-            <button class="ghost-button compact" id="calculator-add-result">Add as Expense</button>
-          </div>
-          <div class="calculator">
-            <div class="calculator-display">
-              <small id="calc-expression">0</small>
-              <strong id="calc-result">0</strong>
-            </div>
-            <div class="calculator-grid" id="calculator-grid"></div>
-          </div>
-        </section>
 
         <section class="tool-panel" id="settings-panel">
           <h3>Settings & Preferences</h3>
@@ -414,6 +396,25 @@
             <button class="danger-button" id="reset-month">Reset Monthly Data</button>
           </div>
           <p class="about-copy">HisabNikash v1.0. Data is private and stored only on this device.</p>
+        </section>
+      </section>
+
+      <section class="tab-page" id="calculator-page" data-page="calculator">
+        <div class="page-title">
+          <div>
+            <p class="eyebrow">Tools</p>
+            <h2>Calculator</h2>
+          </div>
+          <button class="ghost-button compact" id="calculator-add-result">Add as Expense</button>
+        </div>
+        <section class="tool-panel calculator-tool-panel" id="calculator-panel">
+          <div class="calculator">
+            <div class="calculator-display">
+              <small id="calc-expression">0</small>
+              <strong id="calc-result">0</strong>
+            </div>
+            <div class="calculator-grid" id="calculator-grid"></div>
+          </div>
         </section>
       </section>
 

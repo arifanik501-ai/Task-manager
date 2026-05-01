@@ -1890,9 +1890,10 @@ body.liquid-glass:not(.dark) {
   --glass-inner: inset 0 1px 0 rgba(255, 255, 255, .8), inset 0 -1px 0 rgba(60, 80, 140, .08), inset 0 0 0 1px rgba(255, 255, 255, .35);
 }
 
-/* Ambient liquid background orbs that drift behind the app shell.
-   Performance-conscious: no SVG filters, no mix-blend-mode, only
-   compositor-cheap translate3d transforms on a few large soft orbs. */
+/* Ambient liquid background — layered aurora bands, drifting orbs,
+   and a soft film grain. Performance-conscious: no SVG filters, no
+   mix-blend-mode, only compositor-cheap translate3d transforms.
+   The whole layer is contained so paint stays off the main thread. */
 .liquid-bg {
   position: fixed;
   inset: 0;
@@ -1900,8 +1901,66 @@ body.liquid-glass:not(.dark) {
   overflow: hidden;
   pointer-events: none;
   contain: strict;
+  background:
+    radial-gradient(1200px 800px at 0% -10%, rgba(124, 58, 237, .35), transparent 60%),
+    radial-gradient(1000px 700px at 100% 0%, rgba(236, 72, 153, .28), transparent 62%),
+    radial-gradient(900px 700px at 80% 100%, rgba(14, 165, 233, .26), transparent 60%),
+    radial-gradient(900px 700px at 10% 100%, rgba(56, 189, 248, .22), transparent 60%),
+    linear-gradient(160deg, #060822 0%, #0a0e2e 30%, #18123e 55%, #0a0e2e 80%, #050717 100%);
 }
 
+body:not(.dark) .liquid-bg {
+  background:
+    radial-gradient(1200px 800px at 0% -10%, rgba(167, 139, 250, .42), transparent 60%),
+    radial-gradient(1000px 700px at 100% 0%, rgba(244, 114, 182, .32), transparent 62%),
+    radial-gradient(900px 700px at 80% 100%, rgba(56, 189, 248, .32), transparent 60%),
+    radial-gradient(900px 700px at 10% 100%, rgba(125, 211, 252, .28), transparent 60%),
+    linear-gradient(160deg, #f5f3ff 0%, #ecf0ff 30%, #fdf4ff 55%, #eff6ff 80%, #f5f3ff 100%);
+}
+
+/* Soft aurora bands — large rotated rectangles with vivid gradients
+   that very slowly drift to give a dreamy depth without burning GPU. */
+.liquid-bg .lq-aurora {
+  position: absolute;
+  width: 140%;
+  height: 60%;
+  left: -20%;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: .55;
+  transform: translate3d(0, 0, 0) rotate(-12deg);
+  will-change: transform;
+}
+
+.liquid-bg .lq-aurora-1 {
+  top: -22%;
+  background: linear-gradient(90deg, transparent, #7c3aed 35%, #ec4899 65%, transparent);
+  animation: lqAurora 60s ease-in-out infinite alternate;
+}
+
+.liquid-bg .lq-aurora-2 {
+  top: 32%;
+  height: 50%;
+  background: linear-gradient(90deg, transparent, #06b6d4 35%, #0ea5e9 60%, transparent);
+  opacity: .42;
+  animation: lqAurora 80s ease-in-out -20s infinite alternate-reverse;
+  transform: translate3d(0, 0, 0) rotate(8deg);
+}
+
+.liquid-bg .lq-aurora-3 {
+  bottom: -18%;
+  height: 55%;
+  background: linear-gradient(90deg, transparent, #f59e0b 30%, #ef4444 55%, #ec4899 75%, transparent);
+  opacity: .38;
+  animation: lqAurora 70s ease-in-out -35s infinite alternate;
+  transform: translate3d(0, 0, 0) rotate(-6deg);
+}
+
+body:not(.dark) .liquid-bg .lq-aurora-1 { opacity: .32; }
+body:not(.dark) .liquid-bg .lq-aurora-2 { opacity: .26; }
+body:not(.dark) .liquid-bg .lq-aurora-3 { opacity: .22; }
+
+/* Soft floating colour orbs — five blurred circles drifting slowly. */
 .liquid-bg .lq-orb {
   position: absolute;
   border-radius: 50%;
@@ -1940,13 +1999,66 @@ body.liquid-glass:not(.dark) {
   animation-duration: 44s;
 }
 
+.liquid-bg .lq-orb-4 {
+  width: 240px;
+  height: 240px;
+  top: 56%;
+  left: -60px;
+  background: radial-gradient(circle at 50% 50%, #fda4af, #f43f5e 55%, transparent 72%);
+  opacity: .5;
+  animation-delay: -22s;
+  animation-duration: 48s;
+}
+
+.liquid-bg .lq-orb-5 {
+  width: 220px;
+  height: 220px;
+  top: 28%;
+  left: 38%;
+  background: radial-gradient(circle at 50% 50%, #fde68a, #f59e0b 55%, transparent 72%);
+  opacity: .42;
+  animation-delay: -30s;
+  animation-duration: 52s;
+}
+
 body:not(.dark) .liquid-bg .lq-orb {
   opacity: .35;
+}
+
+body:not(.dark) .liquid-bg .lq-orb-4 { opacity: .32; }
+body:not(.dark) .liquid-bg .lq-orb-5 { opacity: .28; }
+
+/* Subtle film grain overlay for premium depth (SVG noise via data URI).
+   Sits above the colour layers but below the app shell. */
+.liquid-bg .lq-grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: .14;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.6 0'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.55'/></svg>");
+  background-size: 220px 220px;
+}
+
+body:not(.dark) .liquid-bg .lq-grain {
+  opacity: .08;
+  mix-blend-mode: multiply;
 }
 
 @keyframes lqDrift {
   from { transform: translate3d(0, 0, 0); }
   to   { transform: translate3d(40px, -30px, 0); }
+}
+
+@keyframes lqAurora {
+  0%   { transform: translate3d(-4%, -2%, 0) rotate(-12deg); }
+  50%  { transform: translate3d(4%, 3%, 0) rotate(-8deg); }
+  100% { transform: translate3d(-2%, -4%, 0) rotate(-14deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .liquid-bg .lq-orb,
+  .liquid-bg .lq-aurora { animation: none !important; }
 }
 
 /* Make the app shell sit above the liquid backdrop with a glass body. */

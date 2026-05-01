@@ -233,8 +233,7 @@ function bindNavigation() {
   });
 
   $("#open-mini-calculator").addEventListener("click", () => {
-    switchPage("more");
-    $("#calculator-panel").scrollIntoView({ behavior: "smooth", block: "start" });
+    switchPage("calculator");
   });
 
   $$(".quick-actions [data-quick-target]").forEach((button) => {
@@ -389,7 +388,6 @@ function bindSettings() {
     $("#confirm-modal").classList.remove("hidden");
   });
 
-  $("#export-csv").addEventListener("click", exportCsv);
   $("#export-pdf").addEventListener("click", exportPdf);
 }
 
@@ -918,21 +916,6 @@ function renderLineChart(summary) {
 function renderTopExpenses(summary) {
   const top = summary.expenses.slice().sort((a, b) => b.amount - a.amount).slice(0, 3);
   renderExpenseList($("#top-expenses"), top);
-}
-
-function exportCsv() {
-  const rows = [["id", "amount", "category", "description", "date", "time", "createdAt"]];
-  getExpensesForMonth(monthKey(new Date())).forEach((expense) => {
-    rows.push([expense.id, expense.amount, expense.categoryName, expense.description, expense.date, expense.time, expense.createdAt]);
-  });
-  const csv = rows.map((row) => row.map((cell) => `"${String(cell).replaceAll('"', '""')}"`).join(",")).join("\n");
-  const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = `hisabnikash-${monthKey(new Date())}.csv`;
-  link.click();
-  URL.revokeObjectURL(url);
 }
 
 function exportPdf() {
