@@ -1,0 +1,19 @@
+{
+  "name": "HisabNikash - Monthly Expense Tracker",
+  "short_name": "HisabNikash",
+  "description": "Mobile-first budget, expense, report, and calculator app.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F5F5F5",
+  "theme_color": "#4CAF50",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#4CAF50">
+  <meta name="description" content="HisabNikash is a mobile-first monthly expense tracker for budgeting, daily expenses, reports, and quick calculations.">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <title>HisabNikash - Monthly Expense Tracker</title>
+</head>
+<body>
+  <div class="app-shell" id="app-shell">
+    <section class="splash-screen" id="splash-screen" aria-live="polite">
+      <div class="logo-mark">৳</div>
+      <h1>HisabNikash</h1>
+      <p>Track Every Taka You Spend</p>
+      <div class="splash-loader" aria-hidden="true"></div>
+    </section>
+
+    <section class="setup-screen hidden" id="setup-screen" aria-labelledby="setup-title">
+      <div class="setup-card">
+        <div class="logo-mark small">৳</div>
+        <p class="eyebrow">Welcome</p>
+        <h2 id="setup-title">Set Your Monthly Budget</h2>
+        <p class="muted">Start the month with a budget. You can edit it anytime from settings.</p>
+        <label class="input-card">
+          <span>Enter Your Monthly Budget</span>
+          <div class="currency-input">
+            <strong id="setup-currency">৳</strong>
+            <input id="setup-budget" type="number" inputmode="decimal" min="0" placeholder="25000" autocomplete="off">
+          </div>
+        </label>
+        <label class="carry-forward-row">
+          <input type="checkbox" id="setup-carry-forward">
+          <span>Carry forward last month’s remaining balance</span>
+        </label>
+        <button class="primary-button" id="start-tracking">Start Tracking</button>
+      </div>
+    </section>
+
+    <main class="main-app hidden" id="main-app">
+      <header class="top-bar">
+        <div>
+          <p class="eyebrow" id="current-month-label">This Month</p>
+          <h1>HisabNikash</h1>
+        </div>
+        <button class="icon-button" id="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+      </header>
+
+      <section class="tab-page active" id="home-page" data-page="home">
+        <article class="balance-card" id="balance-card">
+          <div class="balance-head">
+            <span id="balance-month">Current Month</span>
+            <button class="ghost-button compact" data-open-settings="budget">Edit</button>
+          </div>
+          <div class="progress-wrap">
+            <svg class="progress-ring" viewBox="0 0 140 140" role="img" aria-label="Budget usage">
+              <circle cx="70" cy="70" r="58" class="progress-bg"></circle>
+              <circle cx="70" cy="70" r="58" class="progress-value" id="budget-progress"></circle>
+            </svg>
+            <div class="progress-copy">
+              <strong id="remaining-balance">৳0</strong>
+              <span>Remaining</span>
+              <small id="spent-percent">0% spent</small>
+            </div>
+          </div>
+          <div class="balance-grid">
+            <div>
+              <span>Budget</span>
+              <strong id="total-budget">৳0</strong>
+            </div>
+            <div>
+              <span>Spent</span>
+              <strong id="total-spent">৳0</strong>
+            </div>
+            <div>
+              <span>Left</span>
+              <strong id="balance-left">৳0</strong>
+            </div>
+          </div>
+        </article>
+
+        <section class="summary-section">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Today</p>
+              <h2>Today's Spending</h2>
+            </div>
+            <strong id="today-total">৳0</strong>
+          </div>
+          <div class="expense-list compact-list" id="today-expenses"></div>
+        </section>
+
+        <section class="stats-grid">
+          <article>
+            <span>Daily Average</span>
+            <strong id="daily-average">৳0</strong>
+          </article>
+          <article>
+            <span>Highest Expense</span>
+            <strong id="highest-expense">৳0</strong>
+          </article>
+          <article>
+            <span>Top Category</span>
+            <strong id="top-category">—</strong>
+          </article>
+          <article>
+            <span>Days Left</span>
+            <strong id="days-left">0</strong>
+          </article>
+        </section>
+      </section>
+
+      <section class="tab-page" id="history-page" data-page="history">
+        <div class="page-title">
+          <div>
+            <p class="eyebrow">Current Month</p>
+            <h2>Expense History</h2>
+          </div>
+          <strong id="history-total">৳0</strong>
+        </div>
+        <div class="toolbar">
+          <label class="search-box">
+            <span>🔎</span>
+            <input id="search-expense" type="search" placeholder="Search expenses">
+          </label>
+          <button class="icon-button" id="filter-toggle" aria-expanded="false" aria-controls="filters-panel">☰</button>
+        </div>
+        <div class="filters-panel hidden" id="filters-panel">
+          <label>
+            <span>Category</span>
+            <select id="filter-category"></select>
+          </label>
+          <label>
+            <span>From</span>
+            <input id="filter-from" type="date">
+          </label>
+          <label>
+            <span>To</span>
+            <input id="filter-to" type="date">
+          </label>
+          <label>
+            <span>Min ৳</span>
+            <input id="filter-min" type="number" inputmode="decimal">
+          </label>
+          <label>
+            <span>Max ৳</span>
+            <input id="filter-max" type="number" inputmode="decimal">
+          </label>
+          <label>
+            <span>Sort</span>
+            <select id="sort-expenses">
+              <option value="newest">Newest first</option>
+              <option value="oldest">Oldest first</option>
+              <option value="highest">Highest amount</option>
+              <option value="lowest">Lowest amount</option>
+            </select>
+          </label>
+        </div>
+        <div class="history-groups" id="history-groups"></div>
+      </section>
+
+      <section class="tab-page" id="add-page" data-page="add">
+        <div class="page-title">
+          <div>
+            <p class="eyebrow" id="expense-form-mode">New Entry</p>
+            <h2>Add New Expense</h2>
+          </div>
+          <button class="ghost-button compact" id="open-mini-calculator">🔢 Calculator</button>
+        </div>
+        <form class="expense-form" id="expense-form">
+          <input type="hidden" id="editing-expense-id">
+          <label class="input-card amount-card">
+            <span>Amount</span>
+            <div class="currency-input">
+              <strong id="expense-currency">৳</strong>
+              <input id="expense-amount" type="number" inputmode="decimal" min="0" step="0.01" placeholder="0" required autocomplete="off">
+            </div>
+          </label>
+          <div>
+            <div class="section-head slim">
+              <h3>Category</h3>
+              <span id="selected-category-name">Food & Meals</span>
+            </div>
+            <div class="category-grid" id="category-grid"></div>
+          </div>
+          <label class="input-card">
+            <span>Description (optional)</span>
+            <input id="expense-description" type="text" maxlength="80" placeholder="Lunch at office canteen">
+          </label>
+          <div class="two-col">
+            <label class="input-card">
+              <span>Date</span>
+              <input id="expense-date" type="date" required>
+            </label>
+            <label class="input-card">
+              <span>Time</span>
+              <input id="expense-time" type="time" required>
+            </label>
+          </div>
+          <div class="form-actions">
+            <button class="ghost-button hidden" type="button" id="cancel-edit">Cancel Edit</button>
+            <button class="primary-button" type="submit" id="save-expense">💾 Save Expense</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="tab-page" id="reports-page" data-page="reports">
+        <div class="page-title">
+          <div>
+            <p class="eyebrow">Analytics</p>
+            <h2>Monthly Report</h2>
+          </div>
+          <input class="month-picker" id="report-month" type="month">
+        </div>
+        <section class="report-cards">
+          <article>
+            <span>Total Budget</span>
+            <strong id="report-budget">৳0</strong>
+          </article>
+          <article>
+            <span>Total Spent</span>
+            <strong id="report-spent">৳0</strong>
+          </article>
+          <article>
+            <span>Remaining</span>
+            <strong id="report-remaining">৳0</strong>
+          </article>
+          <article>
+            <span>Daily Average</span>
+            <strong id="report-average">৳0</strong>
+          </article>
+        </section>
+        <section class="chart-card">
+          <div class="section-head">
+            <h3>Category Breakdown</h3>
+            <span id="category-count">0 categories</span>
+          </div>
+          <div class="donut-layout">
+            <div class="donut-chart" id="donut-chart" aria-label="Category chart"></div>
+            <div class="category-breakdown" id="category-breakdown"></div>
+          </div>
+        </section>
+        <section class="chart-card">
+          <div class="section-head">
+            <h3>Daily Spending</h3>
+            <span id="highest-day">Top day: —</span>
+          </div>
+          <div class="bar-chart" id="daily-bar-chart"></div>
+        </section>
+        <section class="chart-card">
+          <div class="section-head">
+            <h3>Cumulative Trend</h3>
+            <span id="month-comparison">No previous data</span>
+          </div>
+          <svg class="line-chart" id="line-chart" viewBox="0 0 320 160" preserveAspectRatio="none"></svg>
+        </section>
+        <section class="top-list-card">
+          <h3>Top 3 Single Expenses</h3>
+          <div id="top-expenses"></div>
+        </section>
+      </section>
+
+      <section class="tab-page" id="more-page" data-page="more">
+        <div class="page-title">
+          <div>
+            <p class="eyebrow">Tools</p>
+            <h2>More</h2>
+          </div>
+        </div>
+        <div class="more-menu">
+          <button class="menu-card" data-panel="calculator-panel">
+            <span>🔢</span>
+            <strong>Calculator</strong>
+            <small>Calculate and add result as expense</small>
+          </button>
+          <button class="menu-card" data-panel="settings-panel">
+            <span>⚙️</span>
+            <strong>Settings</strong>
+            <small>Budget, currency, theme, reminders</small>
+          </button>
+          <button class="menu-card" id="export-csv">
+            <span>📄</span>
+            <strong>Export CSV</strong>
+            <small>Download expense data for Excel</small>
+          </button>
+          <button class="menu-card" id="export-pdf">
+            <span>🖨️</span>
+            <strong>Export PDF</strong>
+            <small>Open printable monthly report</small>
+          </button>
+        </div>
+
+        <section class="tool-panel" id="calculator-panel">
+          <div class="section-head">
+            <h3>Calculator</h3>
+            <button class="ghost-button compact" id="calculator-add-result">Add as Expense</button>
+          </div>
+          <div class="calculator">
+            <div class="calculator-display">
+              <small id="calc-expression">0</small>
+              <strong id="calc-result">0</strong>
+            </div>
+            <div class="calculator-grid" id="calculator-grid"></div>
+          </div>
+        </section>
+
+        <section class="tool-panel" id="settings-panel">
+          <h3>Settings & Preferences</h3>
+          <label class="input-card">
+            <span>Edit Monthly Budget</span>
+            <div class="currency-input">
+              <strong id="settings-currency-prefix">৳</strong>
+              <input id="settings-budget" type="number" inputmode="decimal" min="0">
+            </div>
+          </label>
+          <label class="input-card">
+            <span>Currency Symbol</span>
+            <input id="settings-currency" type="text" maxlength="4" value="৳">
+          </label>
+          <label class="settings-row">
+            <span>Dark Mode</span>
+            <input id="settings-dark" type="checkbox" role="switch">
+          </label>
+          <label class="settings-row">
+            <span>Daily Reminder</span>
+            <input id="settings-reminder" type="checkbox" role="switch">
+          </label>
+          <label class="input-card">
+            <span>Reminder Time</span>
+            <input id="settings-reminder-time" type="time" value="22:00">
+          </label>
+          <label class="input-card">
+            <span>Language</span>
+            <select id="settings-language">
+              <option value="en">English</option>
+              <option value="bn">Bangla (future scope)</option>
+            </select>
+          </label>
+          <div class="settings-actions">
+            <button class="primary-button" id="save-settings">Save Settings</button>
+            <button class="danger-button" id="reset-month">Reset Monthly Data</button>
+          </div>
+          <p class="about-copy">HisabNikash v1.0. Data is private and stored only on this device.</p>
+        </section>
+      </section>
+
+      <nav class="bottom-nav" aria-label="Main navigation">
+        <button class="nav-button active" data-target="home"><span>🏠</span><small>Home</small></button>
+        <button class="nav-button" data-target="history"><span>📋</span><small>History</small></button>
+        <button class="nav-button add-nav" data-target="add"><span>➕</span><small>Add</small></button>
+        <button class="nav-button" data-target="reports"><span>📊</span><small>Reports</small></button>
+        <button class="nav-button" data-target="more"><span>⚙️</span><small>More</small></button>
+      </nav>
+    </main>
+  </div>
+
+  <div class="modal hidden" id="expense-modal" role="dialog" aria-modal="true" aria-labelledby="expense-modal-title">
+    <div class="modal-card">
+      <button class="modal-close" id="close-expense-modal" aria-label="Close">×</button>
+      <h3 id="expense-modal-title">Expense Details</h3>
+      <div id="expense-details"></div>
+      <div class="modal-actions">
+        <button class="ghost-button" id="modal-edit-expense">Edit</button>
+        <button class="danger-button" id="modal-delete-expense">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal hidden" id="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+    <div class="modal-card">
+      <h3 id="confirm-title">Are you sure?</h3>
+      <p id="confirm-copy">This action cannot be undone.</p>
+      <div class="modal-actions">
+        <button class="ghost-button" id="confirm-cancel">Cancel</button>
+        <button class="danger-button" id="confirm-action">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast hidden" id="toast"></div>
+  <button class="undo-toast hidden" id="undo-toast">Expense deleted. <strong>Undo</strong></button>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
