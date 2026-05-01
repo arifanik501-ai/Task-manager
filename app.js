@@ -1,6 +1,14 @@
 const STORAGE_KEY = "hisabnikash_state_v1";
 const MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 const CATEGORY_COLORS = ["#4CAF50", "#2196F3", "#FF9800", "#F44336", "#9C27B0", "#00BCD4", "#8BC34A", "#E91E63", "#795548", "#3F51B5", "#009688", "#FFC107", "#607D8B", "#673AB7", "#CDDC39"];
+const THEMES = {
+  royal: { primary: "#7C3AED", secondary: "#EC4899", accent: "#F97316" },
+  ocean: { primary: "#3B82F6", secondary: "#06B6D4", accent: "#6366F1" },
+  emerald: { primary: "#10B981", secondary: "#34D399", accent: "#06B6D4" },
+  sunset: { primary: "#F97316", secondary: "#EF4444", accent: "#F59E0B" },
+  gold: { primary: "#F59E0B", secondary: "#EAB308", accent: "#F97316" },
+  rose: { primary: "#EC4899", secondary: "#F43F5E", accent: "#7C3AED" }
+};
 const CATEGORIES = [
   { id: "food", icon: "🍚", name: "Food & Meals", short: "Food" },
   { id: "groceries", icon: "🛒", name: "Groceries", short: "Groc" },
@@ -27,10 +35,11 @@ const defaultState = {
   expenses: [],
   settings: {
     currency: "৳",
-    darkMode: false,
+    darkMode: true,
     reminder: false,
     reminderTime: "22:00",
-    language: "en"
+    language: "en",
+    accentTheme: "royal"
   },
   activeMonth: monthKey(new Date())
 };
@@ -129,6 +138,13 @@ function getPreviousMonthRemaining() {
 }
 
 function bindSetup() {
+  $$("[data-budget-chip]").forEach((button) => {
+    button.addEventListener("click", () => {
+      $("#setup-budget").value = button.dataset.budgetChip;
+      $("#setup-budget").focus();
+    });
+  });
+
   $("#start-tracking").addEventListener("click", () => {
     const amount = Number($("#setup-budget").value);
     if (!amount || amount <= 0) {
@@ -171,6 +187,20 @@ function bindNavigation() {
     switchPage("more");
     $("#calculator-panel").scrollIntoView({ behavior: "smooth", block: "start" });
   });
+
+  $$(".quick-actions [data-quick-target]").forEach((button) => {
+    button.addEventListener("click", () => {
+      switchPage(button.dataset.quickTarget);
+      if (button.dataset.panelTarget) {
+        $(`#${button.dataset.panelTarget}`).scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+  });
+
+  $("#alert-bell").addEventListener("click", () => {
+    const alert = $("#budget-alert");
+    alert.classList.toggle("hidden");
+  });
 }
 
 function switchPage(page) {
@@ -210,6 +240,7 @@ function bindExpenseForm() {
     } else {
       state.expenses.push(expense);
       showToast("Expense Added Successfully!");
+      showSuccessOverlay(expense);
     }
 
     saveState();
@@ -239,6 +270,13 @@ function bindExpenseForm() {
     hideConfirm();
   });
   $("#undo-toast").addEventListener("click", undoDelete);
+
+  $("#expense-amount").addEventListener("input", updateAmountPreview);
+  $("#amount-keypad").addEventListener("click", (event) => {
+    const button = event.target.closest("[data-amount-key]");
+    if (!button) return;
+    handleAmountKey(button.dataset.amountKey);
+  });
 }
 
 function bindFilters() {
@@ -246,6 +284,11 @@ function bindFilters() {
     const panel = $("#filters-panel");
     panel.classList.toggle("hidden");
     $("#filter-toggle").setAttribute("aria-expanded", String(!panel.classList.contains("hidden")));
+  });
+
+  $("#filter-close").addEventListener("click", () => {
+    $("#filters-panel").classList.add("hidden");
+    $("#filter-toggle").setAttribute("aria-expanded", "false");
   });
 
   ["search-expense", "filter-category", "filter-from", "filter-to", "filter-min", "filter-max", "sort-expenses"].forEach((id) => {
@@ -264,6 +307,7 @@ function bindSettings() {
     state.settings.reminder = $("#settings-reminder").checked;
     state.settings.reminderTime = $("#settings-reminder-time").value || "22:00";
     state.settings.language = $("#settings-language").value;
+    state.settings.accentTheme = $(".theme-picker button.active")?.dataset.themePick || state.settings.accentTheme;
     saveState();
     applyTheme();
     renderAll();
@@ -275,6 +319,14 @@ function bindSettings() {
     state.settings.darkMode = $("#settings-dark").checked;
     saveState();
     applyTheme();
+  });
+
+  $$(".theme-picker button").forEach((button) => {
+    button.addEventListener("click", () => {
+      state.settings.accentTheme = button.dataset.themePick;
+      saveState();
+      applyTheme();
+    });
   });
 
   $("#reset-month").addEventListener("click", () => {
@@ -327,6 +379,24 @@ function handleCalcInput(label) {
   $("#calc-result").textContent = Number.isFinite(result) ? formatPlain(result) : "0";
 }
 
+function handleAmountKey(key) {
+  const input = $("#expense-amount");
+  if (key === "done") {
+    input.blur();
+    return;
+  }
+  if (key === "clear") input.value = "";
+  else if (key === "back") input.value = input.value.slice(0, -1);
+  else if (key === "." && input.value.includes(".")) return;
+  else input.value += key;
+  updateAmountPreview();
+}
+
+function updateAmountPreview() {
+  const amount = Number($("#expense-amount").value) || 0;
+  $("#amount-preview").textContent = money(amount);
+}
+
 function evaluateExpression(expression) {
   if (!expression) return 0;
   const normalized = expression.replaceAll("×", "*").replaceAll("÷", "/").replaceAll("%", "/100");
@@ -351,6 +421,7 @@ function syncInputs() {
   const currentMonth = monthKey(new Date());
   $("#current-month-label").textContent = monthLabelFromKey(currentMonth);
   $("#balance-month").textContent = monthLabelFromKey(currentMonth);
+  $("#time-greeting").textContent = greeting();
   if (!$("#report-month").value) $("#report-month").value = currentMonth;
   $("#setup-currency").textContent = state.settings.currency;
   $("#expense-currency").textContent = state.settings.currency;
@@ -361,6 +432,8 @@ function syncInputs() {
   $("#settings-reminder").checked = state.settings.reminder;
   $("#settings-reminder-time").value = state.settings.reminderTime;
   $("#settings-language").value = state.settings.language;
+  $$(".theme-picker button").forEach((button) => button.classList.toggle("active", button.dataset.themePick === state.settings.accentTheme));
+  updateAmountPreview();
 }
 
 function renderDashboard() {
@@ -383,6 +456,9 @@ function renderDashboard() {
   $("#highest-expense").textContent = money(summary.highestExpense?.amount || 0);
   $("#top-category").textContent = summary.topCategory ? `${summary.topCategory.icon} ${summary.topCategory.short}` : "—";
   $("#days-left").textContent = daysRemainingInMonth();
+  $("#mini-chart-total").textContent = money(summary.spent);
+  renderBudgetAlert(summary, spentPercent);
+  renderMiniChart(summary);
 
   const circumference = 365;
   $("#budget-progress").style.strokeDashoffset = String(circumference - (spentPercent / 100) * circumference);
@@ -489,7 +565,7 @@ function bindExpenseCards(container) {
       const diff = event.changedTouches[0].clientX - startX;
       card.classList.remove("swiping-left", "swiping-right");
       if (diff < -80) requestDelete(card.dataset.expenseId);
-      if (diff > 80) startEdit(card.dataset.expenseId);
+      if (diff > 80) duplicateExpense(card.dataset.expenseId);
     });
   });
 }
@@ -567,6 +643,22 @@ function deleteExpense(id) {
     $("#undo-toast").classList.add("hidden");
     pendingDelete = null;
   }, 5000);
+}
+
+function duplicateExpense(id) {
+  const expense = state.expenses.find((item) => item.id === id);
+  if (!expense) return;
+  const copy = {
+    ...expense,
+    id: createId(),
+    date: toDateInput(new Date()),
+    time: `${String(new Date().getHours()).padStart(2, "0")}:${String(new Date().getMinutes()).padStart(2, "0")}`,
+    createdAt: new Date().toISOString()
+  };
+  state.expenses.push(copy);
+  saveState();
+  renderAll();
+  showToast("Expense duplicated.");
 }
 
 function undoDelete() {
@@ -716,6 +808,26 @@ function renderDailyBars(summary) {
   $("#daily-bar-chart").innerHTML = days.join("");
 }
 
+function renderMiniChart(summary) {
+  const days = [];
+  for (let offset = 6; offset >= 0; offset -= 1) {
+    const date = new Date();
+    date.setDate(date.getDate() - offset);
+    const key = toDateInput(date);
+    days.push({
+      label: String(date.getDate()),
+      total: summary.dailyRows.find((row) => row.date === key)?.total || 0
+    });
+  }
+  const max = Math.max(...days.map((day) => day.total), 1);
+  $("#mini-spending-chart").innerHTML = days.map((day) => `
+    <div>
+      <span style="height:${day.total ? Math.max(10, (day.total / max) * 86) : 5}px"></span>
+      <small>${day.label}</small>
+    </div>
+  `).join("");
+}
+
 function renderLineChart(summary) {
   const svg = $("#line-chart");
   const days = summary.daysInMonth;
@@ -802,14 +914,38 @@ function checkBudgetAlerts() {
   else if (percent >= 50) showToast("You've spent half your budget!", "warning");
 }
 
+function renderBudgetAlert(summary, percent) {
+  const alert = $("#budget-alert");
+  const dot = $("#alert-dot");
+  let message = "";
+  if (summary.budget && percent >= 100) message = `Budget Exceeded! You're ${money(Math.abs(summary.remaining))} over budget.`;
+  else if (summary.budget && percent >= 90) message = `Almost out of budget — only ${money(summary.remaining)} left.`;
+  else if (summary.budget && percent >= 75) message = "Budget Warning! You have spent 75% of your budget.";
+  else if (summary.budget && percent >= 50) message = "Heads up: you have spent half your budget.";
+  alert.textContent = message;
+  alert.classList.toggle("hidden", !message);
+  dot.classList.toggle("hidden", !message);
+}
+
+function showSuccessOverlay(expense) {
+  $("#success-copy").textContent = `${expense.categoryIcon} ${money(expense.amount)} saved to ${expense.categoryName}.`;
+  $("#success-overlay").classList.remove("hidden");
+  setTimeout(() => $("#success-overlay").classList.add("hidden"), 1300);
+}
+
 function requestReminderPermission() {
   if (!state.settings.reminder || !("Notification" in window)) return;
   if (Notification.permission === "default") Notification.requestPermission();
 }
 
 function applyTheme() {
+  const theme = THEMES[state.settings.accentTheme] || THEMES.royal;
+  document.documentElement.style.setProperty("--primary", theme.primary);
+  document.documentElement.style.setProperty("--secondary", theme.secondary);
+  document.documentElement.style.setProperty("--accent", theme.accent);
   document.body.classList.toggle("dark", state.settings.darkMode);
   $("#theme-toggle").textContent = state.settings.darkMode ? "☀️" : "🌙";
+  $$(".theme-picker button").forEach((button) => button.classList.toggle("active", button.dataset.themePick === state.settings.accentTheme));
 }
 
 function showToast(message, type = "success") {
@@ -824,6 +960,15 @@ function setCurrentDateTime() {
   const now = new Date();
   $("#expense-date").value = toDateInput(now);
   $("#expense-time").value = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+}
+
+function greeting() {
+  const hour = new Date().getHours();
+  if (hour < 5) return "Good Night";
+  if (hour < 12) return "Good Morning";
+  if (hour < 17) return "Good Afternoon";
+  if (hour < 21) return "Good Evening";
+  return "Good Night";
 }
 
 function createId() {
