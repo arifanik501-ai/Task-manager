@@ -15,25 +15,10 @@
   <title>HisabNikash - Monthly Expense Tracker</title>
 </head>
 <body class="liquid-glass">
-  <svg class="liquid-defs" aria-hidden="true" focusable="false" width="0" height="0">
-    <defs>
-      <filter id="liquid-glass-distortion" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
-        <feTurbulence type="fractalNoise" baseFrequency="0.012 0.018" numOctaves="2" seed="7" result="noise"/>
-        <feGaussianBlur in="noise" stdDeviation="1.4" result="softNoise"/>
-        <feDisplacementMap in="SourceGraphic" in2="softNoise" scale="14" xChannelSelector="R" yChannelSelector="G"/>
-      </filter>
-      <filter id="liquid-glass-goo" x="-20%" y="-20%" width="140%" height="140%">
-        <feGaussianBlur in="SourceGraphic" stdDeviation="22" result="blur"/>
-        <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -10" result="goo"/>
-        <feBlend in="SourceGraphic" in2="goo"/>
-      </filter>
-    </defs>
-  </svg>
   <div class="liquid-bg" aria-hidden="true">
     <span class="lq-orb lq-orb-1"></span>
     <span class="lq-orb lq-orb-2"></span>
     <span class="lq-orb lq-orb-3"></span>
-    <span class="lq-orb lq-orb-4"></span>
   </div>
   <div class="app-shell" id="app-shell">
     <div class="orb orb-one" aria-hidden="true"></div>
