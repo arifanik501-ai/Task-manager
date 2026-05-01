@@ -1,7 +1,7 @@
 // HisabNikash service worker — network-first for the app shell so
 // every fresh deploy is picked up immediately, with cache fall-back
 // for offline use.
-const CACHE_NAME = "hisabnikash-v3";
+const CACHE_NAME = "hisabnikash-v4";
 const ASSETS = [
   "./",
   "./index.html",

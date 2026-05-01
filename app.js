@@ -125,8 +125,12 @@ function init() {
 
 function registerServiceWorker() {
   if (!("serviceWorker" in navigator)) return;
+  // Capture controller presence BEFORE registering so we only reload on
+  // genuine updates, not on the first install when clients.claim() flips
+  // the controller from null to the new worker.
+  const hadController = !!navigator.serviceWorker.controller;
+
   navigator.serviceWorker.register("service-worker.js").then((registration) => {
-    // Whenever a new SW is detected, ask it to take over immediately.
     registration.addEventListener("updatefound", () => {
       const incoming = registration.installing;
       if (!incoming) return;
@@ -142,8 +146,12 @@ function registerServiceWorker() {
     setInterval(() => registration.update().catch(() => {}), 60 * 60 * 1000);
   }).catch(() => {});
 
+  if (!hadController) return;
+
   // When a fresh SW takes control we reload exactly once so the new
-  // HTML/CSS/JS is shown without the user pulling-to-refresh.
+  // HTML/CSS/JS is shown without the user pulling-to-refresh. Skipped
+  // on the very first install (hadController === false) to avoid a
+  // jarring reload on the user's first visit.
   let reloading = false;
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (reloading) return;
@@ -238,7 +246,6 @@ async function hydrateFromCloud() {
 }
 
 function bindCloudSync() {
-  const input = $("#settings-sync-id");
   const badge = $("#cloud-status-badge");
 
   function applyStatus(next) {
@@ -249,7 +256,6 @@ function bindCloudSync() {
   }
 
   if (window.cloudSync) {
-    if (input) input.value = window.cloudSync.getDeviceId() || "";
     applyStatus(window.cloudSync.status());
     window.addEventListener("cloud-status-change", (event) => applyStatus(event.detail));
     window.addEventListener("cloud-state-update", (event) => {
@@ -263,30 +269,6 @@ function bindCloudSync() {
     applyStatus("error");
   }
 
-  $("#copy-sync-id")?.addEventListener("click", async () => {
-    if (!input?.value) return;
-    try {
-      await navigator.clipboard.writeText(input.value);
-      showToast("Sync ID copied!");
-    } catch {
-      showToast("Could not copy. Long-press to select.", "warning");
-    }
-  });
-
-  $("#apply-sync-id")?.addEventListener("click", async () => {
-    const id = (input?.value || "").trim();
-    if (!id) {
-      showToast("Enter a Sync ID first.", "warning");
-      return;
-    }
-    if (!window.cloudSync) {
-      showToast("Cloud sync not ready.", "warning");
-      return;
-    }
-    showToast("Pulling cloud data\u2026");
-    await window.cloudSync.setDeviceId(id);
-  });
-
   $("#sync-now")?.addEventListener("click", async () => {
     if (!window.cloudSync) {
       showToast("Cloud sync not ready.", "warning");
@@ -296,11 +278,16 @@ function bindCloudSync() {
     if (button.dataset.busy === "1") return;
     button.dataset.busy = "1";
     button.disabled = true;
+    // Snapshot the local timestamp BEFORE syncNow runs. pullNow inside
+    // syncNow synchronously dispatches cloud-state-update, which the
+    // global listener uses to replace state — so reading
+    // state.lastUpdatedAt afterwards would always equal the remote
+    // timestamp and the "newer pulled" branch could never fire.
+    const localTsBefore = Number(state.lastUpdatedAt) || 0;
     try {
       const remote = await window.cloudSync.syncNow(state);
       const remoteTs = Number(remote?.lastUpdatedAt) || 0;
-      const localTs = Number(state.lastUpdatedAt) || 0;
-      if (remote && remoteTs > localTs) {
+      if (remote && remoteTs > localTsBefore) {
         replaceStateFromCloud(remote);
         showToast("Synced. Newer data pulled from cloud.");
       } else {
@@ -332,9 +319,6 @@ function syncSettingsForm() {
   if ($("#settings-reminder")) $("#settings-reminder").checked = !!state.settings.reminder;
   if ($("#settings-reminder-time")) $("#settings-reminder-time").value = state.settings.reminderTime || "22:00";
   if ($("#settings-language")) $("#settings-language").value = state.settings.language || "en";
-  if ($("#settings-sync-id") && window.cloudSync) {
-    $("#settings-sync-id").value = window.cloudSync.getDeviceId() || "";
-  }
 }
 
 function hasCurrentBudget() {
