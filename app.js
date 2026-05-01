@@ -10,62 +10,22 @@ const THEMES = {
   rose: { primary: "#EC4899", secondary: "#F43F5E", accent: "#7C3AED" }
 };
 
-const ICON_PATHS = {
-  home: '<path d="M5 10.5 12 4l7 6.5V20a1 1 0 0 1-1 1h-4v-6h-4v6H6a1 1 0 0 1-1-1z"/>',
-  history: '<path d="M5 5h14M5 12h14M5 19h14M8 5v14"/>',
-  add: '<path d="M12 5v14M5 12h14"/>',
-  chart: '<path d="M4 19h16M7 16V9M12 16V5M17 16v-8"/>',
-  settings: '<path d="M12 8a4 4 0 1 1 0 8 4 4 0 0 1 0-8Z"/><path d="M3 12h2m14 0h2M12 3v2m0 14v2m6.4-15.4-1.4 1.4M7 17l-1.4 1.4m0-12.8L7 7m10 10 1.4 1.4"/>',
-  calculator: '<rect x="5" y="3" width="14" height="18" rx="3"/><path d="M8 7h8M8 11h2m4 0h2M8 15h2m4 0h2M8 19h8"/>',
-  bell: '<path d="M18 16H6l1.4-2V10a4.6 4.6 0 0 1 9.2 0v4z"/><path d="M10 19a2 2 0 0 0 4 0"/>',
-  moon: '<path d="M20 14.2A7.5 7.5 0 0 1 9.8 4a8 8 0 1 0 10.2 10.2Z"/>',
-  sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
-  search: '<circle cx="10.5" cy="10.5" r="5.5"/><path d="m15 15 5 5"/>',
-  filter: '<path d="M4 6h16M7 12h10M10 18h4"/>',
-  save: '<path d="M5 5h12l2 2v12H5z"/><path d="M8 5v6h8V5M8 19v-5h8v5"/>',
-  file: '<path d="M7 3h7l4 4v14H7z"/><path d="M14 3v5h5M9 13h6M9 17h6"/>',
-  print: '<path d="M7 8V3h10v5M7 17H5v-6h14v6h-2"/><path d="M7 14h10v7H7z"/>',
-  backspace: '<path d="M20 6H9l-5 6 5 6h11z"/><path d="m12 10 4 4m0-4-4 4"/>',
-  check: '<path d="m5 12 4 4L19 6"/>',
-  empty: '<path d="M5 7h14v12H5z"/><path d="M8 7a4 4 0 0 1 8 0M9 13h6"/>',
-  food: '<path d="M7 3v18M4 3v5a3 3 0 0 0 6 0V3M16 3c2 2 3 4.2 3 7 0 2.2-1.2 4-3 4zM16 14v7"/>',
-  groceries: '<path d="M6 7h14l-2 10H8z"/><path d="M6 7 5 4H2M9 21a1 1 0 1 0 0-2 1 1 0 0 0 0 2Zm8 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"/>',
-  transport: '<path d="M6 5h12l2 6v7H4v-7z"/><path d="M7 15h.01M17 15h.01M6 11h12M8 18v2m8-2v2"/>',
-  rent: '<path d="M4 11 12 4l8 7"/><path d="M6 10v10h12V10M10 20v-6h4v6"/>',
-  electricity: '<path d="M13 2 5 13h6l-1 9 9-13h-6z"/>',
-  water: '<path d="M12 3s6 6.2 6 11a6 6 0 0 1-12 0c0-4.8 6-11 6-11Z"/>',
-  mobile: '<rect x="7" y="3" width="10" height="18" rx="2"/><path d="M11 18h2"/>',
-  medicine: '<path d="M10 21 21 10a4 4 0 0 0-6-6L4 15a4 4 0 0 0 6 6Z"/><path d="m8 11 5 5"/>',
-  clothing: '<path d="M8 4 4 7l3 4 2-1v11h6V10l2 1 3-4-4-3-2 3h-4z"/>',
-  education: '<path d="m3 8 9-4 9 4-9 4z"/><path d="M7 10v5c2.8 2 7.2 2 10 0v-5"/>',
-  entertainment: '<path d="M6 8h12l-1 10H7z"/><path d="M8 8l1-3m3 3 1-3m3 3 1-3M9 14h6"/>',
-  gifts: '<path d="M4 10h16v11H4zM3 7h18v3H3z"/><path d="M12 7v14M8 7c-2-2-.5-5 4 0m4 0c2-2 .5-5-4 0"/>',
-  family: '<circle cx="8" cy="8" r="3"/><circle cx="16" cy="8" r="3"/><path d="M3 21a5 5 0 0 1 10 0M11 21a5 5 0 0 1 10 0"/>',
-  savings: '<path d="M4 9h16v10H4z"/><path d="M12 9V5m-5 4V6h10v3M9 14h6"/>',
-  others: '<path d="M14 7 7 14l3 3 7-7"/><path d="m15 6 3-3 3 3-3 3zM4 20l3-6 3 3z"/>'
-};
-
-function svgIcon(id, className = "ui-icon") {
-  const path = ICON_PATHS[id] || ICON_PATHS.others;
-  return `<svg class="${className}" viewBox="0 0 24 24" aria-hidden="true" focusable="false">${path}</svg>`;
-}
-
 const CATEGORIES = [
-  { id: "food", name: "Food & Meals", short: "Food" },
-  { id: "groceries", name: "Groceries", short: "Groc" },
-  { id: "transport", name: "Transport", short: "Trans" },
-  { id: "rent", name: "Rent", short: "Rent" },
-  { id: "electricity", name: "Electricity Bill", short: "Bill" },
-  { id: "water", name: "Water Bill", short: "Water" },
-  { id: "mobile", name: "Mobile / Internet", short: "Mob" },
-  { id: "medicine", name: "Medicine / Health", short: "Med" },
-  { id: "clothing", name: "Clothing", short: "Clth" },
-  { id: "education", name: "Education", short: "Edu" },
-  { id: "entertainment", name: "Entertainment", short: "Fun" },
-  { id: "gifts", name: "Gifts", short: "Gift" },
-  { id: "family", name: "Family", short: "Fam" },
-  { id: "savings", name: "Savings / Deposit", short: "Save" },
-  { id: "others", name: "Miscellaneous / Others", short: "Other" }
+  { id: "food", icon: "🍚", name: "Food & Meals", short: "Food" },
+  { id: "groceries", icon: "🛒", name: "Groceries", short: "Groc" },
+  { id: "transport", icon: "🚌", name: "Transport", short: "Trans" },
+  { id: "rent", icon: "🏠", name: "Rent", short: "Rent" },
+  { id: "electricity", icon: "⚡", name: "Electricity Bill", short: "Bill" },
+  { id: "water", icon: "💧", name: "Water Bill", short: "Water" },
+  { id: "mobile", icon: "📱", name: "Mobile / Internet", short: "Mob" },
+  { id: "medicine", icon: "💊", name: "Medicine / Health", short: "Med" },
+  { id: "clothing", icon: "👕", name: "Clothing", short: "Clth" },
+  { id: "education", icon: "🎓", name: "Education", short: "Edu" },
+  { id: "entertainment", icon: "🎉", name: "Entertainment", short: "Fun" },
+  { id: "gifts", icon: "🎁", name: "Gifts", short: "Gift" },
+  { id: "family", icon: "👨‍👩‍👧", name: "Family", short: "Fam" },
+  { id: "savings", icon: "🏦", name: "Savings / Deposit", short: "Save" },
+  { id: "others", icon: "🔧", name: "Miscellaneous / Others", short: "Other" }
 ];
 
 const $ = (selector) => document.querySelector(selector);
@@ -97,7 +57,6 @@ let amountInputRaw = "";
 document.addEventListener("DOMContentLoaded", init);
 
 function init() {
-  hydrateSvgIcons();
   bindNavigation();
   bindSetup();
   bindExpenseForm();
@@ -121,12 +80,6 @@ function init() {
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("service-worker.js").catch(() => {});
   }
-}
-
-function hydrateSvgIcons() {
-  $$("[data-icon]").forEach((element) => {
-    element.outerHTML = svgIcon(element.dataset.icon, element.className || "ui-icon");
-  });
 }
 
 function loadState() {
@@ -276,6 +229,7 @@ function bindExpenseForm() {
       amount,
       category: category.id,
       categoryName: category.name,
+      categoryIcon: category.icon,
       description: $("#expense-description").value.trim(),
       date: $("#expense-date").value,
       time: $("#expense-time").value,
@@ -512,7 +466,7 @@ function renderDashboard() {
   $("#today-total").textContent = money(todaySpent);
   $("#daily-average").textContent = money(summary.dailyAverage);
   $("#highest-expense").textContent = money(summary.highestExpense?.amount || 0);
-  $("#top-category").textContent = summary.topCategory ? summary.topCategory.short : "—";
+  $("#top-category").textContent = summary.topCategory ? `${summary.topCategory.icon} ${summary.topCategory.short}` : "—";
   $("#days-left").textContent = daysRemainingInMonth();
   $("#mini-chart-total").textContent = money(summary.spent);
   renderBudgetAlert(summary, spentPercent);
@@ -530,7 +484,7 @@ function renderHistory() {
   const container = $("#history-groups");
 
   if (!expenses.length) {
-    container.innerHTML = `<div class="empty-state">${svgIcon("empty", "ui-icon empty-icon")}No expenses found.</div>`;
+    container.innerHTML = `<div class="empty-state"><span class="empty-icon">🎉</span>No expenses found.</div>`;
     return;
   }
 
@@ -565,12 +519,12 @@ function renderReports() {
 function renderCategories() {
   $("#category-grid").innerHTML = CATEGORIES.map((category) => `
     <button class="category-pill${category.id === selectedCategory ? " active" : ""}" type="button" data-category="${category.id}">
-      <span class="cat-icon">${svgIcon(category.id)}</span>
+      <span class="cat-icon">${category.icon}</span>
       <small>${category.short}</small>
     </button>
   `).join("");
 
-  $("#filter-category").innerHTML = `<option value="">All categories</option>${CATEGORIES.map((category) => `<option value="${category.id}">${category.name}</option>`).join("")}`;
+  $("#filter-category").innerHTML = `<option value="">All categories</option>${CATEGORIES.map((category) => `<option value="${category.id}">${category.icon} ${category.name}</option>`).join("")}`;
 
   $("#category-grid").addEventListener("click", (event) => {
     const button = event.target.closest("[data-category]");
@@ -583,7 +537,7 @@ function renderCategories() {
 
 function renderExpenseList(container, expenses, compact = false) {
   if (!expenses.length) {
-    container.innerHTML = `<div class="empty-state">${svgIcon("empty", "ui-icon empty-icon")}${compact ? "No expenses today." : "No expenses added yet."}</div>`;
+    container.innerHTML = `<div class="empty-state"><span class="empty-icon">${compact ? "🎉" : "📝"}</span>${compact ? "No expenses today!" : "No expenses added yet."}</div>`;
     return;
   }
   container.innerHTML = expenses.map(expenseCardHtml).join("");
@@ -593,7 +547,7 @@ function renderExpenseList(container, expenses, compact = false) {
 function expenseCardHtml(expense) {
   return `
     <article class="expense-card" data-expense-id="${expense.id}" tabindex="0">
-      <div class="expense-icon">${svgIcon(expense.category)}</div>
+      <div class="expense-icon">${expense.categoryIcon || getCategory(expense.category).icon}</div>
       <div class="expense-main">
         <strong>${escapeHtml(expense.categoryName)}</strong>
         <span>${escapeHtml(expense.description || "No description")}</span>
@@ -634,7 +588,7 @@ function openExpenseModal(id) {
   currentExpenseId = id;
   $("#expense-details").innerHTML = `
     <div class="detail-grid">
-      <div><span>Category</span><strong class="detail-category">${svgIcon(expense.category)} ${escapeHtml(expense.categoryName)}</strong></div>
+      <div><span>Category</span><strong class="detail-category">${expense.categoryIcon || getCategory(expense.category).icon} ${escapeHtml(expense.categoryName)}</strong></div>
       <div><span>Amount</span><strong>${money(expense.amount)}</strong></div>
       <div><span>Description</span><strong>${escapeHtml(expense.description || "No description")}</strong></div>
       <div><span>Date</span><strong>${formatDateHeading(expense.date)}</strong></div>
@@ -662,7 +616,7 @@ function startEdit(id) {
   $("#expense-date").value = expense.date;
   $("#expense-time").value = expense.time;
   $("#expense-form-mode").textContent = "Edit Entry";
-  $("#save-expense").innerHTML = `${svgIcon("save", "ui-icon")}Update Expense`;
+  $("#save-expense").innerHTML = "💾 Update Expense";
   $("#cancel-edit").classList.remove("hidden");
   $("#selected-category-name").textContent = getCategory(selectedCategory).name;
   $$(".category-pill").forEach((item) => item.classList.toggle("active", item.dataset.category === selectedCategory));
@@ -674,7 +628,7 @@ function resetExpenseForm() {
   amountInputRaw = "";
   $("#editing-expense-id").value = "";
   $("#expense-form-mode").textContent = "New Entry";
-  $("#save-expense").innerHTML = `${svgIcon("save", "ui-icon")}Save Expense`;
+  $("#save-expense").innerHTML = "💾 Save Expense";
   $("#cancel-edit").classList.add("hidden");
   selectedCategory = CATEGORIES[0].id;
   $("#selected-category-name").textContent = CATEGORIES[0].name;
@@ -840,7 +794,7 @@ function renderDonut(summary) {
     return `
       <button class="category-row" data-filter-category="${row.id}">
         <div class="category-row-head">
-          <strong class="category-row-title">${svgIcon(row.id)} ${row.name}</strong>
+          <strong class="category-row-title">${row.icon} ${row.name}</strong>
           <strong>${money(row.total)}</strong>
         </div>
         <small>${Math.round(percent)}% of budget • ${row.count} transaction${row.count === 1 ? "" : "s"}</small>
@@ -957,7 +911,7 @@ function exportPdf() {
         <div><strong>Remaining</strong><br>${money(summary.remaining)}</div>
       </div>
       <table><thead><tr><th>Date</th><th>Time</th><th>Category</th><th>Description</th><th>Amount</th></tr></thead><tbody>
-      ${summary.expenses.map((expense) => `<tr><td>${expense.date}</td><td>${formatTime(expense.time)}</td><td>${escapeHtml(expense.categoryName)}</td><td>${escapeHtml(expense.description || "")}</td><td>${money(expense.amount)}</td></tr>`).join("")}
+      ${summary.expenses.map((expense) => `<tr><td>${expense.date}</td><td>${formatTime(expense.time)}</td><td>${expense.categoryIcon || getCategory(expense.category).icon} ${escapeHtml(expense.categoryName)}</td><td>${escapeHtml(expense.description || "")}</td><td>${money(expense.amount)}</td></tr>`).join("")}
       </tbody></table>
       <script>window.print();</script>
     </body></html>
@@ -989,7 +943,7 @@ function renderBudgetAlert(summary, percent) {
 }
 
 function showSuccessOverlay(expense) {
-  $("#success-copy").textContent = `${money(expense.amount)} saved to ${expense.categoryName}.`;
+  $("#success-copy").textContent = `${expense.categoryIcon || getCategory(expense.category).icon} ${money(expense.amount)} saved to ${expense.categoryName}.`;
   $("#success-overlay").classList.remove("hidden");
   setTimeout(() => $("#success-overlay").classList.add("hidden"), 1300);
 }
@@ -1005,7 +959,7 @@ function applyTheme() {
   document.documentElement.style.setProperty("--secondary", theme.secondary);
   document.documentElement.style.setProperty("--accent", theme.accent);
   document.body.classList.toggle("dark", state.settings.darkMode);
-  $("#theme-toggle").innerHTML = svgIcon(state.settings.darkMode ? "sun" : "moon", "ui-icon");
+  $("#theme-toggle").textContent = state.settings.darkMode ? "☀️" : "🌙";
   $$(".theme-picker button").forEach((button) => button.classList.toggle("active", button.dataset.themePick === state.settings.accentTheme));
 }
 

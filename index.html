@@ -61,9 +61,9 @@
           <h1 id="time-greeting">Good Day</h1>
         </div>
         <div class="top-actions">
-          <button class="icon-button bell-button" id="alert-bell" aria-label="Budget alerts"><span class="ui-icon" data-icon="bell"></span><span class="alert-dot hidden" id="alert-dot"></span></button>
+          <button class="icon-button bell-button" id="alert-bell" aria-label="Budget alerts">🔔<span class="alert-dot hidden" id="alert-dot"></span></button>
           <button class="avatar-button" data-open-settings="profile" aria-label="Open settings">HN</button>
-          <button class="icon-button" id="theme-toggle" aria-label="Toggle dark mode"><span class="ui-icon" data-icon="moon"></span></button>
+          <button class="icon-button" id="theme-toggle" aria-label="Toggle dark mode">🌙</button>
         </div>
       </header>
 
@@ -102,9 +102,9 @@
         </article>
 
         <section class="quick-actions" aria-label="Quick actions">
-          <button type="button" data-quick-target="add"><span class="ui-icon" data-icon="add"></span><strong>Add</strong></button>
-          <button type="button" data-quick-target="reports"><span class="ui-icon" data-icon="chart"></span><strong>Reports</strong></button>
-          <button type="button" data-quick-target="more" data-panel-target="calculator-panel"><span class="ui-icon" data-icon="calculator"></span><strong>Calc</strong></button>
+          <button type="button" data-quick-target="add"><span>➕</span><strong>Add</strong></button>
+          <button type="button" data-quick-target="reports"><span>📊</span><strong>Reports</strong></button>
+          <button type="button" data-quick-target="more" data-panel-target="calculator-panel"><span>🔢</span><strong>Calc</strong></button>
         </section>
 
         <section class="summary-section">
@@ -155,10 +155,10 @@
         </div>
         <div class="toolbar">
           <label class="search-box">
-            <span class="ui-icon" data-icon="search"></span>
+            <span>🔎</span>
             <input id="search-expense" type="search" placeholder="Search expenses">
           </label>
-          <button class="icon-button" id="filter-toggle" aria-expanded="false" aria-controls="filters-panel"><span class="ui-icon" data-icon="filter"></span></button>
+          <button class="icon-button" id="filter-toggle" aria-expanded="false" aria-controls="filters-panel">☰</button>
         </div>
         <div class="filters-panel hidden" id="filters-panel">
           <div class="sheet-handle" aria-hidden="true"></div>
@@ -205,7 +205,7 @@
             <p class="eyebrow" id="expense-form-mode">New Entry</p>
             <h2>Add New Expense</h2>
           </div>
-          <button class="ghost-button compact icon-text" id="open-mini-calculator"><span class="ui-icon" data-icon="calculator"></span>Calculator</button>
+          <button class="ghost-button compact icon-text" id="open-mini-calculator">🔢 Calculator</button>
         </div>
         <form class="expense-form" id="expense-form">
           <input type="hidden" id="editing-expense-id">
@@ -229,7 +229,7 @@
             <button type="button" data-amount-key="9">9</button>
             <button type="button" data-amount-key=".">.</button>
             <button type="button" data-amount-key="0">0</button>
-            <button type="button" data-amount-key="back" aria-label="Backspace"><span class="ui-icon" data-icon="backspace"></span></button>
+            <button type="button" data-amount-key="back">⌫</button>
             <button type="button" class="wide" data-amount-key="clear">Clear</button>
             <button type="button" class="wide accent" data-amount-key="done">Done</button>
           </div>
@@ -256,7 +256,7 @@
           </div>
           <div class="form-actions">
             <button class="ghost-button hidden" type="button" id="cancel-edit">Cancel Edit</button>
-            <button class="primary-button" type="submit" id="save-expense"><span class="ui-icon" data-icon="save"></span>Save Expense</button>
+            <button class="primary-button" type="submit" id="save-expense">💾 Save Expense</button>
           </div>
         </form>
       </section>
@@ -326,22 +326,22 @@
         </div>
         <div class="more-menu">
           <button class="menu-card" data-panel="calculator-panel">
-            <span class="ui-icon" data-icon="calculator"></span>
+            <span>🔢</span>
             <strong>Calculator</strong>
             <small>Calculate and add result as expense</small>
           </button>
           <button class="menu-card" data-panel="settings-panel">
-            <span class="ui-icon" data-icon="settings"></span>
+            <span>⚙️</span>
             <strong>Settings</strong>
             <small>Budget, currency, theme, reminders</small>
           </button>
           <button class="menu-card" id="export-csv">
-            <span class="ui-icon" data-icon="file"></span>
+            <span>📄</span>
             <strong>Export CSV</strong>
             <small>Download expense data for Excel</small>
           </button>
           <button class="menu-card" id="export-pdf">
-            <span class="ui-icon" data-icon="print"></span>
+            <span>🖨️</span>
             <strong>Export PDF</strong>
             <small>Open printable monthly report</small>
           </button>
@@ -413,11 +413,11 @@
       </section>
 
       <nav class="bottom-nav" aria-label="Main navigation">
-        <button class="nav-button active" data-target="home"><span class="ui-icon" data-icon="home"></span><small>Home</small></button>
-        <button class="nav-button" data-target="history"><span class="ui-icon" data-icon="history"></span><small>History</small></button>
-        <button class="nav-button add-nav" data-target="add"><span class="ui-icon" data-icon="add"></span><small>Add</small></button>
-        <button class="nav-button" data-target="reports"><span class="ui-icon" data-icon="chart"></span><small>Reports</small></button>
-        <button class="nav-button" data-target="more"><span class="ui-icon" data-icon="settings"></span><small>More</small></button>
+        <button class="nav-button active" data-target="home"><span>🏠</span><small>Home</small></button>
+        <button class="nav-button" data-target="history"><span>📋</span><small>History</small></button>
+        <button class="nav-button add-nav" data-target="add"><span>➕</span><small>Add</small></button>
+        <button class="nav-button" data-target="reports"><span>📊</span><small>Reports</small></button>
+        <button class="nav-button" data-target="more"><span>⚙️</span><small>More</small></button>
       </nav>
     </main>
   </div>
@@ -447,7 +447,7 @@
 
   <div class="success-overlay hidden" id="success-overlay" role="status" aria-live="polite">
     <div class="success-card">
-      <div class="success-burst"><span class="ui-icon" data-icon="check"></span></div>
+      <div class="success-burst">✓</div>
       <h3>Expense Added</h3>
       <p id="success-copy">Saved successfully.</p>
     </div>
