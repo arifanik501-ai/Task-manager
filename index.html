@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#4CAF50">
+  <meta name="theme-color" content="#0A0E27">
   <meta name="description" content="HisabNikash is a mobile-first monthly expense tracker for budgeting, daily expenses, reports, and quick calculations.">
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
@@ -11,15 +11,17 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
   <title>HisabNikash - Monthly Expense Tracker</title>
 </head>
 <body>
   <div class="app-shell" id="app-shell">
+    <div class="orb orb-one" aria-hidden="true"></div>
+    <div class="orb orb-two" aria-hidden="true"></div>
     <section class="splash-screen" id="splash-screen" aria-live="polite">
       <div class="logo-mark">৳</div>
-      <h1>HisabNikash</h1>
-      <p>Track Every Taka You Spend</p>
+      <h1>HISAB</h1>
+      <p>Every Taka Counts</p>
       <div class="splash-loader" aria-hidden="true"></div>
     </section>
 
@@ -36,6 +38,14 @@
             <input id="setup-budget" type="number" inputmode="decimal" min="0" placeholder="25000" autocomplete="off">
           </div>
         </label>
+        <div class="quick-chip-grid" aria-label="Quick budget amounts">
+          <button type="button" data-budget-chip="10000">৳10,000</button>
+          <button type="button" data-budget-chip="20000">৳20,000</button>
+          <button type="button" data-budget-chip="30000">৳30,000</button>
+          <button type="button" data-budget-chip="40000">৳40,000</button>
+          <button type="button" data-budget-chip="50000">৳50,000</button>
+          <button type="button" data-budget-chip="">Custom</button>
+        </div>
         <label class="carry-forward-row">
           <input type="checkbox" id="setup-carry-forward">
           <span>Carry forward last month’s remaining balance</span>
@@ -48,12 +58,17 @@
       <header class="top-bar">
         <div>
           <p class="eyebrow" id="current-month-label">This Month</p>
-          <h1>HisabNikash</h1>
+          <h1 id="time-greeting">Good Day</h1>
         </div>
-        <button class="icon-button" id="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+        <div class="top-actions">
+          <button class="icon-button bell-button" id="alert-bell" aria-label="Budget alerts">🔔<span class="alert-dot hidden" id="alert-dot"></span></button>
+          <button class="avatar-button" data-open-settings="profile" aria-label="Open settings">HN</button>
+          <button class="icon-button" id="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+        </div>
       </header>
 
       <section class="tab-page active" id="home-page" data-page="home">
+        <div class="budget-alert hidden" id="budget-alert"></div>
         <article class="balance-card" id="balance-card">
           <div class="balance-head">
             <span id="balance-month">Current Month</span>
@@ -86,6 +101,12 @@
           </div>
         </article>
 
+        <section class="quick-actions" aria-label="Quick actions">
+          <button type="button" data-quick-target="add"><span>➕</span><strong>Add</strong></button>
+          <button type="button" data-quick-target="reports"><span>📊</span><strong>Reports</strong></button>
+          <button type="button" data-quick-target="more" data-panel-target="calculator-panel"><span>🔢</span><strong>Calc</strong></button>
+        </section>
+
         <section class="summary-section">
           <div class="section-head">
             <div>
@@ -115,6 +136,13 @@
             <strong id="days-left">0</strong>
           </article>
         </section>
+        <section class="chart-card mini-overview-card">
+          <div class="section-head">
+            <h3>Spending Overview</h3>
+            <span id="mini-chart-total">৳0</span>
+          </div>
+          <div class="mini-chart" id="mini-spending-chart" aria-label="Last seven daily spending bars"></div>
+        </section>
       </section>
 
       <section class="tab-page" id="history-page" data-page="history">
@@ -133,6 +161,11 @@
           <button class="icon-button" id="filter-toggle" aria-expanded="false" aria-controls="filters-panel">☰</button>
         </div>
         <div class="filters-panel hidden" id="filters-panel">
+          <div class="sheet-handle" aria-hidden="true"></div>
+          <div class="filter-sheet-head">
+            <strong>Filters</strong>
+            <button class="ghost-button compact" type="button" id="filter-close">Close</button>
+          </div>
           <label>
             <span>Category</span>
             <select id="filter-category"></select>
@@ -178,11 +211,28 @@
           <input type="hidden" id="editing-expense-id">
           <label class="input-card amount-card">
             <span>Amount</span>
+            <div class="amount-preview" id="amount-preview">৳0</div>
             <div class="currency-input">
               <strong id="expense-currency">৳</strong>
               <input id="expense-amount" type="number" inputmode="decimal" min="0" step="0.01" placeholder="0" required autocomplete="off">
             </div>
           </label>
+          <div class="amount-keypad" id="amount-keypad" aria-label="Custom amount keypad">
+            <button type="button" data-amount-key="1">1</button>
+            <button type="button" data-amount-key="2">2</button>
+            <button type="button" data-amount-key="3">3</button>
+            <button type="button" data-amount-key="4">4</button>
+            <button type="button" data-amount-key="5">5</button>
+            <button type="button" data-amount-key="6">6</button>
+            <button type="button" data-amount-key="7">7</button>
+            <button type="button" data-amount-key="8">8</button>
+            <button type="button" data-amount-key="9">9</button>
+            <button type="button" data-amount-key=".">.</button>
+            <button type="button" data-amount-key="0">0</button>
+            <button type="button" data-amount-key="back">⌫</button>
+            <button type="button" class="wide" data-amount-key="clear">Clear</button>
+            <button type="button" class="wide accent" data-amount-key="done">Done</button>
+          </div>
           <div>
             <div class="section-head slim">
               <h3>Category</h3>
@@ -328,6 +378,17 @@
             <span>Dark Mode</span>
             <input id="settings-dark" type="checkbox" role="switch">
           </label>
+          <div class="theme-picker" id="theme-picker" aria-label="Accent color theme">
+            <span>Accent Color</span>
+            <div>
+              <button type="button" data-theme-pick="royal" aria-label="Royal Purple"></button>
+              <button type="button" data-theme-pick="ocean" aria-label="Ocean Blue"></button>
+              <button type="button" data-theme-pick="emerald" aria-label="Emerald Green"></button>
+              <button type="button" data-theme-pick="sunset" aria-label="Sunset Orange"></button>
+              <button type="button" data-theme-pick="gold" aria-label="Golden Premium"></button>
+              <button type="button" data-theme-pick="rose" aria-label="Rose Pink"></button>
+            </div>
+          </div>
           <label class="settings-row">
             <span>Daily Reminder</span>
             <input id="settings-reminder" type="checkbox" role="switch">
@@ -381,6 +442,14 @@
         <button class="ghost-button" id="confirm-cancel">Cancel</button>
         <button class="danger-button" id="confirm-action">Delete</button>
       </div>
+    </div>
+  </div>
+
+  <div class="success-overlay hidden" id="success-overlay" role="status" aria-live="polite">
+    <div class="success-card">
+      <div class="success-burst">✓</div>
+      <h3>Expense Added</h3>
+      <p id="success-copy">Saved successfully.</p>
     </div>
   </div>
 
