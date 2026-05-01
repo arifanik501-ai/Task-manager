@@ -1375,6 +1375,108 @@ body:not(.dark) .donut-chart::after {
   gap: 10px;
 }
 
+.cloud-sync-card {
+  margin-top: 14px;
+  padding: 16px;
+  border-radius: 22px;
+  background: rgba(127, 127, 127, .08);
+  border: 1px solid var(--line);
+  display: grid;
+  gap: 12px;
+}
+
+.cloud-sync-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.cloud-sync-head strong {
+  font-size: 16px;
+}
+
+.cloud-status {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: rgba(127, 127, 127, .14);
+  color: var(--muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  letter-spacing: .2px;
+}
+
+.cloud-status::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  display: inline-block;
+}
+
+.cloud-status.online {
+  color: #10b981;
+  background: rgba(16, 185, 129, .14);
+}
+
+.cloud-status.connecting,
+.cloud-status.syncing {
+  color: #f59e0b;
+  background: rgba(245, 158, 11, .14);
+}
+
+.cloud-status.syncing::before,
+.cloud-status.connecting::before {
+  animation: cloudPulse 1.2s ease-in-out infinite;
+}
+
+.cloud-status.error {
+  color: #ef4444;
+  background: rgba(239, 68, 68, .14);
+}
+
+@keyframes cloudPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .35; transform: scale(.7); }
+}
+
+.cloud-sync-card .input-card {
+  margin: 0;
+}
+
+.cloud-sync-card .input-card input {
+  font-family: ui-monospace, SFMono-Regular, "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+  font-size: 12.5px;
+  letter-spacing: .2px;
+}
+
+.cloud-sync-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.cloud-sync-actions .ghost-button.compact {
+  width: 100%;
+  justify-content: center;
+}
+
+.muted.small,
+.cloud-sync-card .muted {
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+
+body.liquid-glass .cloud-sync-card {
+  background: var(--glass-tint);
+  border: 1px solid var(--glass-edge);
+  box-shadow: var(--glass-shadow), var(--glass-inner);
+}
+
 .bottom-nav {
   position: fixed;
   left: 50%;
