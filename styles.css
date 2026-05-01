@@ -1466,21 +1466,7 @@ body:not(.dark) .modal-card {
   to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
-/* Typography and SVG icon refinement */
-.ui-icon {
-  width: 1.2em;
-  height: 1.2em;
-  display: inline-block;
-  flex: 0 0 auto;
-  color: currentColor;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  vertical-align: -0.18em;
-}
-
+/* Typography and emoji alignment refinement */
 .logo-mark,
 .splash-screen h1,
 .setup-card h2,
@@ -1529,8 +1515,8 @@ body:not(.dark) .modal-card {
 
 .icon-button,
 .quick-actions span,
-.menu-card > .ui-icon,
-.nav-button > .ui-icon,
+.menu-card > span,
+.nav-button > span,
 .success-burst,
 .expense-icon,
 .category-pill .cat-icon,
@@ -1539,20 +1525,13 @@ body:not(.dark) .modal-card {
   place-items: center;
 }
 
-.icon-button .ui-icon {
-  width: 22px;
-  height: 22px;
-  margin: auto;
-}
-
-.quick-actions .ui-icon,
-.menu-card > .ui-icon {
+.quick-actions span,
+.menu-card > span {
   width: 48px;
   height: 48px;
-  padding: 13px;
-  color: #fff;
   border-radius: 17px;
   background: linear-gradient(145deg, var(--primary), var(--secondary));
+  font-size: 22px;
 }
 
 .quick-actions button,
@@ -1572,20 +1551,6 @@ body:not(.dark) .modal-card {
   display: inline-flex;
   justify-content: center;
   gap: 8px;
-}
-
-.primary-button .ui-icon,
-.icon-text .ui-icon {
-  width: 18px;
-  height: 18px;
-}
-
-.expense-icon .ui-icon,
-.category-pill .cat-icon .ui-icon,
-.category-row-title .ui-icon,
-.detail-category .ui-icon {
-  width: 22px;
-  height: 22px;
 }
 
 .empty-state {
@@ -1627,13 +1592,3 @@ body:not(.dark) .modal-card {
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--success) 36%, transparent);
 }
 
-.success-burst .ui-icon {
-  width: 42px;
-  height: 42px;
-  stroke-width: 2.6;
-}
-
-.nav-button > .ui-icon {
-  width: 22px;
-  height: 22px;
-}
