@@ -1465,6 +1465,26 @@ body:not(.dark) .donut-chart::after {
   justify-content: center;
 }
 
+.cloud-sync-now {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.cloud-sync-now[disabled],
+.cloud-sync-now[data-busy="1"] {
+  opacity: .7;
+  cursor: progress;
+}
+
+.cloud-sync-now .ui-icon {
+  width: 18px;
+  height: 18px;
+}
+
 .muted.small,
 .cloud-sync-card .muted {
   font-size: 12.5px;
