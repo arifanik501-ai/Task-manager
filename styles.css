@@ -1510,8 +1510,16 @@ body.liquid-glass .cloud-sync-card {
   padding: 12px 12px calc(14px + env(safe-area-inset-bottom));
   background: color-mix(in srgb, #0a0e27 70%, transparent);
   border-top: 1px solid var(--line);
-  transform: translateX(-50%);
-  backdrop-filter: blur(20px);
+  /* `translate3d` (instead of `translateX`) and an explicit
+     `will-change: transform` force the bottom nav onto its own
+     stable GPU layer. Without this, the backdrop-filter blur was
+     occasionally dropped during heavy scroll, making the nav
+     buttons appear to flicker / disappear. */
+  transform: translate3d(-50%, 0, 0);
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backdrop-filter: blur(20px);
+          backdrop-filter: blur(20px);
 }
 
 body:not(.dark) .bottom-nav {
@@ -2895,79 +2903,14 @@ body:not(.dark) .liquid-bg .lq-mesh {
   opacity: .8;
 }
 
-/* Aurora silk — a very slow conic shimmer that drifts behind the
-   blurred orbs. We size it to 200vmax so the rotation never reveals
-   an edge, and we deliberately avoid `filter: blur` here (combining
-   filter with transform forces per-frame paint). The conic gradient
-   is rendered once; rotating it is a pure compositor transform. */
-.liquid-bg .lq-silk {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 200vmax;
-  height: 200vmax;
-  margin: -100vmax 0 0 -100vmax;
-  pointer-events: none;
-  transform-origin: 50% 50%;
-  background:
-    conic-gradient(
-      from 0deg at 50% 50%,
-      transparent 0deg,
-      rgba(124, 58, 237, .14) 36deg,
-      transparent 80deg,
-      rgba(236, 72, 153, .16) 130deg,
-      transparent 175deg,
-      rgba(14, 165, 233, .14) 235deg,
-      transparent 280deg,
-      rgba(245, 158, 11, .10) 320deg,
-      transparent 360deg
-    );
-  opacity: .75;
-  transform: rotate(0deg);
-  will-change: transform;
-  animation: lqSilk 140s linear infinite;
-}
-
-body:not(.dark) .liquid-bg .lq-silk {
-  background:
-    conic-gradient(
-      from 0deg at 50% 50%,
-      transparent 0deg,
-      rgba(167, 139, 250, .18) 36deg,
-      transparent 80deg,
-      rgba(244, 114, 182, .18) 130deg,
-      transparent 175deg,
-      rgba(56, 189, 248, .18) 235deg,
-      transparent 280deg,
-      rgba(251, 191, 36, .12) 320deg,
-      transparent 360deg
-    );
-  opacity: .55;
-}
-
-@keyframes lqSilk {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
-
-/* Subtle vignette to focus attention toward the centered phone shell.
-   Static, no animation; helps premium feel without costing GPU. */
-.liquid-bg .lq-vignette {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    radial-gradient(ellipse 80% 70% at 50% 45%, transparent 55%, rgba(2, 4, 22, .42) 100%);
-}
-
-body:not(.dark) .liquid-bg .lq-vignette {
-  background:
-    radial-gradient(ellipse 80% 70% at 50% 45%, transparent 60%, rgba(60, 80, 140, .18) 100%);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .liquid-bg .lq-silk { animation: none !important; }
-}
+/* The previous version of this block introduced a slow-rotating
+   conic "aurora silk" shimmer plus a soft vignette. On lower-end
+   mobile GPUs the extra always-active compositor layers — stacked
+   on top of the existing blurred orbs/auroras and several
+   backdrop-filter surfaces — caused scroll jank and made the
+   bottom-nav buttons momentarily disappear during scroll. The
+   silk + vignette layers were removed in favour of the single
+   static `.lq-mesh` wash above. */
 
 /* ============================================================
    Premium "More" section
