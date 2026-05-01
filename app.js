@@ -530,7 +530,7 @@ function renderHistory() {
   const container = $("#history-groups");
 
   if (!expenses.length) {
-    container.innerHTML = `<div class="empty-state"><span class="ui-icon empty-icon" data-icon="empty"></span>No expenses found.</div>`;
+    container.innerHTML = `<div class="empty-state">${svgIcon("empty", "ui-icon empty-icon")}No expenses found.</div>`;
     return;
   }
 
@@ -583,7 +583,7 @@ function renderCategories() {
 
 function renderExpenseList(container, expenses, compact = false) {
   if (!expenses.length) {
-    container.innerHTML = `<div class="empty-state"><span class="ui-icon empty-icon" data-icon="empty"></span>${compact ? "No expenses today." : "No expenses added yet."}</div>`;
+    container.innerHTML = `<div class="empty-state">${svgIcon("empty", "ui-icon empty-icon")}${compact ? "No expenses today." : "No expenses added yet."}</div>`;
     return;
   }
   container.innerHTML = expenses.map(expenseCardHtml).join("");
