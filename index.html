@@ -395,7 +395,22 @@
             <button class="primary-button" id="save-settings">Save Settings</button>
             <button class="danger-button" id="reset-month">Reset Monthly Data</button>
           </div>
-          <p class="about-copy">HisabNikash v1.0. Data is private and stored only on this device.</p>
+          <div class="cloud-sync-card">
+            <div class="cloud-sync-head">
+              <strong>Cloud Sync</strong>
+              <span id="cloud-status-badge" class="cloud-status connecting" data-status="connecting">Connecting…</span>
+            </div>
+            <p class="muted small">Your data syncs to the cloud automatically. To use the same data on another device, copy this Sync ID and paste it there.</p>
+            <label class="input-card">
+              <span>Sync ID</span>
+              <input id="settings-sync-id" type="text" autocomplete="off" spellcheck="false" autocapitalize="off">
+            </label>
+            <div class="cloud-sync-actions">
+              <button class="ghost-button compact" type="button" id="copy-sync-id">Copy</button>
+              <button class="ghost-button compact" type="button" id="apply-sync-id">Apply</button>
+            </div>
+          </div>
+          <p class="about-copy">HisabNikash v1.0. Data syncs securely to the cloud and is also kept on this device.</p>
         </section>
       </section>
 
@@ -462,6 +477,7 @@
   <div class="toast hidden" id="toast"></div>
   <button class="undo-toast hidden" id="undo-toast">Expense deleted. <strong>Undo</strong></button>
 
+  <script type="module" src="firebase-sync.js"></script>
   <script src="app.js" defer></script>
 </body>
 </html>

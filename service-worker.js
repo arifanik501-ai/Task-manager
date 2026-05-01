@@ -1,9 +1,10 @@
-const CACHE_NAME = "hisabnikash-v1";
+const CACHE_NAME = "hisabnikash-v2";
 const ASSETS = [
   "./",
   "./index.html",
   "./styles.css",
   "./app.js",
+  "./firebase-sync.js",
   "./manifest.json",
   "./icon.svg"
 ];
@@ -24,6 +25,16 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
+  const url = new URL(event.request.url);
+  // Never cache Firebase / Google APIs — they need fresh network data.
+  if (
+    url.hostname.endsWith("firebaseio.com") ||
+    url.hostname.endsWith("googleapis.com") ||
+    url.hostname.endsWith("gstatic.com") ||
+    url.hostname.endsWith("firebase.com")
+  ) {
+    return;
+  }
   event.respondWith(
     caches.match(event.request).then((cached) =>
       cached || fetch(event.request).then((response) => {

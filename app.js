@@ -104,6 +104,7 @@ function init() {
   bindFilters();
   bindSettings();
   bindCalculator();
+  bindCloudSync();
   renderCategories();
   applyTheme();
   setCurrentDateTime();
@@ -116,6 +117,7 @@ function init() {
     } else {
       $("#setup-screen").classList.remove("hidden");
     }
+    hydrateFromCloud();
   }, 2000);
 
   if ("serviceWorker" in navigator) {
@@ -132,22 +134,145 @@ function hydrateSvgIcons() {
 function loadState() {
   try {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
-    return {
-      ...defaultState,
-      ...saved,
-      budgets: saved?.budgets || {},
-      expenses: saved?.expenses || [],
-      settings: { ...defaultState.settings, ...saved?.settings },
-      activeMonth: monthKey(new Date())
-    };
+    return normalizeState(saved);
   } catch {
     return structuredClone(defaultState);
   }
 }
 
+function normalizeState(raw) {
+  return {
+    ...defaultState,
+    ...raw,
+    budgets: raw?.budgets || {},
+    expenses: Array.isArray(raw?.expenses) ? raw.expenses : [],
+    settings: { ...defaultState.settings, ...(raw?.settings || {}) },
+    activeMonth: monthKey(new Date()),
+    lastUpdatedAt: typeof raw?.lastUpdatedAt === "number" ? raw.lastUpdatedAt : 0
+  };
+}
+
 function saveState() {
   state.activeMonth = monthKey(new Date());
+  state.lastUpdatedAt = Date.now();
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  if (window.cloudSync && typeof window.cloudSync.push === "function") {
+    window.cloudSync.push(state);
+  }
+}
+
+function replaceStateFromCloud(remote) {
+  if (!remote || typeof remote !== "object") return;
+  const cleaned = normalizeState(remote);
+  delete cleaned._origin;
+  delete cleaned._updatedAt;
+  state = cleaned;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  applyTheme();
+  renderAll();
+  if (!hasCurrentBudget()) {
+    $("#main-app").classList.add("hidden");
+    $("#setup-screen").classList.remove("hidden");
+  } else {
+    $("#setup-screen").classList.add("hidden");
+    $("#main-app").classList.remove("hidden");
+  }
+  syncSettingsForm();
+}
+
+async function hydrateFromCloud() {
+  if (!window.cloudSync || !window.cloudSync.ready) return;
+  try {
+    const remote = await window.cloudSync.ready;
+    if (!remote) {
+      // Cloud is empty for this Sync ID — seed it with the local state
+      // so future devices using the same ID pull the existing data.
+      const hasAnyLocal = (state.expenses?.length || 0) > 0 || Object.keys(state.budgets || {}).length > 0;
+      if (hasAnyLocal) window.cloudSync.push(state);
+      return;
+    }
+    const remoteTs = Number(remote.lastUpdatedAt) || 0;
+    const localTs = Number(state.lastUpdatedAt) || 0;
+    if (remoteTs > localTs) {
+      replaceStateFromCloud(remote);
+    } else if (localTs > remoteTs) {
+      window.cloudSync.push(state);
+    }
+  } catch (error) {
+    console.warn("[cloud] hydrate failed", error);
+  }
+}
+
+function bindCloudSync() {
+  const input = $("#settings-sync-id");
+  const badge = $("#cloud-status-badge");
+
+  function applyStatus(next) {
+    if (!badge) return;
+    badge.dataset.status = next;
+    badge.className = `cloud-status ${next}`;
+    badge.textContent = formatCloudStatus(next);
+  }
+
+  if (window.cloudSync) {
+    if (input) input.value = window.cloudSync.getDeviceId() || "";
+    applyStatus(window.cloudSync.status());
+    window.addEventListener("cloud-status-change", (event) => applyStatus(event.detail));
+    window.addEventListener("cloud-state-update", (event) => {
+      const remote = event.detail;
+      if (!remote) return;
+      const remoteTs = Number(remote.lastUpdatedAt) || 0;
+      const localTs = Number(state.lastUpdatedAt) || 0;
+      if (remoteTs >= localTs) replaceStateFromCloud(remote);
+    });
+  } else {
+    applyStatus("error");
+  }
+
+  $("#copy-sync-id")?.addEventListener("click", async () => {
+    if (!input?.value) return;
+    try {
+      await navigator.clipboard.writeText(input.value);
+      showToast("Sync ID copied!");
+    } catch {
+      showToast("Could not copy. Long-press to select.", "warning");
+    }
+  });
+
+  $("#apply-sync-id")?.addEventListener("click", async () => {
+    const id = (input?.value || "").trim();
+    if (!id) {
+      showToast("Enter a Sync ID first.", "warning");
+      return;
+    }
+    if (!window.cloudSync) {
+      showToast("Cloud sync not ready.", "warning");
+      return;
+    }
+    showToast("Pulling cloud data\u2026");
+    await window.cloudSync.setDeviceId(id);
+  });
+}
+
+function formatCloudStatus(s) {
+  if (s === "connecting") return "Connecting\u2026";
+  if (s === "syncing") return "Syncing\u2026";
+  if (s === "online") return "Synced";
+  if (s === "error") return "Offline";
+  return s || "Idle";
+}
+
+function syncSettingsForm() {
+  const budget = currentBudget();
+  if ($("#settings-budget")) $("#settings-budget").value = budget.totalBudget || "";
+  if ($("#settings-currency")) $("#settings-currency").value = state.settings.currency || "\u09F3";
+  if ($("#settings-dark")) $("#settings-dark").checked = !!state.settings.darkMode;
+  if ($("#settings-reminder")) $("#settings-reminder").checked = !!state.settings.reminder;
+  if ($("#settings-reminder-time")) $("#settings-reminder-time").value = state.settings.reminderTime || "22:00";
+  if ($("#settings-language")) $("#settings-language").value = state.settings.language || "en";
+  if ($("#settings-sync-id") && window.cloudSync) {
+    $("#settings-sync-id").value = window.cloudSync.getDeviceId() || "";
+  }
 }
 
 function hasCurrentBudget() {
