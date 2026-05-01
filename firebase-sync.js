@@ -34,7 +34,7 @@ const firebaseConfig = {
 
 const DEVICE_KEY = "hisabnikash_device_id";
 const PATH_PREFIX = "users";
-const PUSH_DEBOUNCE_MS = 600;
+const PUSH_DEBOUNCE_MS = 120;
 
 const sessionId = newId("s");
 const statusListeners = new Set();
@@ -126,8 +126,11 @@ async function init() {
 const readyPromise = init();
 
 function flushPush() {
-  pushTimer = null;
-  if (!pendingPush || !currentRef) return;
+  if (pushTimer) {
+    clearTimeout(pushTimer);
+    pushTimer = null;
+  }
+  if (!pendingPush || !currentRef) return Promise.resolve(false);
   const stateToPush = pendingPush;
   pendingPush = null;
   setStatus("syncing");
@@ -136,11 +139,12 @@ function flushPush() {
     _origin: sessionId,
     _updatedAt: Date.now()
   };
-  set(currentRef, payload)
-    .then(() => setStatus("online"))
+  return set(currentRef, payload)
+    .then(() => { setStatus("online"); return true; })
     .catch((error) => {
       console.warn("[cloud] write error", error);
       setStatus("error");
+      throw error;
     });
 }
 
@@ -149,6 +153,39 @@ function push(stateObj) {
   pendingPush = stateObj;
   if (pushTimer) return;
   pushTimer = setTimeout(flushPush, PUSH_DEBOUNCE_MS);
+}
+
+function pushNow(stateObj) {
+  if (stateObj && typeof stateObj === "object") pendingPush = stateObj;
+  return flushPush();
+}
+
+async function pullNow() {
+  if (!currentRef) return null;
+  setStatus("syncing");
+  try {
+    const snapshot = await get(currentRef);
+    const value = snapshot.exists() ? snapshot.val() : null;
+    setStatus("online");
+    if (value && value._origin !== sessionId) {
+      emitRemote(value);
+    } else {
+      lastRemoteSnapshot = value;
+    }
+    return value;
+  } catch (error) {
+    console.warn("[cloud] pull error", error);
+    setStatus("error");
+    throw error;
+  }
+}
+
+async function syncNow(stateObj) {
+  // Push any pending writes (and the supplied state) immediately, then
+  // re-read the cloud snapshot. The caller decides how to reconcile the
+  // returned value against local state via lastUpdatedAt.
+  try { await pushNow(stateObj); } catch { /* surfaced via status */ }
+  return pullNow();
 }
 
 async function setDeviceId(rawId) {
@@ -175,6 +212,9 @@ async function setDeviceId(rawId) {
 window.cloudSync = {
   ready: readyPromise,
   push,
+  pushNow,
+  pullNow,
+  syncNow,
   status: () => status,
   getDeviceId: () => currentDeviceId,
   setDeviceId,

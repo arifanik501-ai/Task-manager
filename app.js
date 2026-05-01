@@ -120,9 +120,37 @@ function init() {
     hydrateFromCloud();
   }, 2000);
 
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("service-worker.js").catch(() => {});
-  }
+  registerServiceWorker();
+}
+
+function registerServiceWorker() {
+  if (!("serviceWorker" in navigator)) return;
+  navigator.serviceWorker.register("service-worker.js").then((registration) => {
+    // Whenever a new SW is detected, ask it to take over immediately.
+    registration.addEventListener("updatefound", () => {
+      const incoming = registration.installing;
+      if (!incoming) return;
+      incoming.addEventListener("statechange", () => {
+        if (incoming.state === "installed" && navigator.serviceWorker.controller) {
+          incoming.postMessage({ type: "SKIP_WAITING" });
+        }
+      });
+    });
+    // Periodically poll for new versions so the user does not stay on a
+    // stale shell after deploys.
+    setTimeout(() => registration.update().catch(() => {}), 4000);
+    setInterval(() => registration.update().catch(() => {}), 60 * 60 * 1000);
+  }).catch(() => {});
+
+  // When a fresh SW takes control we reload exactly once so the new
+  // HTML/CSS/JS is shown without the user pulling-to-refresh.
+  let reloading = false;
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (reloading) return;
+    reloading = true;
+    showToast("Updating to latest version\u2026");
+    setTimeout(() => window.location.reload(), 600);
+  });
 }
 
 function hydrateSvgIcons() {
@@ -156,8 +184,14 @@ function saveState() {
   state.activeMonth = monthKey(new Date());
   state.lastUpdatedAt = Date.now();
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  if (window.cloudSync && typeof window.cloudSync.push === "function") {
-    window.cloudSync.push(state);
+  // Every save fires an immediate cloud write (debounce bypassed) so
+  // adding an expense or updating the budget propagates instantly.
+  if (window.cloudSync) {
+    if (typeof window.cloudSync.pushNow === "function") {
+      window.cloudSync.pushNow(state);
+    } else if (typeof window.cloudSync.push === "function") {
+      window.cloudSync.push(state);
+    }
   }
 }
 
@@ -251,6 +285,34 @@ function bindCloudSync() {
     }
     showToast("Pulling cloud data\u2026");
     await window.cloudSync.setDeviceId(id);
+  });
+
+  $("#sync-now")?.addEventListener("click", async () => {
+    if (!window.cloudSync) {
+      showToast("Cloud sync not ready.", "warning");
+      return;
+    }
+    const button = $("#sync-now");
+    if (button.dataset.busy === "1") return;
+    button.dataset.busy = "1";
+    button.disabled = true;
+    try {
+      const remote = await window.cloudSync.syncNow(state);
+      const remoteTs = Number(remote?.lastUpdatedAt) || 0;
+      const localTs = Number(state.lastUpdatedAt) || 0;
+      if (remote && remoteTs > localTs) {
+        replaceStateFromCloud(remote);
+        showToast("Synced. Newer data pulled from cloud.");
+      } else {
+        showToast("All data synced!");
+      }
+    } catch (error) {
+      console.warn("[cloud] sync now failed", error);
+      showToast("Sync failed. Check your connection.", "warning");
+    } finally {
+      button.dataset.busy = "0";
+      button.disabled = false;
+    }
   });
 }
 
