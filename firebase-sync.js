@@ -141,6 +141,14 @@ function push(stateObj) {
   pushTimer = setTimeout(flushPush, PUSH_DEBOUNCE_MS);
 }
 
+function cancelPending() {
+  if (pushTimer) {
+    clearTimeout(pushTimer);
+    pushTimer = null;
+  }
+  pendingPush = null;
+}
+
 function pushNow(stateObj) {
   if (stateObj && typeof stateObj === "object") pendingPush = stateObj;
   return flushPush();
@@ -180,6 +188,7 @@ window.cloudSync = {
   pushNow,
   pullNow,
   syncNow,
+  cancelPending,
   status: () => status,
   onStatusChange(fn) { statusListeners.add(fn); return () => statusListeners.delete(fn); },
   onRemoteUpdate(fn) { remoteListeners.add(fn); return () => remoteListeners.delete(fn); },

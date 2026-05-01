@@ -205,6 +205,12 @@ function saveState() {
 
 function replaceStateFromCloud(remote) {
   if (!remote || typeof remote !== "object") return;
+  // Drop any in-flight debounced push first: pendingPush still holds a
+  // reference to the *old* state object and would overwrite the newer
+  // remote data we are about to install if we let its timer fire.
+  if (window.cloudSync && typeof window.cloudSync.cancelPending === "function") {
+    window.cloudSync.cancelPending();
+  }
   const cleaned = normalizeState(remote);
   delete cleaned._origin;
   delete cleaned._updatedAt;
