@@ -628,6 +628,40 @@ body:not(.dark) .app-shell {
   will-change: transform;
 }
 
+.onboarding-steps,
+.preset-filters,
+.quick-category-row {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.onboarding-steps::-webkit-scrollbar,
+.preset-filters::-webkit-scrollbar,
+.quick-category-row::-webkit-scrollbar {
+  display: none;
+}
+
+.onboarding-steps span,
+.preset-filters button,
+.quick-category-row button {
+  flex: 0 0 auto;
+  padding: 9px 12px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--primary) 16%, transparent);
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.onboarding-steps span.active,
+.preset-filters button:active,
+.quick-category-row button.active {
+  color: #fff;
+  background: linear-gradient(145deg, var(--primary), var(--secondary));
+}
+
 @media (max-width: 360px) {
   .accent-theme-panel {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -778,10 +812,24 @@ body:not(.dark) .app-shell {
 }
 
 .expense-main strong {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   font-size: 15px;
   font-weight: 800;
   letter-spacing: -.005em;
   line-height: 1.25;
+}
+
+.recurring-badge {
+  flex: 0 0 auto;
+  padding: 2px 6px;
+  color: #fff;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--success) 78%, transparent);
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
 }
 
 .expense-main span,
@@ -815,6 +863,43 @@ body:not(.dark) .app-shell {
   grid-template-columns: repeat(2, 1fr);
   margin-top: 18px;
 }
+
+.insight-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.insight-grid article {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--card);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, .07);
+}
+
+.insight-grid span {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.insight-grid strong {
+  overflow: hidden;
+  font-size: 15px;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.insight-grid .danger strong { color: var(--danger); }
+.insight-grid .warning strong { color: var(--warning); }
+.insight-grid .success strong { color: var(--success); }
 
 .stats-grid > article,
 .report-cards > article {
@@ -1562,6 +1647,13 @@ body:not(.dark) .donut-chart::after {
   letter-spacing: .2px;
 }
 
+.sync-meta {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
 .cloud-sync-actions {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -2091,6 +2183,15 @@ body:not(.dark) .modal-card {
   display: grid;
   justify-items: center;
   gap: 10px;
+}
+
+.empty-state strong {
+  color: var(--text);
+  font-size: 15px;
+}
+
+.empty-state span {
+  font-size: 13px;
 }
 
 .empty-icon {
@@ -3536,6 +3637,12 @@ body.performance-mode .cloud-status.connecting::before,
 body.performance-mode .identity-status[data-status="connecting"] .status-dot,
 body.performance-mode .identity-status[data-status="syncing"] .status-dot {
   animation-play-state: paused !important;
+}
+
+body.performance-mode *,
+body.performance-mode *::before,
+body.performance-mode *::after {
+  animation: none !important;
 }
 
 body.performance-mode .tab-page,
