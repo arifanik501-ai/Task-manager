@@ -38,6 +38,7 @@ body {
   margin: 0;
   min-height: 100vh;
   background: transparent;
+  overflow-x: hidden;
 }
 
 body:not(.dark) {
@@ -2037,6 +2038,8 @@ body.liquid-glass:not(.dark) {
   overflow: hidden;
   pointer-events: none;
   contain: strict;
+  transform: translateZ(0);
+  backface-visibility: hidden;
   background:
     radial-gradient(1200px 800px at 0% -10%, rgba(124, 58, 237, .35), transparent 60%),
     radial-gradient(1000px 700px at 100% 0%, rgba(236, 72, 153, .28), transparent 62%),
@@ -2065,7 +2068,6 @@ body:not(.dark) .liquid-bg {
   filter: blur(80px);
   opacity: .55;
   transform: translate3d(0, 0, 0) rotate(-12deg);
-  will-change: transform;
 }
 
 .liquid-bg .lq-aurora-1 {
@@ -2102,7 +2104,6 @@ body:not(.dark) .liquid-bg .lq-aurora-3 { opacity: .22; }
   border-radius: 50%;
   filter: blur(60px);
   opacity: .55;
-  will-change: transform;
   transform: translate3d(0, 0, 0);
   animation: lqDrift 32s ease-in-out infinite alternate;
 }
@@ -2975,8 +2976,42 @@ body:not(.dark) .liquid-bg .lq-mesh {
     );
   opacity: .75;
   transform: rotate(0deg);
-  will-change: transform;
   animation: lqSilk 140s linear infinite;
+}
+
+@media (hover: none) and (pointer: coarse), (max-width: 480px) {
+  body {
+    background:
+      radial-gradient(1200px 800px at 0% -10%, rgba(124, 58, 237, .35), transparent 60%),
+      radial-gradient(1000px 700px at 100% 0%, rgba(236, 72, 153, .28), transparent 62%),
+      radial-gradient(900px 700px at 80% 100%, rgba(14, 165, 233, .26), transparent 60%),
+      radial-gradient(900px 700px at 10% 100%, rgba(56, 189, 248, .22), transparent 60%),
+      linear-gradient(160deg, #060822 0%, #0a0e2e 30%, #18123e 55%, #0a0e2e 80%, #050717 100%);
+  }
+
+  body:not(.dark) {
+    background:
+      radial-gradient(1200px 800px at 0% -10%, rgba(167, 139, 250, .42), transparent 60%),
+      radial-gradient(1000px 700px at 100% 0%, rgba(244, 114, 182, .32), transparent 62%),
+      radial-gradient(900px 700px at 80% 100%, rgba(56, 189, 248, .32), transparent 60%),
+      radial-gradient(900px 700px at 10% 100%, rgba(125, 211, 252, .28), transparent 60%),
+      linear-gradient(160deg, #f5f3ff 0%, #ecf0ff 30%, #fdf4ff 55%, #eff6ff 80%, #f5f3ff 100%);
+  }
+
+  .liquid-bg {
+    position: absolute;
+    min-height: 100svh;
+  }
+
+  .orb {
+    position: absolute;
+  }
+
+  body.is-touch-scrolling .liquid-bg .lq-silk,
+  body.is-touch-scrolling .liquid-bg .lq-aurora,
+  body.is-touch-scrolling .liquid-bg .lq-orb {
+    animation-play-state: paused;
+  }
 }
 
 body:not(.dark) .liquid-bg .lq-silk {
