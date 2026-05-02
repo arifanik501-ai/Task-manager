@@ -336,10 +336,6 @@ function syncSettingsForm() {
   if ($("#money-amount")) $("#money-amount").value = "";
   if ($("#money-note")) $("#money-note").value = "";
   if ($("#settings-currency")) $("#settings-currency").value = state.settings.currency || "\u09F3";
-  if ($("#settings-dark")) $("#settings-dark").checked = !!state.settings.darkMode;
-  if ($("#settings-reminder")) $("#settings-reminder").checked = !!state.settings.reminder;
-  if ($("#settings-reminder-time")) $("#settings-reminder-time").value = state.settings.reminderTime || "22:00";
-  if ($("#settings-language")) $("#settings-language").value = state.settings.language || "en";
 }
 
 function hasCurrentBudget() {
@@ -629,22 +625,11 @@ function bindSettings() {
     const budget = Number($("#settings-budget").value);
     if (budget > 0) currentBudget().totalBudget = budget;
     state.settings.currency = $("#settings-currency").value.trim() || "৳";
-    state.settings.darkMode = $("#settings-dark").checked;
-    state.settings.reminder = $("#settings-reminder").checked;
-    state.settings.reminderTime = $("#settings-reminder-time").value || "22:00";
-    state.settings.language = $("#settings-language").value;
     state.settings.accentTheme = $(".theme-picker button.active")?.dataset.themePick || state.settings.accentTheme;
     saveState();
     applyTheme();
     renderAll();
-    requestReminderPermission();
     showToast("Settings saved successfully!");
-  });
-
-  $("#settings-dark").addEventListener("change", () => {
-    state.settings.darkMode = $("#settings-dark").checked;
-    saveState();
-    applyTheme();
   });
 
   $$(".theme-picker button").forEach((button) => {
@@ -765,10 +750,6 @@ function syncInputs() {
   $("#settings-currency-prefix").textContent = state.settings.currency;
   $("#settings-budget").value = budget.totalBudget || "";
   $("#settings-currency").value = state.settings.currency;
-  $("#settings-dark").checked = state.settings.darkMode;
-  $("#settings-reminder").checked = state.settings.reminder;
-  $("#settings-reminder-time").value = state.settings.reminderTime;
-  $("#settings-language").value = state.settings.language;
   $$(".theme-picker button").forEach((button) => button.classList.toggle("active", button.dataset.themePick === state.settings.accentTheme));
   updateAmountPreview();
   updateMoneyPreview();
@@ -1248,11 +1229,6 @@ function showSuccessOverlay(expense) {
   $("#success-overlay").classList.remove("hidden");
   clearTimeout(successOverlayTimer);
   successOverlayTimer = setTimeout(() => $("#success-overlay").classList.add("hidden"), 1300);
-}
-
-function requestReminderPermission() {
-  if (!state.settings.reminder || !("Notification" in window)) return;
-  if (Notification.permission === "default") Notification.requestPermission();
 }
 
 function applyTheme() {
