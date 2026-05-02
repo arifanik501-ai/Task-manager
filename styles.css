@@ -3468,6 +3468,67 @@ body.performance-mode .liquid-bg {
   transform: none;
 }
 
+@media (hover: none) and (pointer: coarse), (max-width: 480px) {
+  body.performance-mode,
+  body.performance-mode * {
+    scroll-behavior: auto !important;
+  }
+
+  body.performance-mode .liquid-bg .lq-aurora,
+  body.performance-mode .liquid-bg .lq-orb,
+  body.performance-mode .liquid-bg .lq-silk {
+    display: none;
+  }
+
+  body.performance-mode .liquid-bg {
+    background:
+      radial-gradient(1200px 800px at 0% -10%, rgba(124, 58, 237, .35), transparent 60%),
+      radial-gradient(1000px 700px at 100% 0%, rgba(236, 72, 153, .28), transparent 62%),
+      radial-gradient(900px 700px at 80% 100%, rgba(14, 165, 233, .24), transparent 60%),
+      radial-gradient(900px 700px at 10% 100%, rgba(56, 189, 248, .2), transparent 60%),
+      linear-gradient(160deg, #060822 0%, #0a0e2e 30%, #18123e 55%, #0a0e2e 80%, #050717 100%);
+  }
+
+  body.performance-mode:not(.dark) .liquid-bg {
+    background:
+      radial-gradient(1200px 800px at 0% -10%, rgba(167, 139, 250, .4), transparent 60%),
+      radial-gradient(1000px 700px at 100% 0%, rgba(244, 114, 182, .3), transparent 62%),
+      radial-gradient(900px 700px at 80% 100%, rgba(56, 189, 248, .3), transparent 60%),
+      radial-gradient(900px 700px at 10% 100%, rgba(125, 211, 252, .26), transparent 60%),
+      linear-gradient(160deg, #f5f3ff 0%, #ecf0ff 30%, #fdf4ff 55%, #eff6ff 80%, #f5f3ff 100%);
+  }
+
+  body.performance-mode .bottom-nav,
+  body.performance-mode .icon-button,
+  body.performance-mode .balance-card,
+  body.performance-mode .modal-card,
+  body.performance-mode .filters-panel:not(.hidden),
+  body.performance-mode .success-card,
+  body.performance-mode .undo-toast {
+    -webkit-backdrop-filter: none !important;
+            backdrop-filter: none !important;
+  }
+
+  body.performance-mode .bottom-nav,
+  body.performance-mode .app-shell,
+  body.performance-mode .balance-card,
+  body.performance-mode .summary-section,
+  body.performance-mode .chart-card,
+  body.performance-mode .top-list-card,
+  body.performance-mode .tool-panel,
+  body.performance-mode .quick-actions button,
+  body.performance-mode .expense-card,
+  body.performance-mode .report-cards > article,
+  body.performance-mode .category-row,
+  body.performance-mode .menu-card {
+    box-shadow: 0 8px 20px rgba(15, 23, 42, .08), var(--glass-inner) !important;
+  }
+
+  body.performance-mode .tab-page {
+    content-visibility: visible;
+  }
+}
+
 /* Hover lift on capable devices (no jitter on touch). */
 @media (hover: hover) and (pointer: fine) {
   .more-menu-grid .menu-card:hover {

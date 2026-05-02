@@ -431,7 +431,7 @@ function bindNavigation() {
     state.settings.performanceMode = !state.settings.performanceMode;
     saveState();
     applyTheme();
-    showToast(state.settings.performanceMode ? "Smooth mode enabled." : "Premium animations restored.");
+    showToast(state.settings.performanceMode ? "Smooth mode enabled: fast mobile scroll." : "Premium animations restored.");
   });
 
   $$("[data-open-settings]").forEach((button) => {
@@ -1246,7 +1246,7 @@ function applyTheme() {
     const label = performanceToggle.querySelector("[data-performance-label]");
     const copy = performanceToggle.querySelector("small");
     if (label) label.textContent = state.settings.performanceMode ? "Smooth Mode On" : "Smooth Mode";
-    if (copy) copy.textContent = state.settings.performanceMode ? "Animations paused, RAM/GPU use lower" : "Tap for less RAM and smoother clicks";
+    if (copy) copy.textContent = state.settings.performanceMode ? "Fast scroll, lower RAM/GPU use" : "Tap for less RAM and smoother clicks";
   }
   $$(".theme-picker button").forEach((button) => button.classList.toggle("active", button.dataset.themePick === state.settings.accentTheme));
 }
