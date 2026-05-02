@@ -1275,6 +1275,13 @@ body:not(.dark) .donut-chart::after {
   padding: 12px;
   border: 1px solid var(--line);
   border-radius: 16px;
+  color: #fff;
+  background: rgba(11, 18, 45, .58);
+}
+
+body:not(.dark) .category-row {
+  color: var(--text);
+  background: rgba(255, 255, 255, .82);
 }
 
 .category-row-head {
@@ -1287,6 +1294,10 @@ body:not(.dark) .donut-chart::after {
 .category-row small {
   min-width: 0;
   overflow-wrap: anywhere;
+  color: rgba(255, 255, 255, .78);
+}
+
+body:not(.dark) .category-row small {
   color: var(--muted);
 }
 
@@ -1294,6 +1305,10 @@ body:not(.dark) .donut-chart::after {
   height: 8px;
   overflow: hidden;
   border-radius: 999px;
+  background: rgba(255, 255, 255, .18);
+}
+
+body:not(.dark) .progress-bar {
   background: rgba(127, 127, 127, .14);
 }
 
@@ -2509,6 +2524,7 @@ body.liquid-glass .insight-grid article,
 body.liquid-glass .quick-actions button,
 body.liquid-glass .icon-button,
 body.liquid-glass .expense-card,
+body.liquid-glass .category-row,
 body.liquid-glass .stats-grid > article,
 body.liquid-glass .report-cards > article,
 body.liquid-glass .input-card,
@@ -2539,6 +2555,7 @@ body.liquid-glass.dark .chart-card,
 body.liquid-glass.dark .top-list-card,
 body.liquid-glass.dark .tool-panel,
 body.liquid-glass.dark .insight-grid article,
+body.liquid-glass.dark .category-row,
 body.liquid-glass.dark .stats-grid > article,
 body.liquid-glass.dark .report-cards > article,
 body.liquid-glass.dark .input-card,
@@ -2551,6 +2568,7 @@ body.liquid-glass .chart-card,
 body.liquid-glass .top-list-card,
 body.liquid-glass .tool-panel,
 body.liquid-glass .insight-grid article,
+body.liquid-glass .category-row,
 body.liquid-glass .stats-grid > article,
 body.liquid-glass .report-cards > article,
 body.liquid-glass .input-card,
@@ -2565,6 +2583,7 @@ body.liquid-glass.dark .stats-grid span,
 body.liquid-glass.dark .report-cards span,
 body.liquid-glass.dark .insight-grid span,
 body.liquid-glass.dark .sync-meta,
+body.liquid-glass.dark .category-row small,
 body.liquid-glass.dark .muted,
 body.liquid-glass.dark .expense-main span,
 body.liquid-glass.dark .expense-main small,
@@ -2572,6 +2591,7 @@ body.liquid-glass .stats-grid span,
 body.liquid-glass .report-cards span,
 body.liquid-glass .insight-grid span,
 body.liquid-glass .sync-meta,
+body.liquid-glass .category-row small,
 body.liquid-glass .muted,
 body.liquid-glass .expense-main span,
 body.liquid-glass .expense-main small {
@@ -3143,6 +3163,7 @@ body.liquid-glass .category-pill.active {
   body.liquid-glass .top-list-card,
   body.liquid-glass .tool-panel,
   body.liquid-glass .insight-grid article,
+  body.liquid-glass .category-row,
   body.liquid-glass .stats-grid > article,
   body.liquid-glass .report-cards > article,
   body.liquid-glass .modal-card,
@@ -3156,6 +3177,7 @@ body.liquid-glass .category-pill.active {
   body.liquid-glass:not(.dark) .top-list-card,
   body.liquid-glass:not(.dark) .tool-panel,
   body.liquid-glass:not(.dark) .insight-grid article,
+  body.liquid-glass:not(.dark) .category-row,
   body.liquid-glass:not(.dark) .stats-grid > article,
   body.liquid-glass:not(.dark) .report-cards > article,
   body.liquid-glass:not(.dark) .modal-card,
