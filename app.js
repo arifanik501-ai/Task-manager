@@ -90,9 +90,11 @@ let selectedCategory = CATEGORIES[0].id;
 let currentExpenseId = null;
 let pendingDelete = null;
 let toastTimer = null;
+let successOverlayTimer = null;
 let undoTimer = null;
 let calcExpression = "";
 let amountInputRaw = "";
+let activePage = "home";
 
 document.addEventListener("DOMContentLoaded", init);
 
@@ -442,11 +444,17 @@ function bindNavigation() {
 
   $("#alert-bell").addEventListener("click", () => {
     const alert = $("#budget-alert");
+    const hasAlert = alert.textContent.trim().length > 0;
+    if (!hasAlert) {
+      showToast("No budget alerts right now.");
+      return;
+    }
     alert.classList.toggle("hidden");
   });
 }
 
 function switchPage(page) {
+  activePage = page;
   $$(".tab-page").forEach((tab) => tab.classList.toggle("active", tab.dataset.page === page));
   $$(".nav-button").forEach((button) => button.classList.toggle("active", button.dataset.target === page));
   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -484,13 +492,17 @@ function bindExpenseForm() {
       state.expenses.push(expense);
       showToast("Expense Added Successfully!");
       showSuccessOverlay(expense);
+      saveState();
+      resetExpenseForm();
+      switchPage("home");
+      checkBudgetAlerts();
+      return;
     }
 
     saveState();
     resetExpenseForm();
-    renderAll();
-    checkBudgetAlerts();
     switchPage("home");
+    checkBudgetAlerts();
   });
 
   $("#cancel-edit").addEventListener("click", resetExpenseForm);
@@ -663,8 +675,8 @@ function evaluateExpression(expression) {
 function renderAll() {
   syncInputs();
   renderDashboard();
-  renderHistory();
-  renderReports();
+  if (activePage === "history") renderHistory();
+  if (activePage === "reports") renderReports();
 }
 
 function syncInputs() {
@@ -1031,7 +1043,7 @@ function renderDonut(summary) {
   $("#category-breakdown").innerHTML = summary.categoryRows.map((row, index) => {
     const percent = summary.budget ? Math.min(100, (row.total / summary.budget) * 100) : 0;
     return `
-      <button class="category-row" data-filter-category="${row.id}">
+      <button class="category-row" type="button" data-filter-category="${row.id}">
         <div class="category-row-head">
           <strong class="category-row-title">${svgIcon(row.id)} ${row.name}</strong>
           <strong>${money(row.total)}</strong>
@@ -1169,7 +1181,8 @@ function renderBudgetAlert(summary, percent) {
 function showSuccessOverlay(expense) {
   $("#success-copy").textContent = `${money(expense.amount)} saved to ${expense.categoryName}.`;
   $("#success-overlay").classList.remove("hidden");
-  setTimeout(() => $("#success-overlay").classList.add("hidden"), 1300);
+  clearTimeout(successOverlayTimer);
+  successOverlayTimer = setTimeout(() => $("#success-overlay").classList.add("hidden"), 1300);
 }
 
 function requestReminderPermission() {

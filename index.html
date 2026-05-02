@@ -64,7 +64,7 @@
           <input type="checkbox" id="setup-carry-forward">
           <span>Carry forward last month’s remaining balance</span>
         </label>
-        <button class="primary-button" id="start-tracking">Start Tracking</button>
+        <button class="primary-button" type="button" id="start-tracking">Start Tracking</button>
       </div>
     </section>
 
@@ -75,9 +75,9 @@
           <h1 id="time-greeting">Good Day</h1>
         </div>
         <div class="top-actions">
-          <button class="icon-button bell-button" id="alert-bell" aria-label="Budget alerts"><span class="ui-icon" data-icon="bell"></span><span class="alert-dot hidden" id="alert-dot"></span></button>
-          <button class="avatar-button" data-open-settings="profile" aria-label="Open settings">HN</button>
-          <button class="icon-button" id="theme-toggle" aria-label="Toggle dark mode"><span class="ui-icon" data-icon="moon"></span></button>
+          <button class="icon-button bell-button" type="button" id="alert-bell" aria-label="Budget alerts"><span class="ui-icon" data-icon="bell"></span><span class="alert-dot hidden" id="alert-dot"></span></button>
+          <button class="avatar-button" type="button" data-open-settings="profile" aria-label="Open settings">HN</button>
+          <button class="icon-button" type="button" id="theme-toggle" aria-label="Toggle dark mode"><span class="ui-icon" data-icon="moon"></span></button>
         </div>
       </header>
 
@@ -86,7 +86,7 @@
         <article class="balance-card" id="balance-card">
           <div class="balance-head">
             <span id="balance-month">Current Month</span>
-            <button class="ghost-button compact" data-open-settings="budget">Edit</button>
+            <button class="ghost-button compact" type="button" data-open-settings="budget">Edit</button>
           </div>
           <div class="progress-wrap">
             <svg class="progress-ring" viewBox="0 0 140 140" role="img" aria-label="Budget usage">
@@ -172,7 +172,7 @@
             <span class="ui-icon" data-icon="search"></span>
             <input id="search-expense" type="search" placeholder="Search expenses">
           </label>
-          <button class="icon-button" id="filter-toggle" aria-expanded="false" aria-controls="filters-panel"><span class="ui-icon" data-icon="filter"></span></button>
+          <button class="icon-button" type="button" id="filter-toggle" aria-expanded="false" aria-controls="filters-panel"><span class="ui-icon" data-icon="filter"></span></button>
         </div>
         <div class="filters-panel hidden" id="filters-panel">
           <div class="sheet-handle" aria-hidden="true"></div>
@@ -219,7 +219,7 @@
             <p class="eyebrow" id="expense-form-mode">New Entry</p>
             <h2>Add New Expense</h2>
           </div>
-          <button class="ghost-button compact icon-text" id="open-mini-calculator"><span class="ui-icon" data-icon="calculator"></span>Calculator</button>
+          <button class="ghost-button compact icon-text" type="button" id="open-mini-calculator"><span class="ui-icon" data-icon="calculator"></span>Calculator</button>
         </div>
         <form class="expense-form" id="expense-form">
           <input type="hidden" id="editing-expense-id">
@@ -354,22 +354,22 @@
 
         <p class="more-section-label"><span>Quick Actions</span></p>
         <div class="more-menu more-menu-grid">
-          <button class="menu-card menu-card-violet" data-panel="settings-panel">
+          <button class="menu-card menu-card-violet" type="button" data-panel="settings-panel">
             <span class="menu-icon"><span class="ui-icon" data-icon="settings"></span></span>
             <strong>Settings</strong>
             <small>Budget, currency, theme, reminders</small>
           </button>
-          <button class="menu-card menu-card-orange" id="export-pdf">
+          <button class="menu-card menu-card-orange" type="button" id="export-pdf">
             <span class="menu-icon"><span class="ui-icon" data-icon="print"></span></span>
             <strong>Export PDF</strong>
             <small>Open printable monthly report</small>
           </button>
-          <button class="menu-card menu-card-cyan" id="more-open-calculator">
+          <button class="menu-card menu-card-cyan" type="button" id="more-open-calculator">
             <span class="menu-icon"><span class="ui-icon" data-icon="calculator"></span></span>
             <strong>Calculator</strong>
             <small>Quick math &amp; add as expense</small>
           </button>
-          <button class="menu-card menu-card-emerald" id="more-sync-now">
+          <button class="menu-card menu-card-emerald" type="button" id="more-sync-now">
             <span class="menu-icon"><span class="ui-icon" data-icon="save"></span></span>
             <strong>Sync Now</strong>
             <small>Push &amp; pull latest cloud data</small>
@@ -421,8 +421,8 @@
             </select>
           </label>
           <div class="settings-actions">
-            <button class="primary-button" id="save-settings">Save Settings</button>
-            <button class="danger-button" id="reset-month">Reset Monthly Data</button>
+            <button class="primary-button" type="button" id="save-settings">Save Settings</button>
+            <button class="danger-button" type="button" id="reset-month">Reset Monthly Data</button>
           </div>
           <div class="cloud-sync-card">
             <div class="cloud-sync-head">
@@ -442,7 +442,7 @@
             <p class="eyebrow">Tools</p>
             <h2>Calculator</h2>
           </div>
-          <button class="ghost-button compact" id="calculator-add-result">Add as Expense</button>
+          <button class="ghost-button compact" type="button" id="calculator-add-result">Add as Expense</button>
         </div>
         <section class="tool-panel calculator-tool-panel" id="calculator-panel">
           <div class="calculator">
@@ -456,23 +456,23 @@
       </section>
 
       <nav class="bottom-nav" aria-label="Main navigation">
-        <button class="nav-button active" data-target="home"><span class="ui-icon" data-icon="home"></span><small>Home</small></button>
-        <button class="nav-button" data-target="history"><span class="ui-icon" data-icon="history"></span><small>History</small></button>
-        <button class="nav-button add-nav" data-target="add"><span class="ui-icon" data-icon="add"></span><small>Add</small></button>
-        <button class="nav-button" data-target="reports"><span class="ui-icon" data-icon="chart"></span><small>Reports</small></button>
-        <button class="nav-button" data-target="more"><span class="ui-icon" data-icon="settings"></span><small>More</small></button>
+        <button class="nav-button active" type="button" data-target="home"><span class="ui-icon" data-icon="home"></span><small>Home</small></button>
+        <button class="nav-button" type="button" data-target="history"><span class="ui-icon" data-icon="history"></span><small>History</small></button>
+        <button class="nav-button add-nav" type="button" data-target="add"><span class="ui-icon" data-icon="add"></span><small>Add</small></button>
+        <button class="nav-button" type="button" data-target="reports"><span class="ui-icon" data-icon="chart"></span><small>Reports</small></button>
+        <button class="nav-button" type="button" data-target="more"><span class="ui-icon" data-icon="settings"></span><small>More</small></button>
       </nav>
     </main>
   </div>
 
   <div class="modal hidden" id="expense-modal" role="dialog" aria-modal="true" aria-labelledby="expense-modal-title">
     <div class="modal-card">
-      <button class="modal-close" id="close-expense-modal" aria-label="Close">×</button>
+      <button class="modal-close" type="button" id="close-expense-modal" aria-label="Close">×</button>
       <h3 id="expense-modal-title">Expense Details</h3>
       <div id="expense-details"></div>
       <div class="modal-actions">
-        <button class="ghost-button" id="modal-edit-expense">Edit</button>
-        <button class="danger-button" id="modal-delete-expense">Delete</button>
+        <button class="ghost-button" type="button" id="modal-edit-expense">Edit</button>
+        <button class="danger-button" type="button" id="modal-delete-expense">Delete</button>
       </div>
     </div>
   </div>
@@ -482,8 +482,8 @@
       <h3 id="confirm-title">Are you sure?</h3>
       <p id="confirm-copy">This action cannot be undone.</p>
       <div class="modal-actions">
-        <button class="ghost-button" id="confirm-cancel">Cancel</button>
-        <button class="danger-button" id="confirm-action">Delete</button>
+        <button class="ghost-button" type="button" id="confirm-cancel">Cancel</button>
+        <button class="danger-button" type="button" id="confirm-action">Delete</button>
       </div>
     </div>
   </div>
@@ -497,7 +497,7 @@
   </div>
 
   <div class="toast hidden" id="toast"></div>
-  <button class="undo-toast hidden" id="undo-toast">Expense deleted. <strong>Undo</strong></button>
+  <button class="undo-toast hidden" type="button" id="undo-toast">Expense deleted. <strong>Undo</strong></button>
 
   <script type="module" src="firebase-sync.js"></script>
   <script src="app.js" defer></script>
