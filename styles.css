@@ -649,10 +649,12 @@ body:not(.dark) .app-shell {
   flex: 0 0 auto;
   padding: 9px 12px;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--primary) 16%, transparent);
-  color: var(--text);
+  border: 1px solid color-mix(in srgb, #fff 22%, transparent);
+  background: color-mix(in srgb, var(--primary) 28%, rgba(10, 14, 39, .72));
+  color: #fff;
   font-size: 12px;
   font-weight: 800;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, .28);
 }
 
 .onboarding-steps span.active,
@@ -660,6 +662,15 @@ body:not(.dark) .app-shell {
 .quick-category-row button.active {
   color: #fff;
   background: linear-gradient(145deg, var(--primary), var(--secondary));
+}
+
+body:not(.dark) .onboarding-steps span,
+body:not(.dark) .preset-filters button,
+body:not(.dark) .quick-category-row button {
+  border-color: color-mix(in srgb, var(--primary) 24%, transparent);
+  background: color-mix(in srgb, var(--primary) 12%, #fff);
+  color: var(--text);
+  text-shadow: none;
 }
 
 @media (max-width: 360px) {
@@ -758,10 +769,16 @@ body:not(.dark) .app-shell {
 
 .empty-state {
   padding: 20px;
-  color: var(--muted);
+  color: color-mix(in srgb, #fff 82%, transparent);
   text-align: center;
-  background: rgba(255, 255, 255, .08);
+  background: rgba(10, 14, 39, .42);
+  border: 1px solid rgba(255, 255, 255, .12);
   border-radius: 18px;
+}
+
+body:not(.dark) .empty-state {
+  color: var(--muted);
+  background: rgba(255, 255, 255, .08);
 }
 
 .expense-card {
@@ -878,7 +895,8 @@ body:not(.dark) .app-shell {
   padding: 14px;
   border: 1px solid var(--line);
   border-radius: 20px;
-  background: var(--card);
+  color: var(--text);
+  background: color-mix(in srgb, var(--card) 72%, rgba(10, 14, 39, .64));
   box-shadow: 0 12px 28px rgba(15, 23, 42, .07);
 }
 
@@ -891,6 +909,7 @@ body:not(.dark) .app-shell {
 
 .insight-grid strong {
   overflow: hidden;
+  color: var(--text);
   font-size: 15px;
   font-weight: 800;
   text-overflow: ellipsis;
@@ -900,6 +919,10 @@ body:not(.dark) .app-shell {
 .insight-grid .danger strong { color: var(--danger); }
 .insight-grid .warning strong { color: var(--warning); }
 .insight-grid .success strong { color: var(--success); }
+
+body:not(.dark) .insight-grid article {
+  background: var(--card);
+}
 
 .stats-grid > article,
 .report-cards > article {
@@ -2186,8 +2209,12 @@ body:not(.dark) .modal-card {
 }
 
 .empty-state strong {
-  color: var(--text);
+  color: #fff;
   font-size: 15px;
+}
+
+body:not(.dark) .empty-state strong {
+  color: var(--text);
 }
 
 .empty-state span {
@@ -2478,6 +2505,7 @@ body.liquid-glass .summary-section,
 body.liquid-glass .chart-card,
 body.liquid-glass .top-list-card,
 body.liquid-glass .tool-panel,
+body.liquid-glass .insight-grid article,
 body.liquid-glass .quick-actions button,
 body.liquid-glass .icon-button,
 body.liquid-glass .expense-card,
@@ -2503,6 +2531,52 @@ body.liquid-glass .quick-chip-grid button {
   border: 1px solid var(--glass-edge-soft);
   box-shadow: var(--glass-shadow), var(--glass-inner);
   contain: layout paint;
+}
+
+body.liquid-glass.dark .setup-card,
+body.liquid-glass.dark .summary-section,
+body.liquid-glass.dark .chart-card,
+body.liquid-glass.dark .top-list-card,
+body.liquid-glass.dark .tool-panel,
+body.liquid-glass.dark .insight-grid article,
+body.liquid-glass.dark .stats-grid > article,
+body.liquid-glass.dark .report-cards > article,
+body.liquid-glass.dark .input-card,
+body.liquid-glass.dark .search-box,
+body.liquid-glass.dark .filters-panel:not(.hidden),
+body.liquid-glass.dark .cloud-sync-card,
+body.liquid-glass .setup-card,
+body.liquid-glass .summary-section,
+body.liquid-glass .chart-card,
+body.liquid-glass .top-list-card,
+body.liquid-glass .tool-panel,
+body.liquid-glass .insight-grid article,
+body.liquid-glass .stats-grid > article,
+body.liquid-glass .report-cards > article,
+body.liquid-glass .input-card,
+body.liquid-glass .search-box,
+body.liquid-glass .filters-panel:not(.hidden),
+body.liquid-glass .cloud-sync-card {
+  color: #fff;
+  background: rgba(11, 18, 45, .72);
+}
+
+body.liquid-glass.dark .stats-grid span,
+body.liquid-glass.dark .report-cards span,
+body.liquid-glass.dark .insight-grid span,
+body.liquid-glass.dark .sync-meta,
+body.liquid-glass.dark .muted,
+body.liquid-glass.dark .expense-main span,
+body.liquid-glass.dark .expense-main small,
+body.liquid-glass .stats-grid span,
+body.liquid-glass .report-cards span,
+body.liquid-glass .insight-grid span,
+body.liquid-glass .sync-meta,
+body.liquid-glass .muted,
+body.liquid-glass .expense-main span,
+body.liquid-glass .expense-main small {
+  color: rgba(255, 255, 255, .82);
+  opacity: 1;
 }
 
 /* Heavy backdrop-filter only on the few prominent floating surfaces
@@ -3068,6 +3142,7 @@ body.liquid-glass .category-pill.active {
   body.liquid-glass .chart-card,
   body.liquid-glass .top-list-card,
   body.liquid-glass .tool-panel,
+  body.liquid-glass .insight-grid article,
   body.liquid-glass .stats-grid > article,
   body.liquid-glass .report-cards > article,
   body.liquid-glass .modal-card,
@@ -3080,6 +3155,7 @@ body.liquid-glass .category-pill.active {
   body.liquid-glass:not(.dark) .chart-card,
   body.liquid-glass:not(.dark) .top-list-card,
   body.liquid-glass:not(.dark) .tool-panel,
+  body.liquid-glass:not(.dark) .insight-grid article,
   body.liquid-glass:not(.dark) .stats-grid > article,
   body.liquid-glass:not(.dark) .report-cards > article,
   body.liquid-glass:not(.dark) .modal-card,
