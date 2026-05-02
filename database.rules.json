@@ -1,8 +1,29 @@
 {
   "rules": {
     "shared": {
-      ".read": true,
-      ".write": true
+      "state": {
+        ".read": true,
+        ".write": "newData.exists()",
+        ".validate": "newData.hasChildren(['lastUpdatedAt']) && newData.child('lastUpdatedAt').isNumber() && newData.child('lastUpdatedAt').val() > 0 && newData.child('lastUpdatedAt').val() < (now + 60000)",
+        "_origin": {
+          ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 80)"
+        },
+        "_updatedAt": {
+          ".validate": "!newData.exists() || newData.isNumber()"
+        },
+        "activeMonth": {
+          ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 32)"
+        },
+        "settings": {
+          ".validate": "!newData.exists() || newData.hasChildren()"
+        },
+        "budgets": {
+          ".validate": "!newData.exists() || newData.hasChildren()"
+        },
+        "expenses": {
+          ".validate": "!newData.exists() || newData.hasChildren()"
+        }
+      }
     }
   }
 }
