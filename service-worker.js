@@ -9,7 +9,10 @@ const ASSETS = [
   "./app.js",
   "./firebase-sync.js",
   "./manifest.json",
-  "./icon.svg"
+  "./icon.svg",
+  "./app-logo.png",
+  "./app-logo-192.png",
+  "./app-logo-512.png"
 ];
 
 self.addEventListener("install", (event) => {
