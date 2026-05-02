@@ -35,16 +35,13 @@
     <section class="splash-screen" id="splash-screen" aria-live="polite">
       <img class="logo-mark" src="app-logo.png" alt="হিসাব logo">
       <h1>হিসাব</h1>
-      <p>Every Taka Counts</p>
       <div class="splash-loader" aria-hidden="true"></div>
     </section>
 
     <section class="setup-screen hidden" id="setup-screen" aria-labelledby="setup-title">
       <div class="setup-card">
         <img class="logo-mark small" src="app-logo.png" alt="হিসাব logo">
-        <p class="eyebrow">Welcome</p>
         <h2 id="setup-title">Set Your Monthly Budget</h2>
-        <p class="muted">Start the month with a budget. You can edit it anytime from settings.</p>
         <label class="input-card">
           <span>Enter Your Monthly Budget</span>
           <div class="currency-input">
@@ -372,7 +369,6 @@
           <img class="identity-glyph" src="app-logo-192.png" alt="" aria-hidden="true">
           <div class="identity-meta">
             <strong>হিসাব</strong>
-            <span>Premium expense tracker · v1.0</span>
           </div>
           <div class="identity-status" id="more-cloud-status" data-status="connecting" aria-live="polite">
             <span class="status-dot" aria-hidden="true"></span>
@@ -380,17 +376,14 @@
           </div>
         </article>
 
-        <p class="more-section-label"><span>Quick Actions</span></p>
         <div class="more-menu more-menu-grid">
           <button class="menu-card menu-card-violet" type="button" data-panel="settings-panel">
             <span class="menu-icon"><span class="ui-icon" data-icon="settings"></span></span>
             <strong>Settings</strong>
-            <small>Budget, currency, sync and reset</small>
           </button>
           <button class="menu-card menu-card-palette" type="button" id="accent-toggle" aria-expanded="false" aria-controls="accent-palette">
             <span class="menu-icon"><span class="ui-icon" data-icon="palette"></span></span>
             <strong>Accent Colors</strong>
-            <small>Tap to show 20+ themes</small>
             <span class="accent-preview-strip" aria-hidden="true">
               <i></i><i></i><i></i><i></i>
             </span>
@@ -423,28 +416,23 @@
           <button class="menu-card menu-card-orange" type="button" id="export-pdf">
             <span class="menu-icon"><span class="ui-icon" data-icon="print"></span></span>
             <strong>Export PDF</strong>
-            <small>Open printable monthly report</small>
           </button>
           <button class="menu-card menu-card-cyan" type="button" id="more-open-calculator">
             <span class="menu-icon"><span class="ui-icon" data-icon="calculator"></span></span>
             <strong>Calculator</strong>
-            <small>Quick math &amp; add as expense</small>
           </button>
           <button class="menu-card menu-card-emerald" type="button" id="more-sync-now">
             <span class="menu-icon"><span class="ui-icon" data-icon="save"></span></span>
             <strong>Sync Now</strong>
-            <small>Push &amp; pull latest cloud data</small>
           </button>
           <button class="menu-card menu-card-performance" type="button" id="performance-toggle" aria-pressed="false">
             <span class="menu-icon"><span class="ui-icon" data-icon="check"></span></span>
             <strong data-performance-label>Smooth Mode</strong>
-            <small>Tap for less RAM and smoother clicks</small>
           </button>
         </div>
 
-        <p class="more-section-label"><span>Preferences</span></p>
         <section class="tool-panel" id="settings-panel">
-          <h3>Settings & Preferences</h3>
+          <h3>Settings</h3>
           <label class="input-card">
             <span>Edit Monthly Budget</span>
             <div class="currency-input">
@@ -465,10 +453,8 @@
               <strong>Cloud Sync</strong>
               <span id="cloud-status-badge" class="cloud-status connecting" data-status="connecting">Connecting…</span>
             </div>
-            <p class="muted small">Every change is saved to a shared cloud bucket, so every device that opens this app sees and edits the exact same data.</p>
             <button class="primary-button cloud-sync-now" type="button" id="sync-now"><span class="ui-icon" data-icon="save"></span>Sync Now</button>
           </div>
-          <p class="about-copy">হিসাব v1.0. Data is shared with every device that opens this app.</p>
         </section>
       </section>
 

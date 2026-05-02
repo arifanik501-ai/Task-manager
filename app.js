@@ -1267,9 +1267,7 @@ function applyTheme() {
     performanceToggle.classList.toggle("active", !!state.settings.performanceMode);
     performanceToggle.setAttribute("aria-pressed", String(!!state.settings.performanceMode));
     const label = performanceToggle.querySelector("[data-performance-label]");
-    const copy = performanceToggle.querySelector("small");
     if (label) label.textContent = state.settings.performanceMode ? "Smooth Mode On" : "Smooth Mode";
-    if (copy) copy.textContent = state.settings.performanceMode ? "Fast scroll, lower RAM/GPU use" : "Tap for less RAM and smoother clicks";
   }
   $$(".theme-picker button").forEach((button) => button.classList.toggle("active", button.dataset.themePick === state.settings.accentTheme));
 }
