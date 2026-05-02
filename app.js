@@ -80,7 +80,8 @@ const defaultState = {
     reminder: false,
     reminderTime: "22:00",
     language: "en",
-    accentTheme: "royal"
+    accentTheme: "royal",
+    performanceMode: false
   },
   activeMonth: monthKey(new Date())
 };
@@ -405,6 +406,13 @@ function bindNavigation() {
     state.settings.darkMode = !state.settings.darkMode;
     saveState();
     applyTheme();
+  });
+
+  $("#performance-toggle")?.addEventListener("click", () => {
+    state.settings.performanceMode = !state.settings.performanceMode;
+    saveState();
+    applyTheme();
+    showToast(state.settings.performanceMode ? "Smooth mode enabled." : "Premium animations restored.");
   });
 
   $$("[data-open-settings]").forEach((button) => {
@@ -1217,7 +1225,17 @@ function applyTheme() {
   document.documentElement.style.setProperty("--secondary", theme.secondary);
   document.documentElement.style.setProperty("--accent", theme.accent);
   document.body.classList.toggle("dark", state.settings.darkMode);
+  document.body.classList.toggle("performance-mode", !!state.settings.performanceMode);
   $("#theme-toggle").innerHTML = svgIcon(state.settings.darkMode ? "sun" : "moon", "ui-icon");
+  const performanceToggle = $("#performance-toggle");
+  if (performanceToggle) {
+    performanceToggle.classList.toggle("active", !!state.settings.performanceMode);
+    performanceToggle.setAttribute("aria-pressed", String(!!state.settings.performanceMode));
+    const label = performanceToggle.querySelector("[data-performance-label]");
+    const copy = performanceToggle.querySelector("small");
+    if (label) label.textContent = state.settings.performanceMode ? "Smooth Mode On" : "Smooth Mode";
+    if (copy) copy.textContent = state.settings.performanceMode ? "Animations paused, RAM/GPU use lower" : "Tap for less RAM and smoother clicks";
+  }
   $$(".theme-picker button").forEach((button) => button.classList.toggle("active", button.dataset.themePick === state.settings.accentTheme));
 }
 
