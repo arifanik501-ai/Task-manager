@@ -23,6 +23,7 @@ const ICON_PATHS = {
   search: '<circle cx="10.5" cy="10.5" r="5.5"/><path d="m15 15 5 5"/>',
   filter: '<path d="M4 6h16M7 12h10M10 18h4"/>',
   save: '<path d="M5 5h12l2 2v12H5z"/><path d="M8 5v6h8V5M8 19v-5h8v5"/>',
+  wallet: '<path d="M4 7h15a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4z"/><path d="M4 7V5a2 2 0 0 1 2-2h11v4M16 13h5"/>',
   file: '<path d="M7 3h7l4 4v14H7z"/><path d="M14 3v5h5M9 13h6M9 17h6"/>',
   print: '<path d="M7 8V3h10v5M7 17H5v-6h14v6h-2"/><path d="M7 14h10v7H7z"/>',
   backspace: '<path d="M20 6H9l-5 6 5 6h11z"/><path d="m12 10 4 4m0-4-4 4"/>',
@@ -332,6 +333,8 @@ function formatCloudStatus(s) {
 function syncSettingsForm() {
   const budget = currentBudget();
   if ($("#settings-budget")) $("#settings-budget").value = budget.totalBudget || "";
+  if ($("#money-amount")) $("#money-amount").value = "";
+  if ($("#money-note")) $("#money-note").value = "";
   if ($("#settings-currency")) $("#settings-currency").value = state.settings.currency || "\u09F3";
   if ($("#settings-dark")) $("#settings-dark").checked = !!state.settings.darkMode;
   if ($("#settings-reminder")) $("#settings-reminder").checked = !!state.settings.reminder;
@@ -364,6 +367,26 @@ function setBudget(amount, carryForward = false) {
     createdDate: toDateInput(new Date())
   };
   saveState();
+}
+
+function addMoney(amount, note = "") {
+  const budget = currentBudget();
+  const value = roundMoney(Math.max(0, Number(amount) || 0));
+  if (!value) return false;
+  budget.totalBudget = roundMoney((Number(budget.totalBudget) || 0) + value);
+  budget.moneyAdds = [
+    ...(Array.isArray(budget.moneyAdds) ? budget.moneyAdds : []),
+    {
+      id: createId(),
+      amount: value,
+      note: note.trim(),
+      date: toDateInput(new Date()),
+      time: `${String(new Date().getHours()).padStart(2, "0")}:${String(new Date().getMinutes()).padStart(2, "0")}`,
+      createdAt: new Date().toISOString()
+    }
+  ];
+  saveState();
+  return true;
 }
 
 function getPreviousMonthRemaining() {
@@ -486,7 +509,7 @@ function switchPage(page) {
   activePage = page;
   $$(".tab-page").forEach((tab) => tab.classList.toggle("active", tab.dataset.page === page));
   $$(".nav-button").forEach((button) => button.classList.toggle("active", button.dataset.target === page));
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  window.scrollTo({ top: 0, behavior: state.settings.performanceMode ? "auto" : "smooth" });
   if (page === "add" && !$("#editing-expense-id").value) setCurrentDateTime();
   syncAmountRawFromInput();
   renderAll();
@@ -564,6 +587,22 @@ function bindExpenseForm() {
     if (!button) return;
     handleAmountKey(button.dataset.amountKey);
   });
+
+  $("#add-money-form")?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const amount = Number($("#money-amount").value);
+    if (!addMoney(amount, $("#money-note").value)) {
+      showToast("Enter a valid money amount.", "warning");
+      return;
+    }
+    $("#money-amount").value = "";
+    $("#money-note").value = "";
+    updateMoneyPreview();
+    switchPage("home");
+    showToast("Money added to this month.");
+  });
+
+  $("#money-amount")?.addEventListener("input", updateMoneyPreview);
 }
 
 function bindFilters() {
@@ -685,6 +724,11 @@ function updateAmountPreview() {
   $("#amount-preview").textContent = money(amount);
 }
 
+function updateMoneyPreview() {
+  const amount = Number($("#money-amount")?.value) || 0;
+  $("#money-preview").textContent = money(amount);
+}
+
 function syncAmountRawFromInput() {
   amountInputRaw = $("#expense-amount").value;
 }
@@ -717,6 +761,7 @@ function syncInputs() {
   if (!$("#report-month").value) $("#report-month").value = currentMonth;
   $("#setup-currency").textContent = state.settings.currency;
   $("#expense-currency").textContent = state.settings.currency;
+  $("#money-currency").textContent = state.settings.currency;
   $("#settings-currency-prefix").textContent = state.settings.currency;
   $("#settings-budget").value = budget.totalBudget || "";
   $("#settings-currency").value = state.settings.currency;
@@ -726,6 +771,7 @@ function syncInputs() {
   $("#settings-language").value = state.settings.language;
   $$(".theme-picker button").forEach((button) => button.classList.toggle("active", button.dataset.themePick === state.settings.accentTheme));
   updateAmountPreview();
+  updateMoneyPreview();
 }
 
 function renderDashboard() {
@@ -841,23 +887,29 @@ function expenseCardHtml(expense) {
 function bindExpenseCards(container) {
   container.querySelectorAll(".expense-card").forEach((card) => {
     let startX = 0;
+    let startY = 0;
+    let isHorizontalSwipe = false;
     card.addEventListener("click", () => openExpenseModal(card.dataset.expenseId));
     card.addEventListener("keydown", (event) => {
       if (event.key === "Enter") openExpenseModal(card.dataset.expenseId);
     });
     card.addEventListener("touchstart", (event) => {
       startX = event.touches[0].clientX;
+      startY = event.touches[0].clientY;
+      isHorizontalSwipe = false;
     }, { passive: true });
     card.addEventListener("touchmove", (event) => {
       const diff = event.touches[0].clientX - startX;
+      const verticalDiff = Math.abs(event.touches[0].clientY - startY);
+      if (Math.abs(diff) > 18 && Math.abs(diff) > verticalDiff * 1.4) isHorizontalSwipe = true;
+      if (!isHorizontalSwipe) return;
       card.classList.toggle("swiping-left", diff < -45);
-      card.classList.toggle("swiping-right", diff > 45);
     }, { passive: true });
     card.addEventListener("touchend", (event) => {
       const diff = event.changedTouches[0].clientX - startX;
-      card.classList.remove("swiping-left", "swiping-right");
-      if (diff < -80) requestDelete(card.dataset.expenseId);
-      if (diff > 80) duplicateExpense(card.dataset.expenseId);
+      const verticalDiff = Math.abs(event.changedTouches[0].clientY - startY);
+      card.classList.remove("swiping-left");
+      if (isHorizontalSwipe && Math.abs(diff) > verticalDiff * 1.4 && diff < -80) requestDelete(card.dataset.expenseId);
     });
   });
 }
@@ -938,22 +990,6 @@ function deleteExpense(id) {
     $("#undo-toast").classList.add("hidden");
     pendingDelete = null;
   }, 5000);
-}
-
-function duplicateExpense(id) {
-  const expense = state.expenses.find((item) => item.id === id);
-  if (!expense) return;
-  const copy = {
-    ...expense,
-    id: createId(),
-    date: toDateInput(new Date()),
-    time: `${String(new Date().getHours()).padStart(2, "0")}:${String(new Date().getMinutes()).padStart(2, "0")}`,
-    createdAt: new Date().toISOString()
-  };
-  state.expenses.push(copy);
-  saveState();
-  renderAll();
-  showToast("Expense duplicated.");
 }
 
 function undoDelete() {

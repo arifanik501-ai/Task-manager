@@ -66,7 +66,7 @@ button {
 button:active,
 .category-pill:active,
 .expense-card:active {
-  transform: scale(.96);
+  transform: scale(.98);
 }
 
 .hidden {
@@ -423,6 +423,12 @@ body:not(.dark) .app-shell {
   opacity: .92;
 }
 
+.balance-actions {
+  display: inline-flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
 .ghost-button,
 .primary-button,
 .danger-button {
@@ -594,13 +600,13 @@ body:not(.dark) .app-shell {
 
 .quick-actions {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 10px;
   margin-top: 18px;
 }
 
 .quick-actions button {
-  min-height: 90px;
+  min-height: 86px;
   display: grid;
   gap: 8px;
   place-items: center;
@@ -616,6 +622,18 @@ body:not(.dark) .app-shell {
   transform: translateZ(0);
   transition: transform .18s ease, box-shadow .18s ease;
   will-change: transform;
+}
+
+@media (max-width: 360px) {
+  .quick-actions {
+    gap: 8px;
+  }
+
+  .quick-actions button {
+    min-height: 78px;
+    padding: 12px 6px;
+    border-radius: 20px;
+  }
 }
 
 .quick-actions button strong {
@@ -723,10 +741,6 @@ body:not(.dark) .app-shell {
 
 .expense-card.swiping-left {
   transform: translateX(-86px);
-}
-
-.expense-card.swiping-right {
-  transform: translateX(86px);
 }
 
 .expense-icon,
@@ -2811,8 +2825,7 @@ body.liquid-glass .category-pill.active {
   button:active,
   .category-pill:active,
   .expense-card:active,
-  .expense-card.swiping-left,
-  .expense-card.swiping-right {
+  .expense-card.swiping-left {
     transform: none !important;
   }
 }
