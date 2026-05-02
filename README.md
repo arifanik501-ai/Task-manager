@@ -1,6 +1,6 @@
-# HisabNikash
+# হিসাব
 
-HisabNikash is a mobile-first monthly expense tracker built with HTML, CSS, and vanilla JavaScript.
+হিসাব is a mobile-first monthly expense tracker built with HTML, CSS, and vanilla JavaScript.
 
 ## Features
 

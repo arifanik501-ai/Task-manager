@@ -1202,14 +1202,14 @@ function exportPdf() {
     return;
   }
   win.document.write(`
-    <html><head><title>HisabNikash Report</title><style>
+    <html><head><title>হিসাব Report</title><style>
       body{font-family:"Plus Jakarta Sans",Arial,sans-serif;padding:24px;color:#212121}
       h1{color:#4CAF50;font-family:"Times New Roman",Times,serif;text-align:center} table{width:100%;border-collapse:collapse;margin-top:18px}
       td,th{border:1px solid #ddd;padding:8px;text-align:left;vertical-align:top}
       .summary{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
       .summary div{padding:14px;border:1px solid #ddd;border-radius:12px}
     </style></head><body>
-      <h1>HisabNikash Monthly Report - ${monthLabelFromKey(summary.key)}</h1>
+      <h1>হিসাব Monthly Report - ${monthLabelFromKey(summary.key)}</h1>
       <div class="summary">
         <div><strong>Budget</strong><br>${money(summary.budget)}</div>
         <div><strong>Spent</strong><br>${money(summary.spent)}</div>
