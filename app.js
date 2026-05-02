@@ -95,6 +95,7 @@ let undoTimer = null;
 let calcExpression = "";
 let amountInputRaw = "";
 let activePage = "home";
+let touchScrollTimer = null;
 
 document.addEventListener("DOMContentLoaded", init);
 
@@ -107,6 +108,7 @@ function init() {
   bindSettings();
   bindCalculator();
   bindCloudSync();
+  bindTouchScrollStabilizer();
   renderCategories();
   applyTheme();
   setCurrentDateTime();
@@ -451,6 +453,25 @@ function bindNavigation() {
     }
     alert.classList.toggle("hidden");
   });
+}
+
+function bindTouchScrollStabilizer() {
+  if (!window.matchMedia("(hover: none) and (pointer: coarse)").matches) return;
+
+  window.addEventListener("touchmove", () => {
+    document.body.classList.add("is-touch-scrolling");
+    clearTimeout(touchScrollTimer);
+    touchScrollTimer = setTimeout(() => {
+      document.body.classList.remove("is-touch-scrolling");
+    }, 140);
+  }, { passive: true });
+
+  window.addEventListener("touchend", () => {
+    clearTimeout(touchScrollTimer);
+    touchScrollTimer = setTimeout(() => {
+      document.body.classList.remove("is-touch-scrolling");
+    }, 180);
+  }, { passive: true });
 }
 
 function switchPage(page) {
