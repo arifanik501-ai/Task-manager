@@ -86,7 +86,10 @@
         <article class="balance-card" id="balance-card">
           <div class="balance-head">
             <span id="balance-month">Current Month</span>
-            <button class="ghost-button compact" type="button" data-open-settings="budget">Edit</button>
+            <div class="balance-actions">
+              <button class="ghost-button compact" type="button" data-quick-target="add-money">Add Money</button>
+              <button class="ghost-button compact" type="button" data-open-settings="budget">Edit</button>
+            </div>
           </div>
           <div class="progress-wrap">
             <svg class="progress-ring" viewBox="0 0 140 140" role="img" aria-label="Budget usage">
@@ -117,6 +120,7 @@
 
         <section class="quick-actions" aria-label="Quick actions">
           <button type="button" data-quick-target="add"><span class="ui-icon" data-icon="add"></span><strong>Add</strong></button>
+          <button type="button" data-quick-target="add-money"><span class="ui-icon" data-icon="wallet"></span><strong>Money</strong></button>
           <button type="button" data-quick-target="reports"><span class="ui-icon" data-icon="chart"></span><strong>Reports</strong></button>
           <button type="button" data-quick-target="calculator"><span class="ui-icon" data-icon="calculator"></span><strong>Calc</strong></button>
         </section>
@@ -272,6 +276,30 @@
             <button class="ghost-button hidden" type="button" id="cancel-edit">Cancel Edit</button>
             <button class="primary-button" type="submit" id="save-expense"><span class="ui-icon" data-icon="save"></span>Save Expense</button>
           </div>
+        </form>
+      </section>
+
+      <section class="tab-page" id="add-money-page" data-page="add-money">
+        <div class="page-title">
+          <div>
+            <p class="eyebrow">Current Month</p>
+            <h2>Add Money</h2>
+          </div>
+        </div>
+        <form class="expense-form" id="add-money-form">
+          <label class="input-card amount-card">
+            <span>Add to this month</span>
+            <div class="amount-preview" id="money-preview">৳0</div>
+            <div class="currency-input">
+              <strong id="money-currency">৳</strong>
+              <input id="money-amount" type="number" inputmode="decimal" min="0" step="0.01" placeholder="0" required autocomplete="off">
+            </div>
+          </label>
+          <label class="input-card">
+            <span>Note (optional)</span>
+            <input id="money-note" type="text" maxlength="80" placeholder="Salary, bonus, savings">
+          </label>
+          <button class="primary-button" type="submit" id="save-money"><span class="ui-icon" data-icon="wallet"></span>Add Money</button>
         </form>
       </section>
 
