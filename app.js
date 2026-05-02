@@ -450,6 +450,13 @@ function bindNavigation() {
     showToast(state.settings.performanceMode ? "Smooth mode enabled: fast mobile scroll." : "Premium animations restored.");
   });
 
+  $("#accent-toggle")?.addEventListener("click", () => {
+    const palette = $("#accent-palette");
+    const isOpening = palette.classList.contains("hidden");
+    palette.classList.toggle("hidden", !isOpening);
+    $("#accent-toggle").setAttribute("aria-expanded", String(isOpening));
+  });
+
   $$("[data-open-settings]").forEach((button) => {
     button.addEventListener("click", () => {
       switchPage("more");
