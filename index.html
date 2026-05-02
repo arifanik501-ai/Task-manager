@@ -42,6 +42,12 @@
       <div class="setup-card">
         <img class="logo-mark small" src="app-logo.png" alt="হিসাব logo">
         <h2 id="setup-title">Set Your Monthly Budget</h2>
+        <div class="onboarding-steps" aria-label="Onboarding steps">
+          <span class="active">১. বাজেট</span>
+          <span>২. ক্যাটাগরি</span>
+          <span>৩. প্রথম খরচ</span>
+        </div>
+        <p class="muted">আগে মাসিক বাজেট সেট করুন। এরপর ক্যাটাগরি বেছে প্রথম খরচ যোগ করুন।</p>
         <label class="input-card">
           <span>Enter Your Monthly Budget</span>
           <div class="currency-input">
@@ -158,6 +164,7 @@
           </div>
           <div class="mini-chart" id="mini-spending-chart" aria-label="Last seven daily spending bars"></div>
         </section>
+        <section class="insight-grid" id="dashboard-insights"></section>
       </section>
 
       <section class="tab-page" id="history-page" data-page="history">
@@ -174,6 +181,12 @@
             <input id="search-expense" type="search" placeholder="Search expenses">
           </label>
           <button class="icon-button" type="button" id="filter-toggle" aria-expanded="false" aria-controls="filters-panel"><span class="ui-icon" data-icon="filter"></span></button>
+        </div>
+        <div class="preset-filters" aria-label="Preset filters">
+          <button type="button" data-filter-preset="today">Today</button>
+          <button type="button" data-filter-preset="week">7 Days</button>
+          <button type="button" data-filter-preset="high">High</button>
+          <button type="button" data-filter-preset="clear">Clear</button>
         </div>
         <div class="filters-panel hidden" id="filters-panel">
           <div class="sheet-handle" aria-hidden="true"></div>
@@ -253,6 +266,7 @@
               <h3>Category</h3>
               <span id="selected-category-name">Food & Meals</span>
             </div>
+            <div class="quick-category-row" id="quick-category-row" aria-label="Quick categories"></div>
             <div class="category-grid" id="category-grid"></div>
           </div>
           <label class="input-card">
@@ -326,6 +340,7 @@
             <strong id="report-average">৳0</strong>
           </article>
         </section>
+        <section class="insight-grid" id="report-insights"></section>
         <section class="chart-card">
           <div class="section-head">
             <h3>Category Breakdown</h3>
@@ -453,7 +468,15 @@
               <strong>Cloud Sync</strong>
               <span id="cloud-status-badge" class="cloud-status connecting" data-status="connecting">Connecting…</span>
             </div>
+            <p class="sync-meta" id="last-sync-time">Last synced: —</p>
             <button class="primary-button cloud-sync-now" type="button" id="sync-now"><span class="ui-icon" data-icon="save"></span>Sync Now</button>
+          </div>
+          <div class="settings-actions">
+            <button class="ghost-button" type="button" id="backup-data">Backup Data</button>
+            <button class="ghost-button" type="button" id="restore-data">Restore Data</button>
+            <button class="ghost-button" type="button" id="language-toggle">Language: বাংলা</button>
+            <button class="ghost-button" type="button" id="security-toggle">Security Lock: Off</button>
+            <input class="hidden" id="restore-data-file" type="file" accept="application/json">
           </div>
         </section>
       </section>

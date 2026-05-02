@@ -98,7 +98,9 @@ const defaultState = {
     reminderTime: "22:00",
     language: "en",
     accentTheme: "royal",
-    performanceMode: false
+    performanceMode: false,
+    lastUsedCategory: "food",
+    securityLock: false
   },
   activeMonth: monthKey(new Date())
 };
@@ -326,6 +328,9 @@ function bindCloudSync() {
         replaceStateFromCloud(remote);
         showToast("Synced. Newer data pulled from cloud.");
       } else {
+        state.settings.lastSyncedAt = Date.now();
+        saveState();
+        updateLastSyncTime();
         showToast("All data synced!");
       }
     } catch (error) {
@@ -344,6 +349,13 @@ function formatCloudStatus(s) {
   if (s === "online") return "Synced";
   if (s === "error") return "Offline";
   return s || "Idle";
+}
+
+function updateLastSyncTime() {
+  const target = $("#last-sync-time");
+  if (!target) return;
+  const ts = Number(state.settings.lastSyncedAt) || Number(state.lastUpdatedAt) || 0;
+  target.textContent = ts ? `Last synced: ${new Date(ts).toLocaleString([], { dateStyle: "medium", timeStyle: "short" })}` : "Last synced: —";
 }
 
 function syncSettingsForm() {
@@ -460,13 +472,13 @@ function bindNavigation() {
   $$("[data-open-settings]").forEach((button) => {
     button.addEventListener("click", () => {
       switchPage("more");
-      $("#settings-panel").scrollIntoView({ behavior: "smooth", block: "start" });
+      $("#settings-panel").scrollIntoView({ behavior: state.settings.performanceMode ? "auto" : "smooth", block: "start" });
     });
   });
 
   $$(".menu-card[data-panel]").forEach((button) => {
     button.addEventListener("click", () => {
-      $(`#${button.dataset.panel}`).scrollIntoView({ behavior: "smooth", block: "start" });
+      $(`#${button.dataset.panel}`).scrollIntoView({ behavior: state.settings.performanceMode ? "auto" : "smooth", block: "start" });
     });
   });
 
@@ -481,17 +493,17 @@ function bindNavigation() {
   $("#more-sync-now")?.addEventListener("click", () => {
     switchPage("more");
     const cloudCard = $(".cloud-sync-card");
-    if (cloudCard) cloudCard.scrollIntoView({ behavior: "smooth", block: "center" });
+    if (cloudCard) cloudCard.scrollIntoView({ behavior: state.settings.performanceMode ? "auto" : "smooth", block: "center" });
     $("#sync-now")?.click();
   });
 
-  $$(".quick-actions [data-quick-target]").forEach((button) => {
-    button.addEventListener("click", () => {
-      switchPage(button.dataset.quickTarget);
-      if (button.dataset.panelTarget) {
-        $(`#${button.dataset.panelTarget}`).scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-    });
+  document.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-quick-target]");
+    if (!button) return;
+    switchPage(button.dataset.quickTarget);
+    if (button.dataset.panelTarget) {
+      $(`#${button.dataset.panelTarget}`).scrollIntoView({ behavior: state.settings.performanceMode ? "auto" : "smooth", block: "start" });
+    }
   });
 
   $("#alert-bell").addEventListener("click", () => {
@@ -529,7 +541,11 @@ function switchPage(page) {
   $$(".tab-page").forEach((tab) => tab.classList.toggle("active", tab.dataset.page === page));
   $$(".nav-button").forEach((button) => button.classList.toggle("active", button.dataset.target === page));
   window.scrollTo({ top: 0, behavior: state.settings.performanceMode ? "auto" : "smooth" });
-  if (page === "add" && !$("#editing-expense-id").value) setCurrentDateTime();
+  if (page === "add" && !$("#editing-expense-id").value) {
+    setCurrentDateTime();
+    selectCategory(state.settings.lastUsedCategory || CATEGORIES[0].id);
+    requestAnimationFrame(() => $("#expense-amount").focus({ preventScroll: true }));
+  }
   syncAmountRawFromInput();
   renderAll();
 }
@@ -561,6 +577,7 @@ function bindExpenseForm() {
       showToast("Expense updated successfully!");
     } else {
       state.expenses.push(expense);
+      state.settings.lastUsedCategory = category.id;
       showToast("Expense Added Successfully!");
       showSuccessOverlay(expense);
       saveState();
@@ -640,6 +657,10 @@ function bindFilters() {
     $(`#${id}`).addEventListener("input", renderHistory);
   });
 
+  $$(".preset-filters [data-filter-preset]").forEach((button) => {
+    button.addEventListener("click", () => applyFilterPreset(button.dataset.filterPreset));
+  });
+
   $("#report-month").addEventListener("input", renderReports);
 }
 
@@ -669,6 +690,22 @@ function bindSettings() {
     $("#confirm-copy").textContent = "This will clear all expenses for the current month and reset the budget.";
     $("#confirm-action").textContent = "Reset";
     $("#confirm-modal").classList.remove("hidden");
+  });
+
+  $("#backup-data")?.addEventListener("click", backupData);
+  $("#restore-data")?.addEventListener("click", () => $("#restore-data-file").click());
+  $("#restore-data-file")?.addEventListener("change", restoreData);
+  $("#language-toggle")?.addEventListener("click", () => {
+    state.settings.language = state.settings.language === "bn" ? "en" : "bn";
+    saveState();
+    syncInputs();
+    showToast(`Language set to ${state.settings.language === "bn" ? "বাংলা" : "English"}.`);
+  });
+  $("#security-toggle")?.addEventListener("click", () => {
+    state.settings.securityLock = !state.settings.securityLock;
+    saveState();
+    syncInputs();
+    showToast(state.settings.securityLock ? "Security lock enabled." : "Security lock disabled.");
   });
 
   $("#export-pdf").addEventListener("click", exportPdf);
@@ -773,7 +810,10 @@ function syncInputs() {
   $("#settings-currency-prefix").textContent = state.settings.currency;
   $("#settings-budget").value = budget.totalBudget || "";
   $("#settings-currency").value = state.settings.currency;
+  $("#language-toggle").textContent = `Language: ${state.settings.language === "bn" ? "বাংলা" : "English"}`;
+  $("#security-toggle").textContent = `Security Lock: ${state.settings.securityLock ? "On" : "Off"}`;
   $$(".theme-picker button").forEach((button) => button.classList.toggle("active", button.dataset.themePick === state.settings.accentTheme));
+  updateLastSyncTime();
   updateAmountPreview();
   updateMoneyPreview();
 }
@@ -801,10 +841,25 @@ function renderDashboard() {
   $("#mini-chart-total").textContent = money(summary.spent);
   renderBudgetAlert(summary, spentPercent);
   renderMiniChart(summary);
+  renderDashboardInsights(summary);
 
   const circumference = 365;
   $("#budget-progress").style.strokeDashoffset = String(circumference - (spentPercent / 100) * circumference);
   renderExpenseList($("#today-expenses"), todayExpenses.sort(byNewest).slice(0, 5), true);
+}
+
+function renderDashboardInsights(summary) {
+  const forecast = summary.dailyAverage * summary.daysInMonth;
+  const safeDaily = Math.max(0, summary.remaining) / Math.max(1, daysRemainingInMonth() || 1);
+  const percent = summary.budget ? (summary.spent / summary.budget) * 100 : 0;
+  const trend = recentTrend(summary);
+  const alertText = percent >= 100 ? "Budget crossed" : percent >= 85 ? "Overspending risk" : percent >= 70 ? "Watch spending" : "Budget safe";
+  $("#dashboard-insights").innerHTML = [
+    insightCard("Trend", trend),
+    insightCard("Forecast", summary.budget ? money(forecast) : "Set budget first"),
+    insightCard("Safe/day", summary.budget ? money(safeDaily) : "—"),
+    insightCard("Alert", alertText, percent >= 85 ? "danger" : percent >= 70 ? "warning" : "success")
+  ].join("");
 }
 
 function renderHistory() {
@@ -814,7 +869,7 @@ function renderHistory() {
   const container = $("#history-groups");
 
   if (!expenses.length) {
-    container.innerHTML = `<div class="empty-state">${svgIcon("empty", "ui-icon empty-icon")}No expenses found.</div>`;
+    container.innerHTML = emptyStateHtml("No expenses found.", "Add first expense", "add");
     return;
   }
 
@@ -840,10 +895,25 @@ function renderReports() {
   $("#category-count").textContent = `${summary.categoryRows.length} categories`;
   $("#highest-day").textContent = summary.highestDay ? `Top day: ${shortDate(summary.highestDay.date)}` : "Top day: —";
   $("#month-comparison").textContent = monthComparison(selectedMonth, summary.spent);
+  renderReportInsights(summary);
   renderDonut(summary);
   renderDailyBars(summary);
   renderLineChart(summary);
   renderTopExpenses(summary);
+}
+
+function renderReportInsights(summary) {
+  const previousKey = previousMonthKey(summary.key);
+  const previousSpent = sumExpenses(getExpensesForMonth(previousKey));
+  const diff = summary.spent - previousSpent;
+  const savingsRate = summary.budget ? Math.max(0, (summary.remaining / summary.budget) * 100) : 0;
+  const unusual = unusualExpense(summary);
+  $("#report-insights").innerHTML = [
+    insightCard("Last month", previousSpent ? `${diff >= 0 ? "+" : "-"}${money(Math.abs(diff))}` : "No data", diff > 0 ? "warning" : "success"),
+    insightCard("Savings", summary.budget ? `${Math.round(savingsRate)}%` : "Set budget"),
+    insightCard("Unusual", unusual ? `${unusual.categoryName} ${money(unusual.amount)}` : "None"),
+    insightCard("Forecast", summary.budget ? money(summary.dailyAverage * summary.daysInMonth) : "—")
+  ].join("");
 }
 
 function renderCategories() {
@@ -853,21 +923,42 @@ function renderCategories() {
       <small>${category.short}</small>
     </button>
   `).join("");
+  renderQuickCategories();
 
   $("#filter-category").innerHTML = `<option value="">All categories</option>${CATEGORIES.map((category) => `<option value="${category.id}">${category.name}</option>`).join("")}`;
 
   $("#category-grid").addEventListener("click", (event) => {
     const button = event.target.closest("[data-category]");
     if (!button) return;
-    selectedCategory = button.dataset.category;
-    $$(".category-pill").forEach((item) => item.classList.toggle("active", item.dataset.category === selectedCategory));
-    $("#selected-category-name").textContent = getCategory(selectedCategory).name;
+    selectCategory(button.dataset.category);
   });
+
+  $("#quick-category-row")?.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-quick-category]");
+    if (!button) return;
+    selectCategory(button.dataset.quickCategory);
+  });
+}
+
+function renderQuickCategories() {
+  const ids = [state.settings.lastUsedCategory, ...mostUsedCategories(), "food", "transport", "groceries"].filter(Boolean);
+  const unique = [...new Set(ids)].slice(0, 4);
+  $("#quick-category-row").innerHTML = unique.map((id) => {
+    const category = getCategory(id);
+    return `<button type="button" data-quick-category="${category.id}">${svgIcon(category.id)} ${category.short}</button>`;
+  }).join("");
+}
+
+function selectCategory(id) {
+  selectedCategory = getCategory(id).id;
+  $$(".category-pill").forEach((item) => item.classList.toggle("active", item.dataset.category === selectedCategory));
+  $$("#quick-category-row button").forEach((item) => item.classList.toggle("active", item.dataset.quickCategory === selectedCategory));
+  $("#selected-category-name").textContent = getCategory(selectedCategory).name;
 }
 
 function renderExpenseList(container, expenses, compact = false) {
   if (!expenses.length) {
-    container.innerHTML = `<div class="empty-state">${svgIcon("empty", "ui-icon empty-icon")}${compact ? "No expenses today." : "No expenses added yet."}</div>`;
+    container.innerHTML = emptyStateHtml(compact ? "No expenses today." : "No expenses added yet.", "Add Expense", "add");
     return;
   }
   container.innerHTML = expenses.map(expenseCardHtml).join("");
@@ -875,11 +966,12 @@ function renderExpenseList(container, expenses, compact = false) {
 }
 
 function expenseCardHtml(expense) {
+  const recurring = isRecurringExpense(expense) ? `<small class="recurring-badge">Recurring</small>` : "";
   return `
     <article class="expense-card" data-expense-id="${expense.id}" tabindex="0">
       <div class="expense-icon">${svgIcon(expense.category)}</div>
       <div class="expense-main">
-        <strong>${escapeHtml(expense.categoryName)}</strong>
+        <strong>${escapeHtml(expense.categoryName)} ${recurring}</strong>
         <span>${escapeHtml(expense.description || "No description")}</span>
         <small>${formatDateTime(expense.date, expense.time)}</small>
       </div>
@@ -966,9 +1058,7 @@ function resetExpenseForm() {
   $("#expense-form-mode").textContent = "New Entry";
   $("#save-expense").innerHTML = `${svgIcon("save", "ui-icon")}Save Expense`;
   $("#cancel-edit").classList.add("hidden");
-  selectedCategory = CATEGORIES[0].id;
-  $("#selected-category-name").textContent = CATEGORIES[0].name;
-  $$(".category-pill").forEach((item) => item.classList.toggle("active", item.dataset.category === selectedCategory));
+  selectCategory(state.settings.lastUsedCategory || CATEGORIES[0].id);
   setCurrentDateTime();
 }
 
@@ -1093,10 +1183,31 @@ function getFilteredExpenses() {
   });
 }
 
+function applyFilterPreset(preset) {
+  const today = new Date();
+  if (preset === "clear") {
+    ["search-expense", "filter-category", "filter-from", "filter-to", "filter-min", "filter-max"].forEach((id) => { $(`#${id}`).value = ""; });
+  }
+  if (preset === "today") {
+    const date = toDateInput(today);
+    $("#filter-from").value = date;
+    $("#filter-to").value = date;
+  }
+  if (preset === "week") {
+    $("#filter-from").value = toDateInput(new Date(Date.now() - 6 * 86400000));
+    $("#filter-to").value = toDateInput(today);
+  }
+  if (preset === "high") {
+    const summary = getMonthSummary(monthKey(today));
+    $("#filter-min").value = Math.ceil(summary.dailyAverage || summary.spent / Math.max(1, summary.expenses.length) || 0);
+  }
+  renderHistory();
+}
+
 function renderDonut(summary) {
   if (!summary.categoryRows.length) {
     $("#donut-chart").style.background = `conic-gradient(var(--line) 0 100%)`;
-    $("#category-breakdown").innerHTML = `<div class="empty-state">No category data yet.</div>`;
+    $("#category-breakdown").innerHTML = emptyStateHtml("No category data yet.", "Add Expense", "add");
     return;
   }
 
@@ -1192,6 +1303,94 @@ function renderLineChart(summary) {
 function renderTopExpenses(summary) {
   const top = summary.expenses.slice().sort((a, b) => b.amount - a.amount).slice(0, 3);
   renderExpenseList($("#top-expenses"), top);
+}
+
+function emptyStateHtml(message, action, target) {
+  return `
+    <div class="empty-state">
+      ${svgIcon("empty", "ui-icon empty-icon")}
+      <strong>${message}</strong>
+      <span>শুরু করতে নিচের বাটন চাপুন।</span>
+      <button class="ghost-button compact" type="button" data-quick-target="${target}">${action}</button>
+    </div>
+  `;
+}
+
+function insightCard(label, value, tone = "") {
+  return `<article class="${tone}"><span>${label}</span><strong>${value}</strong></article>`;
+}
+
+function recentTrend(summary) {
+  const today = new Date();
+  const last3 = [];
+  const prev3 = [];
+  for (let offset = 0; offset < 6; offset += 1) {
+    const date = new Date(today);
+    date.setDate(today.getDate() - offset);
+    const total = sumExpenses(state.expenses.filter((expense) => expense.date === toDateInput(date)));
+    if (offset < 3) last3.push(total);
+    else prev3.push(total);
+  }
+  const recent = sumExpenses(last3.map((amount) => ({ amount })));
+  const previous = sumExpenses(prev3.map((amount) => ({ amount })));
+  if (!recent && !previous) return "No trend yet";
+  if (recent > previous * 1.12) return "Increasing";
+  if (recent < previous * .88) return "Decreasing";
+  return "Stable";
+}
+
+function mostUsedCategories() {
+  const counts = new Map();
+  getExpensesForMonth(monthKey(new Date())).forEach((expense) => counts.set(expense.category, (counts.get(expense.category) || 0) + 1));
+  return [...counts.entries()].sort((a, b) => b[1] - a[1]).map(([id]) => id);
+}
+
+function isRecurringExpense(expense) {
+  const base = (expense.description || expense.categoryName || "").trim().toLowerCase();
+  if (!base) return false;
+  return state.expenses.filter((item) => {
+    const itemBase = (item.description || item.categoryName || "").trim().toLowerCase();
+    return item.id !== expense.id && itemBase === base && Math.abs(Number(item.amount) - Number(expense.amount)) < 1;
+  }).length >= 1;
+}
+
+function unusualExpense(summary) {
+  if (summary.expenses.length < 3) return null;
+  const average = summary.spent / summary.expenses.length;
+  return summary.expenses.find((expense) => expense.amount > average * 2);
+}
+
+function previousMonthKey(key) {
+  const [year, month] = key.split("-").map(Number);
+  return monthKey(new Date(year, month - 2, 1));
+}
+
+function backupData() {
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = `hisab-backup-${toDateInput(new Date())}.json`;
+  link.click();
+  URL.revokeObjectURL(link.href);
+}
+
+function restoreData(event) {
+  const file = event.target.files?.[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.addEventListener("load", () => {
+    try {
+      state = normalizeState(JSON.parse(reader.result));
+      saveState();
+      renderAll();
+      showToast("Backup restored.");
+    } catch {
+      showToast("Restore failed. Invalid backup.", "warning");
+    } finally {
+      event.target.value = "";
+    }
+  });
+  reader.readAsText(file);
 }
 
 function exportPdf() {
