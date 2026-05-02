@@ -356,6 +356,8 @@ body:not(.dark) .app-shell {
 .tab-page {
   display: none;
   animation: pageIn .26s ease;
+  content-visibility: auto;
+  contain-intrinsic-size: 680px;
 }
 
 .tab-page.active {
@@ -610,6 +612,9 @@ body:not(.dark) .app-shell {
   box-shadow: 0 12px 28px rgba(0, 0, 0, .12);
   font-weight: 700;
   letter-spacing: -.005em;
+  transform: translateZ(0);
+  transition: transform .18s ease, box-shadow .18s ease;
+  will-change: transform;
 }
 
 .quick-actions button strong {
@@ -710,7 +715,9 @@ body:not(.dark) .app-shell {
   box-shadow: 0 8px 18px rgba(15, 23, 42, .05);
   backdrop-filter: blur(18px);
   touch-action: pan-y;
+  transform: translateZ(0);
   transition: transform .2s ease, opacity .2s ease;
+  will-change: transform;
 }
 
 .expense-card.swiping-left {
@@ -1013,6 +1020,9 @@ body:not(.dark) .app-shell {
   background: rgba(255, 255, 255, .09);
   font-size: 18px;
   font-weight: 800;
+  transform: translateZ(0);
+  transition: transform .16s ease, background .16s ease;
+  will-change: transform;
 }
 
 .amount-keypad .wide {
@@ -1289,6 +1299,9 @@ body:not(.dark) .donut-chart::after {
   font-variant-numeric: tabular-nums;
   position: relative;
   overflow: hidden;
+  transform: translateZ(0);
+  transition: transform .16s ease, background .16s ease;
+  will-change: transform;
 }
 
 .calc-button.operator {
@@ -1528,6 +1541,7 @@ body:not(.dark) .bottom-nav {
   color: var(--muted);
   background: transparent;
   font-weight: 800;
+  transition: transform .16s ease, background .18s ease, color .18s ease;
 }
 
 .nav-button small {
@@ -2183,6 +2197,12 @@ body:not(.dark) .liquid-bg .lq-grain {
   .liquid-bg .lq-aurora { animation: none !important; }
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  .app-shell {
+    scroll-behavior: smooth;
+  }
+}
+
 /* Make the app shell sit above the liquid backdrop with a glass body. */
 body.liquid-glass .app-shell {
   background:
@@ -2760,8 +2780,39 @@ body.liquid-glass .category-pill.active {
 
 /* Reduced motion — disable drifting orbs for users who prefer reduced motion. */
 @media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+  }
+
   .liquid-bg .lq-orb {
     animation: none !important;
+  }
+
+  .tab-page,
+  .filters-panel,
+  .modal-card,
+  .success-card,
+  .toast,
+  .undo-toast,
+  .logo-mark,
+  .splash-loader::after,
+  .primary-button::after,
+  .category-pill.active,
+  .cloud-status.syncing::before,
+  .cloud-status.connecting::before,
+  .identity-status[data-status="connecting"] .status-dot,
+  .identity-status[data-status="syncing"] .status-dot {
+    animation: none !important;
+  }
+
+  button:active,
+  .category-pill:active,
+  .expense-card:active,
+  .expense-card.swiping-left,
+  .expense-card.swiping-right {
+    transform: none !important;
   }
 }
 
