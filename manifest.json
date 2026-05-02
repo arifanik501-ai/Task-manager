@@ -1,6 +1,6 @@
 {
-  "name": "HisabNikash - Monthly Expense Tracker",
-  "short_name": "HisabNikash",
+  "name": "হিসাব - Monthly Expense Tracker",
+  "short_name": "হিসাব",
   "description": "Mobile-first budget, expense, report, and calculator app.",
   "start_url": "./",
   "scope": "./",

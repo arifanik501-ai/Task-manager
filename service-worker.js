@@ -1,4 +1,4 @@
-// HisabNikash service worker — network-first for the app shell so
+// হিসাব service worker — network-first for the app shell so
 // every fresh deploy is picked up immediately, with cache fall-back
 // for offline use.
 const CACHE_NAME = "hisabnikash-v4";

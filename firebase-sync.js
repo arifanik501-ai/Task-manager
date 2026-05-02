@@ -1,4 +1,4 @@
-/* HisabNikash cloud sync via Firebase Realtime Database.
+/* হিসাব cloud sync via Firebase Realtime Database.
  *
  * Single shared bucket: every device reads from and writes to
  * /shared/state. There is no per-device ID anymore; whoever opens the
