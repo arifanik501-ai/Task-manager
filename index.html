@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#0A0E27">
-  <meta name="description" content="হিসাব is a mobile-first monthly expense tracker for budgeting, daily expenses, reports, and quick calculations.">
+  <meta name="description" content="হিসাব একটি মোবাইল-ফার্স্ট মাসিক খরচ ট্র্যাকার।">
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="app-logo-192.png" type="image/png">
   <link rel="apple-touch-icon" href="app-logo-192.png">
@@ -34,40 +34,40 @@
     <div class="orb orb-two" aria-hidden="true"></div>
     <section class="splash-screen" id="splash-screen" aria-live="polite">
       <img class="logo-mark" src="app-logo.png" alt="হিসাব logo">
-      <h1>হিসাব</h1>
+      <h1 data-i18n="appName">হিসাব</h1>
       <div class="splash-loader" aria-hidden="true"></div>
     </section>
 
     <section class="setup-screen hidden" id="setup-screen" aria-labelledby="setup-title">
       <div class="setup-card">
         <img class="logo-mark small" src="app-logo.png" alt="হিসাব logo">
-        <h2 id="setup-title">মাসিক বাজেট সেট করুন</h2>
-        <div class="onboarding-steps" aria-label="অনবোর্ডিং ধাপ">
-          <span class="active">১. বাজেট</span>
-          <span>২. ক্যাটাগরি</span>
-          <span>৩. প্রথম খরচ</span>
+        <h2 id="setup-title" data-i18n="setupTitle">মাসিক বাজেট সেট করুন</h2>
+        <div class="onboarding-steps" data-i18n-aria="onboardingSteps" aria-label="অনবোর্ডিং ধাপ">
+          <span class="active" data-i18n="onboardingBudget">১. বাজেট</span>
+          <span data-i18n="onboardingCategory">২. ক্যাটাগরি</span>
+          <span data-i18n="onboardingExpense">৩. প্রথম খরচ</span>
         </div>
-        <p class="muted">আগে মাসিক বাজেট সেট করুন। এরপর ক্যাটাগরি বেছে প্রথম খরচ যোগ করুন।</p>
+        <p class="muted" data-i18n="setupCopy">আগে মাসিক বাজেট সেট করুন। এরপর ক্যাটাগরি বেছে প্রথম খরচ যোগ করুন।</p>
         <label class="input-card">
-          <span>আপনার মাসিক বাজেট</span>
+          <span data-i18n="setupBudgetLabel">আপনার মাসিক বাজেট</span>
           <div class="currency-input">
             <strong id="setup-currency">৳</strong>
             <input id="setup-budget" type="number" inputmode="decimal" min="0" placeholder="25000" autocomplete="off">
           </div>
         </label>
-        <div class="quick-chip-grid" aria-label="দ্রুত বাজেট">
+        <div class="quick-chip-grid" data-i18n-aria="quickBudget" aria-label="দ্রুত বাজেট">
           <button type="button" data-budget-chip="10000">৳10,000</button>
           <button type="button" data-budget-chip="20000">৳20,000</button>
           <button type="button" data-budget-chip="30000">৳30,000</button>
           <button type="button" data-budget-chip="40000">৳40,000</button>
           <button type="button" data-budget-chip="50000">৳50,000</button>
-          <button type="button" data-budget-chip="">নিজস্ব</button>
+          <button type="button" data-budget-chip="" data-i18n="custom">নিজস্ব</button>
         </div>
         <label class="carry-forward-row">
           <input type="checkbox" id="setup-carry-forward">
-          <span>গত মাসের বাকি টাকা যোগ করুন</span>
+          <span data-i18n="carryForward">গত মাসের বাকি টাকা যোগ করুন</span>
         </label>
-        <button class="primary-button" type="button" id="start-tracking">শুরু করুন</button>
+        <button class="primary-button" type="button" id="start-tracking" data-i18n="startTracking">শুরু করুন</button>
       </div>
     </section>
 
@@ -90,42 +90,42 @@
           <div class="balance-head">
             <span id="balance-month">এই মাস</span>
             <div class="balance-actions">
-              <button class="ghost-button compact" type="button" data-quick-target="add-money">টাকা যোগ</button>
-              <button class="ghost-button compact" type="button" data-open-settings="budget">এডিট</button>
+              <button class="ghost-button compact" type="button" data-quick-target="add-money" data-i18n="addMoney">টাকা যোগ</button>
+              <button class="ghost-button compact" type="button" data-open-settings="budget" data-i18n="edit">এডিট</button>
             </div>
           </div>
           <div class="progress-wrap">
-            <svg class="progress-ring" viewBox="0 0 140 140" role="img" aria-label="বাজেট ব্যাবেহার">
+            <svg class="progress-ring" viewBox="0 0 140 140" role="img" data-i18n-aria="budgetUsage" aria-label="বাজেট ব্যবহার">
               <circle cx="70" cy="70" r="58" class="progress-bg"></circle>
               <circle cx="70" cy="70" r="58" class="progress-value" id="budget-progress"></circle>
             </svg>
             <div class="progress-copy">
               <strong id="remaining-balance">৳0</strong>
-              <span>বাকি</span>
+              <span data-i18n="remaining">বাকি</span>
               <small id="spent-percent">০% খরচ</small>
             </div>
           </div>
           <div class="balance-grid">
             <div>
-              <span>বাজেট</span>
+              <span data-i18n="budget">বাজেট</span>
               <strong id="total-budget">৳0</strong>
             </div>
             <div>
-              <span>খরচ</span>
+              <span data-i18n="spent">খরচ</span>
               <strong id="total-spent">৳0</strong>
             </div>
             <div>
-              <span>বাকি</span>
+              <span data-i18n="remaining">বাকি</span>
               <strong id="balance-left">৳0</strong>
             </div>
           </div>
         </article>
 
-        <section class="quick-actions" aria-label="দ্রুত কাজ">
-          <button type="button" data-quick-target="add"><span class="ui-icon" data-icon="add"></span><strong>খরচ</strong></button>
-          <button type="button" data-quick-target="add-money"><span class="ui-icon" data-icon="wallet"></span><strong>টাকা</strong></button>
-          <button type="button" data-quick-target="reports"><span class="ui-icon" data-icon="chart"></span><strong>রিপোর্ট</strong></button>
-          <button type="button" data-quick-target="calculator"><span class="ui-icon" data-icon="calculator"></span><strong>ক্যালক</strong></button>
+        <section class="quick-actions" data-i18n-aria="quickActions" aria-label="দ্রুত কাজ">
+          <button type="button" data-quick-target="add"><span class="ui-icon" data-icon="add"></span><strong data-i18n="spent">খরচ</strong></button>
+          <button type="button" data-quick-target="add-money"><span class="ui-icon" data-icon="wallet"></span><strong data-i18n="money">টাকা</strong></button>
+          <button type="button" data-quick-target="reports"><span class="ui-icon" data-icon="chart"></span><strong data-i18n="reports">রিপোর্ট</strong></button>
+          <button type="button" data-quick-target="calculator"><span class="ui-icon" data-icon="calculator"></span><strong data-i18n="calc">ক্যালক</strong></button>
         </section>
 
         <section class="insight-brief" id="dashboard-brief"></section>
@@ -133,8 +133,8 @@
         <section class="summary-section">
           <div class="section-head">
             <div>
-              <p class="eyebrow">আজ</p>
-              <h2>আজকের খরচ</h2>
+              <p class="eyebrow" data-i18n="today">আজ</p>
+              <h2 data-i18n="todayExpense">আজকের খরচ</h2>
             </div>
             <strong id="today-total">৳0</strong>
           </div>
@@ -143,25 +143,25 @@
 
         <section class="stats-grid">
           <article>
-            <span>দৈনিক গড়</span>
+            <span data-i18n="dailyAverage">দৈনিক গড়</span>
             <strong id="daily-average">৳0</strong>
           </article>
           <article>
-            <span>সর্বোচ্চ খরচ</span>
+            <span data-i18n="highestExpense">সর্বোচ্চ খরচ</span>
             <strong id="highest-expense">৳0</strong>
           </article>
           <article>
-            <span>শীর্ষ ক্যাটাগরি</span>
+            <span data-i18n="topCategory">শীর্ষ ক্যাটাগরি</span>
             <strong id="top-category">—</strong>
           </article>
           <article>
-            <span>দিন বাকি</span>
+            <span data-i18n="daysLeft">দিন বাকি</span>
             <strong id="days-left">0</strong>
           </article>
         </section>
         <section class="chart-card mini-overview-card">
           <div class="section-head">
-            <h3>খরচের চিত্র</h3>
+            <h3 data-i18n="spendingChart">খরচের চিত্র</h3>
             <span id="mini-chart-total">৳0</span>
           </div>
           <div class="mini-chart" id="mini-spending-chart" aria-label="শেষ সাত দিনের খরচ"></div>
@@ -172,59 +172,59 @@
       <section class="tab-page" id="history-page" data-page="history">
         <div class="page-title">
           <div>
-            <p class="eyebrow">এই মাস</p>
-            <h2>খরচের ইতিহাস</h2>
+            <p class="eyebrow" data-i18n="thisMonth">এই মাস</p>
+            <h2 data-i18n="spendingHistory">খরচের ইতিহাস</h2>
           </div>
           <strong id="history-total">৳0</strong>
         </div>
         <div class="toolbar">
           <label class="search-box">
             <span class="ui-icon" data-icon="search"></span>
-            <input id="search-expense" type="search" placeholder="খরচ খুঁজুন">
+            <input id="search-expense" type="search" data-i18n-placeholder="searchExpense" placeholder="খরচ খুঁজুন">
           </label>
           <button class="icon-button" type="button" id="filter-toggle" aria-expanded="false" aria-controls="filters-panel"><span class="ui-icon" data-icon="filter"></span></button>
         </div>
         <div class="preset-filters" aria-label="প্রিসেট ফিল্টার">
-          <button type="button" data-filter-preset="today">আজ</button>
-          <button type="button" data-filter-preset="week">৭ দিন</button>
-          <button type="button" data-filter-preset="high">বড় খরচ</button>
-          <button type="button" data-filter-preset="clear">ক্লিয়ার</button>
+          <button type="button" data-filter-preset="today" data-i18n="today">আজ</button>
+          <button type="button" data-filter-preset="week" data-i18n="sevenDays">৭ দিন</button>
+          <button type="button" data-filter-preset="high" data-i18n="highExpense">বড় খরচ</button>
+          <button type="button" data-filter-preset="clear" data-i18n="clear">ক্লিয়ার</button>
         </div>
         <div class="history-filter-summary" id="history-filter-summary"></div>
         <div class="history-category-blocks" id="history-category-blocks"></div>
         <div class="filters-panel hidden" id="filters-panel">
           <div class="sheet-handle" aria-hidden="true"></div>
           <div class="filter-sheet-head">
-            <strong>ফিল্টার</strong>
-            <button class="ghost-button compact" type="button" id="filter-close">বন্ধ</button>
+            <strong data-i18n="filter">ফিল্টার</strong>
+            <button class="ghost-button compact" type="button" id="filter-close" data-i18n="close">বন্ধ</button>
           </div>
           <label>
-            <span>ক্যাটাগরি</span>
+            <span data-i18n="category">ক্যাটাগরি</span>
             <select id="filter-category"></select>
           </label>
           <label>
-            <span>শুরু</span>
+            <span data-i18n="from">শুরু</span>
             <input id="filter-from" type="date">
           </label>
           <label>
-            <span>শেষ</span>
+            <span data-i18n="to">শেষ</span>
             <input id="filter-to" type="date">
           </label>
           <label>
-            <span>কম ৳</span>
+            <span data-i18n="min">কম ৳</span>
             <input id="filter-min" type="number" inputmode="decimal">
           </label>
           <label>
-            <span>বেশি ৳</span>
+            <span data-i18n="max">বেশি ৳</span>
             <input id="filter-max" type="number" inputmode="decimal">
           </label>
           <label>
-            <span>সাজান</span>
+            <span data-i18n="sort">সাজান</span>
             <select id="sort-expenses">
-              <option value="newest">নতুন আগে</option>
-              <option value="oldest">পুরনো আগে</option>
-              <option value="highest">বেশি টাকা আগে</option>
-              <option value="lowest">কম টাকা আগে</option>
+              <option value="newest" data-i18n="newest">নতুন আগে</option>
+              <option value="oldest" data-i18n="oldest">পুরনো আগে</option>
+              <option value="highest" data-i18n="highest">বেশি টাকা আগে</option>
+              <option value="lowest" data-i18n="lowest">কম টাকা আগে</option>
             </select>
           </label>
         </div>
@@ -235,14 +235,14 @@
         <div class="page-title">
           <div>
             <p class="eyebrow" id="expense-form-mode">নতুন এন্ট্রি</p>
-            <h2>খরচ যোগ করুন</h2>
+            <h2 data-i18n="addExpense">খরচ যোগ করুন</h2>
           </div>
           <button class="ghost-button compact icon-text" type="button" id="open-mini-calculator"><span class="ui-icon" data-icon="calculator"></span>ক্যালক</button>
         </div>
         <form class="expense-form" id="expense-form">
           <input type="hidden" id="editing-expense-id">
           <label class="input-card amount-card">
-            <span>টাকার পরিমাণ</span>
+            <span data-i18n="amount">টাকার পরিমাণ</span>
             <div class="amount-preview" id="amount-preview">৳0</div>
             <div class="currency-input">
               <strong id="expense-currency">৳</strong>
@@ -262,35 +262,35 @@
             <button type="button" data-amount-key=".">.</button>
             <button type="button" data-amount-key="0">0</button>
             <button type="button" data-amount-key="back" aria-label="এক ঘর মুছুন"><span class="ui-icon" data-icon="backspace"></span></button>
-            <button type="button" class="wide" data-amount-key="clear">ক্লিয়ার</button>
-            <button type="button" class="wide accent" data-amount-key="done">সেভ</button>
+            <button type="button" class="wide" data-amount-key="clear" data-i18n="clear">ক্লিয়ার</button>
+            <button type="button" class="wide accent" data-amount-key="done" data-i18n="saveFast">সেভ</button>
           </div>
           <div>
             <div class="section-head slim">
-              <h3>ক্যাটাগরি</h3>
+              <h3 data-i18n="category">ক্যাটাগরি</h3>
               <span id="selected-category-name">খাবার</span>
             </div>
             <div class="quick-category-row" id="quick-category-row" aria-label="দ্রুত ক্যাটাগরি"></div>
             <div class="category-grid" id="category-grid"></div>
           </div>
           <label class="input-card">
-            <span>বিবেরিণ (ঐচ্ছিক)</span>
-            <input id="expense-description" type="text" maxlength="80" placeholder="দুপুরের খাবার">
+            <span data-i18n="description">বিবরণ</span>
+            <input id="expense-description" type="text" maxlength="80" data-i18n-placeholder="optionalNote" placeholder="দুপুরের খাবার">
           </label>
           <div class="two-col">
             <label class="input-card">
-              <span>তারিখ</span>
+              <span data-i18n="date">তারিখ</span>
               <input id="expense-date" type="date" required>
             </label>
             <label class="input-card">
-              <span>সময়</span>
+              <span data-i18n="time">সময়</span>
               <input id="expense-time" type="time" required>
             </label>
           </div>
           <div class="form-actions">
-            <button class="ghost-button hidden" type="button" id="cancel-edit">এডিট বাতিল</button>
-            <button class="ghost-button" type="submit" id="save-expense"><span class="ui-icon" data-icon="save"></span>সেভ করে হোমে</button>
-            <button class="primary-button" type="submit" id="save-expense-fast" data-after-save="stay"><span class="ui-icon" data-icon="save"></span>দ্রুত সেভ</button>
+            <button class="ghost-button hidden" type="button" id="cancel-edit" data-i18n="cancelEdit">এডিট বাতিল</button>
+            <button class="ghost-button" type="submit" id="save-expense"><span class="ui-icon" data-icon="save"></span><span data-i18n="saveHome">সেভ করে হোমে</span></button>
+            <button class="primary-button" type="submit" id="save-expense-fast" data-after-save="stay"><span class="ui-icon" data-icon="save"></span><span data-i18n="saveFast">দ্রুত সেভ</span></button>
           </div>
         </form>
       </section>
@@ -298,13 +298,13 @@
       <section class="tab-page" id="add-money-page" data-page="add-money">
         <div class="page-title">
           <div>
-            <p class="eyebrow">এই মাস</p>
-            <h2>টাকা যোগ করুন</h2>
+            <p class="eyebrow" data-i18n="thisMonth">এই মাস</p>
+            <h2 data-i18n="addMoneyTitle">টাকা যোগ করুন</h2>
           </div>
         </div>
         <form class="expense-form" id="add-money-form">
           <label class="input-card amount-card">
-            <span>এই মাসে যোগ হবে</span>
+            <span data-i18n="addToMonth">এই মাসে যোগ হবে</span>
             <div class="amount-preview" id="money-preview">৳0</div>
             <div class="currency-input">
               <strong id="money-currency">৳</strong>
@@ -312,43 +312,43 @@
             </div>
           </label>
           <label class="input-card">
-            <span>নোট (ঐচ্ছিক)</span>
-            <input id="money-note" type="text" maxlength="80" placeholder="বেতন, বোনাস, সঞ্চয়">
+            <span data-i18n="optionalNote">নোট (ঐচ্ছিক)</span>
+            <input id="money-note" type="text" maxlength="80" data-i18n-placeholder="notePlaceholder" placeholder="বেতন, বোনাস, সঞ্চয়">
           </label>
-          <button class="primary-button" type="submit" id="save-money"><span class="ui-icon" data-icon="wallet"></span>টাকা যোগ করুন</button>
+          <button class="primary-button" type="submit" id="save-money"><span class="ui-icon" data-icon="wallet"></span><span data-i18n="addMoneyTitle">টাকা যোগ করুন</span></button>
         </form>
       </section>
 
       <section class="tab-page" id="reports-page" data-page="reports">
         <div class="page-title">
           <div>
-            <p class="eyebrow">বিশ্লেষণ</p>
-            <h2>মাসিক রিপোর্ট</h2>
+            <p class="eyebrow" data-i18n="compare">বিশ্লেষণ</p>
+            <h2 data-i18n="reportsTitle">মাসিক রিপোর্ট</h2>
           </div>
           <input class="month-picker" id="report-month" type="month">
         </div>
         <section class="report-cards">
           <article>
-            <span>মোট বাজেট</span>
+            <span data-i18n="reportBudget">মোট বাজেট</span>
             <strong id="report-budget">৳0</strong>
           </article>
           <article>
-            <span>মোট খরচ</span>
+            <span data-i18n="reportSpent">মোট খরচ</span>
             <strong id="report-spent">৳0</strong>
           </article>
           <article>
-            <span>বাকি</span>
+            <span data-i18n="remaining">বাকি</span>
             <strong id="report-remaining">৳0</strong>
           </article>
           <article>
-            <span>দৈনিক গড়</span>
+            <span data-i18n="dailyAverage">দৈনিক গড়</span>
             <strong id="report-average">৳0</strong>
           </article>
         </section>
         <section class="insight-grid" id="report-insights"></section>
         <section class="chart-card">
           <div class="section-head">
-            <h3>ক্যাটাগরি বিশ্লেষণ</h3>
+            <h3 data-i18n="categoryAnalysis">ক্যাটাগরি বিশ্লেষণ</h3>
             <span id="category-count">০ ক্যাটাগরি</span>
           </div>
           <div class="donut-layout">
@@ -358,20 +358,20 @@
         </section>
         <section class="chart-card">
           <div class="section-head">
-            <h3>দৈনিক খরচ</h3>
+            <h3 data-i18n="todayExpense">দৈনিক খরচ</h3>
             <span id="highest-day">শীর্ষ দিন: —</span>
           </div>
           <div class="bar-chart" id="daily-bar-chart"></div>
         </section>
         <section class="chart-card">
           <div class="section-head">
-            <h3>মাসের ট্রেন্ড</h3>
+            <h3 data-i18n="monthTrend">মাসের ট্রেন্ড</h3>
             <span id="month-comparison">আগের ডাটা নেই</span>
           </div>
           <svg class="line-chart" id="line-chart" viewBox="0 0 320 160" preserveAspectRatio="none"></svg>
         </section>
         <section class="top-list-card">
-          <h3>শীর্ষ ৩ একক খরচ</h3>
+          <h3 data-i18n="topThree">শীর্ষ ৩ একক খরচ</h3>
           <div id="top-expenses"></div>
         </section>
       </section>
@@ -379,8 +379,8 @@
       <section class="tab-page" id="more-page" data-page="more">
         <div class="page-title">
           <div>
-            <p class="eyebrow">টুলস</p>
-            <h2>আরও</h2>
+            <p class="eyebrow" data-i18n="tools">টুলস</p>
+            <h2 data-i18n="more">আরও</h2>
           </div>
         </div>
 
@@ -388,22 +388,22 @@
           <div class="identity-shine" aria-hidden="true"></div>
           <img class="identity-glyph" src="app-logo-192.png" alt="" aria-hidden="true">
           <div class="identity-meta">
-            <strong>হিসাব</strong>
+            <strong data-i18n="appName">হিসাব</strong>
           </div>
           <div class="identity-status" id="more-cloud-status" data-status="offline" aria-live="polite">
             <span class="status-dot" aria-hidden="true"></span>
-            <small>অফলাইন</small>
+            <small data-i18n="offline">অফলাইন</small>
           </div>
         </article>
 
         <div class="more-menu more-menu-grid">
           <button class="menu-card menu-card-violet" type="button" data-panel="settings-panel">
             <span class="menu-icon"><span class="ui-icon" data-icon="settings"></span></span>
-            <strong>সেটিংস</strong>
+            <strong data-i18n="settings">সেটিংস</strong>
           </button>
           <button class="menu-card menu-card-palette" type="button" id="accent-toggle" aria-expanded="false" aria-controls="accent-palette">
             <span class="menu-icon"><span class="ui-icon" data-icon="palette"></span></span>
-            <strong>রং</strong>
+            <strong data-i18n="colors">রং</strong>
             <span class="accent-preview-strip" aria-hidden="true">
               <i></i><i></i><i></i><i></i>
             </span>
@@ -435,54 +435,54 @@
           </div>
           <button class="menu-card menu-card-orange" type="button" id="export-pdf">
             <span class="menu-icon"><span class="ui-icon" data-icon="print"></span></span>
-            <strong>PDF এক্সপোর্ট</strong>
+            <strong data-i18n="exportPdf">PDF এক্সপোর্ট</strong>
           </button>
           <button class="menu-card menu-card-cyan" type="button" id="more-open-calculator">
             <span class="menu-icon"><span class="ui-icon" data-icon="calculator"></span></span>
-            <strong>ক্যালকুলেটর</strong>
+            <strong data-i18n="calculator">ক্যালকুলেটর</strong>
           </button>
           <button class="menu-card menu-card-emerald" type="button" id="more-sync-now">
             <span class="menu-icon"><span class="ui-icon" data-icon="save"></span></span>
-            <strong>সিঙ্ক করুন</strong>
+            <strong data-i18n="syncNow">সিঙ্ক করুন</strong>
           </button>
           <button class="menu-card menu-card-data" type="button" data-panel="data-panel">
             <span class="menu-icon"><span class="ui-icon" data-icon="wallet"></span></span>
-            <strong>ডাটা কন্ট্রোল</strong>
+            <strong data-i18n="dataControl">ডাটা কন্ট্রোল</strong>
           </button>
           <button class="menu-card menu-card-performance" type="button" id="performance-toggle" aria-pressed="false">
             <span class="menu-icon"><span class="ui-icon" data-icon="check"></span></span>
-            <strong data-performance-label>স্মুথ মোড</strong>
+            <strong data-performance-label data-i18n="smoothMode">স্মুথ মোড</strong>
           </button>
         </div>
 
         <section class="tool-panel" id="settings-panel">
-          <h3>সেটিংস</h3>
+          <h3 data-i18n="settings">সেটিংস</h3>
           <label class="input-card">
-            <span>মাসিক বাজেট এডিট</span>
+            <span data-i18n="edit">মাসিক বাজেট এডিট</span>
             <div class="currency-input">
               <strong id="settings-currency-prefix">৳</strong>
               <input id="settings-budget" type="number" inputmode="decimal" min="0">
             </div>
           </label>
           <label class="input-card">
-            <span>কারেন্সি চিহ্ন</span>
+            <span data-i18n="currencySymbol">কারেন্সি চিহ্ন</span>
             <input id="settings-currency" type="text" maxlength="4" value="৳">
           </label>
           <div class="settings-actions">
-            <button class="primary-button" type="button" id="save-settings">সেটিংস সেভ</button>
-            <button class="danger-button" type="button" id="reset-month">মাসের ডাটা রিসেট</button>
+            <button class="primary-button" type="button" id="save-settings" data-i18n="saveSettings">সেটিংস সেভ</button>
+            <button class="danger-button" type="button" id="reset-month" data-i18n="resetMonth">মাসের ডাটা রিসেট</button>
           </div>
           <div class="cloud-sync-card">
             <div class="cloud-sync-head">
-              <strong>ক্লাউড সিঙ্ক</strong>
+              <strong data-i18n="cloudSync">ক্লাউড সিঙ্ক</strong>
               <span id="cloud-status-badge" class="cloud-status error" data-status="error">অফলাইন</span>
             </div>
             <p class="sync-meta" id="last-sync-time">শেষ সিঙ্ক: —</p>
-            <button class="primary-button cloud-sync-now" type="button" id="sync-now"><span class="ui-icon" data-icon="save"></span>আবার সিঙ্ক করুন</button>
+            <button class="primary-button cloud-sync-now" type="button" id="sync-now"><span class="ui-icon" data-icon="save"></span><span data-i18n="retrySync">আবার সিঙ্ক করুন</span></button>
           </div>
           <div class="settings-actions" id="data-panel">
-            <button class="ghost-button" type="button" id="backup-data">ডাটা ব্যাকআপ</button>
-            <button class="ghost-button" type="button" id="restore-data">ডাটা রিস্টোর</button>
+            <button class="ghost-button" type="button" id="backup-data" data-i18n="backupData">ডাটা ব্যাকআপ</button>
+            <button class="ghost-button" type="button" id="restore-data" data-i18n="restoreData">ডাটা রিস্টোর</button>
             <input class="hidden" id="restore-data-file" type="file" accept="application/json">
           </div>
           <div class="settings-actions">
@@ -495,10 +495,10 @@
       <section class="tab-page" id="calculator-page" data-page="calculator">
         <div class="page-title">
           <div>
-            <p class="eyebrow">টুলস</p>
-            <h2>ক্যালকুলেটর</h2>
+            <p class="eyebrow" data-i18n="tools">টুলস</p>
+            <h2 data-i18n="calculator">ক্যালকুলেটর</h2>
           </div>
-          <button class="ghost-button compact" type="button" id="calculator-add-result">খরচে যোগ</button>
+          <button class="ghost-button compact" type="button" id="calculator-add-result" data-i18n="addExpense">খরচে যোগ</button>
         </div>
         <section class="tool-panel calculator-tool-panel" id="calculator-panel">
           <div class="calculator">
@@ -512,11 +512,11 @@
       </section>
 
       <nav class="bottom-nav" aria-label="মূল নেভিগেশন">
-        <button class="nav-button active" type="button" data-target="home"><span class="ui-icon" data-icon="home"></span><small>হোম</small></button>
-        <button class="nav-button" type="button" data-target="history"><span class="ui-icon" data-icon="history"></span><small>ইতিহাস</small></button>
-        <button class="nav-button add-nav" type="button" data-target="add"><span class="ui-icon" data-icon="add"></span><small>যোগ</small></button>
-        <button class="nav-button" type="button" data-target="reports"><span class="ui-icon" data-icon="chart"></span><small>রিপোর্ট</small></button>
-        <button class="nav-button" type="button" data-target="more"><span class="ui-icon" data-icon="settings"></span><small>আরও</small></button>
+        <button class="nav-button active" type="button" data-target="home"><span class="ui-icon" data-icon="home"></span><small data-i18n="navHome">হোম</small></button>
+        <button class="nav-button" type="button" data-target="history"><span class="ui-icon" data-icon="history"></span><small data-i18n="navHistory">ইতিহাস</small></button>
+        <button class="nav-button add-nav" type="button" data-target="add"><span class="ui-icon" data-icon="add"></span><small data-i18n="navAdd">যোগ</small></button>
+        <button class="nav-button" type="button" data-target="reports"><span class="ui-icon" data-icon="chart"></span><small data-i18n="navReports">রিপোর্ট</small></button>
+        <button class="nav-button" type="button" data-target="more"><span class="ui-icon" data-icon="settings"></span><small data-i18n="navMore">আরও</small></button>
       </nav>
     </main>
   </div>
@@ -524,22 +524,22 @@
   <div class="modal hidden" id="expense-modal" role="dialog" aria-modal="true" aria-labelledby="expense-modal-title">
     <div class="modal-card">
       <button class="modal-close" type="button" id="close-expense-modal" aria-label="বন্ধ">×</button>
-      <h3 id="expense-modal-title">খরচের বিস্তারিত</h3>
+      <h3 id="expense-modal-title" data-i18n="modalTitle">খরচের বিস্তারিত</h3>
       <div id="expense-details"></div>
       <div class="modal-actions">
-        <button class="ghost-button" type="button" id="modal-edit-expense">এডিট</button>
-        <button class="danger-button" type="button" id="modal-delete-expense">ডিলিট</button>
+        <button class="ghost-button" type="button" id="modal-edit-expense" data-i18n="modalEdit">এডিট</button>
+        <button class="danger-button" type="button" id="modal-delete-expense" data-i18n="modalDelete">ডিলিট</button>
       </div>
     </div>
   </div>
 
   <div class="modal hidden" id="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
     <div class="modal-card">
-      <h3 id="confirm-title">আপনিি নিশ্চিত?</h3>
-      <p id="confirm-copy">এই কাজটি ফিরিয়ে নেওয়া যাবে না।</p>
+      <h3 id="confirm-title" data-i18n="confirmDefaultTitle">আপনি নিশ্চিত?</h3>
+      <p id="confirm-copy" data-i18n="confirmDefaultCopy">এই কাজটি ফিরিয়ে নেওয়া যাবে না।</p>
       <div class="modal-actions">
-        <button class="ghost-button" type="button" id="confirm-cancel">বাতিল</button>
-        <button class="danger-button" type="button" id="confirm-action">ডিলিট</button>
+        <button class="ghost-button" type="button" id="confirm-cancel" data-i18n="confirmCancel">বাতিল</button>
+        <button class="danger-button" type="button" id="confirm-action" data-i18n="confirmAction">ডিলিট</button>
       </div>
     </div>
   </div>
@@ -547,13 +547,13 @@
   <div class="success-overlay hidden" id="success-overlay" role="status" aria-live="polite">
     <div class="success-card">
       <div class="success-burst"><span class="ui-icon" data-icon="check"></span></div>
-      <h3>খরচ যোগ হয়েছে</h3>
+      <h3 data-i18n="successTitle">খরচ যোগ হয়েছে</h3>
       <p id="success-copy">সফলভাবে সেভ হয়েছে।</p>
     </div>
   </div>
 
   <div class="toast hidden" id="toast"></div>
-  <button class="undo-toast hidden" type="button" id="undo-toast">খরচ ডিলিট হয়েছে। <strong>ফিরিয়ে আনুন</strong></button>
+  <button class="undo-toast hidden" type="button" id="undo-toast"><span data-i18n="deleteExpenseTitle">খরচ ডিলিট হয়েছে।</span> <strong data-i18n="undo">ফিরিয়ে আনুন</strong></button>
 
   <script type="module" src="firebase-sync.js"></script>
   <script src="app.js" defer></script>
