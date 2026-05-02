@@ -7,7 +7,22 @@ const THEMES = {
   emerald: { primary: "#10B981", secondary: "#34D399", accent: "#06B6D4" },
   sunset: { primary: "#F97316", secondary: "#EF4444", accent: "#F59E0B" },
   gold: { primary: "#F59E0B", secondary: "#EAB308", accent: "#F97316" },
-  rose: { primary: "#EC4899", secondary: "#F43F5E", accent: "#7C3AED" }
+  rose: { primary: "#EC4899", secondary: "#F43F5E", accent: "#7C3AED" },
+  amethyst: { primary: "#8B5CF6", secondary: "#A855F7", accent: "#D946EF" },
+  sapphire: { primary: "#2563EB", secondary: "#1D4ED8", accent: "#60A5FA" },
+  cyan: { primary: "#0891B2", secondary: "#22D3EE", accent: "#0EA5E9" },
+  teal: { primary: "#0F766E", secondary: "#14B8A6", accent: "#2DD4BF" },
+  mint: { primary: "#22C55E", secondary: "#86EFAC", accent: "#10B981" },
+  lime: { primary: "#65A30D", secondary: "#A3E635", accent: "#84CC16" },
+  amber: { primary: "#D97706", secondary: "#FBBF24", accent: "#F59E0B" },
+  coral: { primary: "#FB7185", secondary: "#F97316", accent: "#FDBA74" },
+  ruby: { primary: "#DC2626", secondary: "#F43F5E", accent: "#FB7185" },
+  berry: { primary: "#BE185D", secondary: "#DB2777", accent: "#F472B6" },
+  grape: { primary: "#6D28D9", secondary: "#9333EA", accent: "#C084FC" },
+  indigo: { primary: "#4F46E5", secondary: "#6366F1", accent: "#818CF8" },
+  midnight: { primary: "#1E3A8A", secondary: "#312E81", accent: "#7C3AED" },
+  slate: { primary: "#475569", secondary: "#64748B", accent: "#94A3B8" },
+  aurora: { primary: "#06B6D4", secondary: "#8B5CF6", accent: "#EC4899" }
 };
 
 const ICON_PATHS = {
@@ -16,6 +31,7 @@ const ICON_PATHS = {
   add: '<path d="M12 5v14M5 12h14"/>',
   chart: '<path d="M4 19h16M7 16V9M12 16V5M17 16v-8"/>',
   settings: '<path d="M12 8a4 4 0 1 1 0 8 4 4 0 0 1 0-8Z"/><path d="M3 12h2m14 0h2M12 3v2m0 14v2m6.4-15.4-1.4 1.4M7 17l-1.4 1.4m0-12.8L7 7m10 10 1.4 1.4"/>',
+  palette: '<path d="M12 3a9 9 0 0 0 0 18h1.5a1.8 1.8 0 0 0 1.2-3.1 1.7 1.7 0 0 1 1.1-3h1.4A3.8 3.8 0 0 0 21 11.1 8.9 8.9 0 0 0 12 3Z"/><path d="M7.5 11h.01M9 7.5h.01M14 7.5h.01M16.5 11h.01"/>',
   calculator: '<rect x="5" y="3" width="14" height="18" rx="3"/><path d="M8 7h8M8 11h2m4 0h2M8 15h2m4 0h2M8 19h8"/>',
   bell: '<path d="M18 16H6l1.4-2V10a4.6 4.6 0 0 1 9.2 0v4z"/><path d="M10 19a2 2 0 0 0 4 0"/>',
   moon: '<path d="M20 14.2A7.5 7.5 0 0 1 9.8 4a8 8 0 1 0 10.2 10.2Z"/>',

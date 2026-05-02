@@ -385,7 +385,12 @@
           <button class="menu-card menu-card-violet" type="button" data-panel="settings-panel">
             <span class="menu-icon"><span class="ui-icon" data-icon="settings"></span></span>
             <strong>Settings</strong>
-            <small>Budget, currency, theme, reminders</small>
+            <small>Budget, currency, sync and reset</small>
+          </button>
+          <button class="menu-card menu-card-palette" type="button" data-panel="accent-panel">
+            <span class="menu-icon"><span class="ui-icon" data-icon="palette"></span></span>
+            <strong>Accent Colors</strong>
+            <small>Choose from 20 unique themes</small>
           </button>
           <button class="menu-card menu-card-orange" type="button" id="export-pdf">
             <span class="menu-icon"><span class="ui-icon" data-icon="print"></span></span>
@@ -409,6 +414,34 @@
           </button>
         </div>
 
+        <p class="more-section-label"><span>Accent</span></p>
+        <section class="tool-panel" id="accent-panel">
+          <h3>Accent Colors</h3>
+          <div class="theme-picker accent-theme-panel" id="theme-picker" aria-label="Accent color theme">
+            <button type="button" data-theme-pick="royal" aria-label="Royal Purple"><span>Royal</span></button>
+            <button type="button" data-theme-pick="ocean" aria-label="Ocean Blue"><span>Ocean</span></button>
+            <button type="button" data-theme-pick="emerald" aria-label="Emerald Green"><span>Emerald</span></button>
+            <button type="button" data-theme-pick="sunset" aria-label="Sunset Orange"><span>Sunset</span></button>
+            <button type="button" data-theme-pick="gold" aria-label="Golden Premium"><span>Gold</span></button>
+            <button type="button" data-theme-pick="rose" aria-label="Rose Pink"><span>Rose</span></button>
+            <button type="button" data-theme-pick="amethyst" aria-label="Amethyst Purple"><span>Amethyst</span></button>
+            <button type="button" data-theme-pick="sapphire" aria-label="Sapphire Blue"><span>Sapphire</span></button>
+            <button type="button" data-theme-pick="cyan" aria-label="Cyan Sky"><span>Cyan</span></button>
+            <button type="button" data-theme-pick="teal" aria-label="Teal Aqua"><span>Teal</span></button>
+            <button type="button" data-theme-pick="mint" aria-label="Mint Green"><span>Mint</span></button>
+            <button type="button" data-theme-pick="lime" aria-label="Lime Fresh"><span>Lime</span></button>
+            <button type="button" data-theme-pick="amber" aria-label="Amber Glow"><span>Amber</span></button>
+            <button type="button" data-theme-pick="coral" aria-label="Coral Flame"><span>Coral</span></button>
+            <button type="button" data-theme-pick="ruby" aria-label="Ruby Red"><span>Ruby</span></button>
+            <button type="button" data-theme-pick="berry" aria-label="Berry Pink"><span>Berry</span></button>
+            <button type="button" data-theme-pick="grape" aria-label="Grape Violet"><span>Grape</span></button>
+            <button type="button" data-theme-pick="indigo" aria-label="Indigo Night"><span>Indigo</span></button>
+            <button type="button" data-theme-pick="midnight" aria-label="Midnight Blue"><span>Midnight</span></button>
+            <button type="button" data-theme-pick="slate" aria-label="Slate Grey"><span>Slate</span></button>
+            <button type="button" data-theme-pick="aurora" aria-label="Aurora Blend"><span>Aurora</span></button>
+          </div>
+        </section>
+
         <p class="more-section-label"><span>Preferences</span></p>
         <section class="tool-panel" id="settings-panel">
           <h3>Settings & Preferences</h3>
@@ -423,17 +456,6 @@
             <span>Currency Symbol</span>
             <input id="settings-currency" type="text" maxlength="4" value="৳">
           </label>
-          <div class="theme-picker" id="theme-picker" aria-label="Accent color theme">
-            <span>Accent Color</span>
-            <div>
-              <button type="button" data-theme-pick="royal" aria-label="Royal Purple"></button>
-              <button type="button" data-theme-pick="ocean" aria-label="Ocean Blue"></button>
-              <button type="button" data-theme-pick="emerald" aria-label="Emerald Green"></button>
-              <button type="button" data-theme-pick="sunset" aria-label="Sunset Orange"></button>
-              <button type="button" data-theme-pick="gold" aria-label="Golden Premium"></button>
-              <button type="button" data-theme-pick="rose" aria-label="Rose Pink"></button>
-            </div>
-          </div>
           <div class="settings-actions">
             <button class="primary-button" type="button" id="save-settings">Save Settings</button>
             <button class="danger-button" type="button" id="reset-month">Reset Monthly Data</button>
