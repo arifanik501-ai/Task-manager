@@ -1122,14 +1122,16 @@ body:not(.dark) .app-shell {
 
 .donut-layout {
   display: grid;
-  grid-template-columns: 138px 1fr;
+  grid-template-columns: minmax(104px, 138px) minmax(0, 1fr);
   gap: 14px;
   align-items: start;
+  min-width: 0;
 }
 
 .donut-chart {
-  width: 138px;
-  height: 138px;
+  width: min(138px, 100%);
+  aspect-ratio: 1;
+  height: auto;
   border-radius: 50%;
   background: conic-gradient(var(--line) 0 100%);
   position: sticky;
@@ -1151,6 +1153,8 @@ body:not(.dark) .donut-chart::after {
 .category-row {
   display: grid;
   gap: 8px;
+  min-width: 0;
+  width: 100%;
   padding: 12px;
   border: 1px solid var(--line);
   border-radius: 16px;
@@ -1158,11 +1162,14 @@ body:not(.dark) .donut-chart::after {
 
 .category-row-head {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   gap: 8px;
+  min-width: 0;
 }
 
 .category-row small {
+  min-width: 0;
+  overflow-wrap: anywhere;
   color: var(--muted);
 }
 
@@ -1744,6 +1751,38 @@ body:not(.dark) .modal-card {
 }
 
 @media (max-width: 480px) {
+  .donut-layout {
+    grid-template-columns: 112px minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .donut-chart {
+    position: static;
+    width: 112px;
+  }
+
+  .category-breakdown {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .category-row {
+    padding: 11px;
+  }
+
+  .category-row-head {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .category-row-head > strong:last-child {
+    justify-self: start;
+    text-align: left;
+  }
+
+  .category-row-title {
+    justify-content: flex-start;
+  }
+
   .filters-panel:not(.hidden) {
     position: fixed;
     left: 50%;
@@ -1799,6 +1838,10 @@ body:not(.dark) .modal-card {
   .donut-layout {
     grid-template-columns: 1fr;
     justify-items: center;
+  }
+
+  .category-breakdown {
+    justify-self: stretch;
   }
 }
 
@@ -1941,6 +1984,16 @@ body:not(.dark) .modal-card {
   justify-content: center;
   align-items: center;
   gap: 8px;
+}
+
+.category-row-title {
+  min-width: 0;
+  justify-content: flex-start;
+  overflow-wrap: anywhere;
+}
+
+.category-row-title .ui-icon {
+  flex: 0 0 auto;
 }
 
 .primary-button {
