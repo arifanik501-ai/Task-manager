@@ -1136,6 +1136,7 @@ body:not(.dark) .app-shell {
   background: conic-gradient(var(--line) 0 100%);
   position: sticky;
   top: 12px;
+  flex: 0 0 auto;
 }
 
 .donut-chart::after {
@@ -1757,7 +1758,7 @@ body:not(.dark) .modal-card {
   }
 
   .donut-chart {
-    position: static;
+    position: relative;
     width: 112px;
   }
 
