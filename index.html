@@ -6,8 +6,8 @@
   <meta name="theme-color" content="#0A0E27">
   <meta name="description" content="HisabNikash is a mobile-first monthly expense tracker for budgeting, daily expenses, reports, and quick calculations.">
   <link rel="manifest" href="manifest.json">
-  <link rel="icon" href="icon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="icon.svg">
+  <link rel="icon" href="app-logo-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="app-logo-192.png">
   <link rel="stylesheet" href="styles.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -33,7 +33,7 @@
     <div class="orb orb-one" aria-hidden="true"></div>
     <div class="orb orb-two" aria-hidden="true"></div>
     <section class="splash-screen" id="splash-screen" aria-live="polite">
-      <div class="logo-mark">৳</div>
+      <img class="logo-mark" src="app-logo.png" alt="Hisab Nikash logo">
       <h1>HISAB</h1>
       <p>Every Taka Counts</p>
       <div class="splash-loader" aria-hidden="true"></div>
@@ -41,7 +41,7 @@
 
     <section class="setup-screen hidden" id="setup-screen" aria-labelledby="setup-title">
       <div class="setup-card">
-        <div class="logo-mark small">৳</div>
+        <img class="logo-mark small" src="app-logo.png" alt="Hisab Nikash logo">
         <p class="eyebrow">Welcome</p>
         <h2 id="setup-title">Set Your Monthly Budget</h2>
         <p class="muted">Start the month with a budget. You can edit it anytime from settings.</p>
@@ -76,7 +76,7 @@
         </div>
         <div class="top-actions">
           <button class="icon-button bell-button" type="button" id="alert-bell" aria-label="Budget alerts"><span class="ui-icon" data-icon="bell"></span><span class="alert-dot hidden" id="alert-dot"></span></button>
-          <button class="avatar-button" type="button" data-open-settings="profile" aria-label="Open settings">HN</button>
+          <button class="avatar-button" type="button" data-open-settings="profile" aria-label="Open settings"><img src="app-logo-192.png" alt=""></button>
           <button class="icon-button" type="button" id="theme-toggle" aria-label="Toggle dark mode"><span class="ui-icon" data-icon="moon"></span></button>
         </div>
       </header>
@@ -369,7 +369,7 @@
 
         <article class="identity-hero" aria-label="HisabNikash">
           <div class="identity-shine" aria-hidden="true"></div>
-          <div class="identity-glyph" aria-hidden="true">৳</div>
+          <img class="identity-glyph" src="app-logo-192.png" alt="" aria-hidden="true">
           <div class="identity-meta">
             <strong>HisabNikash</strong>
             <span>Premium expense tracker · v1.0</span>
