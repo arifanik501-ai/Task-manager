@@ -3325,13 +3325,22 @@ body:not(.dark) .liquid-bg .lq-vignette {
     inset 0 -1px 0 rgba(0, 0, 0, .14);
 }
 
+.more-menu-grid .menu-card-performance .menu-icon {
+  background: linear-gradient(145deg, #facc15, #f97316);
+  box-shadow:
+    0 12px 22px rgba(249, 115, 22, .38),
+    inset 0 1px 0 rgba(255, 255, 255, .55),
+    inset 0 -1px 0 rgba(0, 0, 0, .14);
+}
+
 /* Soft chromatic corner wash baked into each card's background.
    Layers a coloured radial gradient on top of the existing glass
    tint — no extra DOM, no extra paint cost. */
 body.liquid-glass .more-menu-grid .menu-card-violet,
 body.liquid-glass .more-menu-grid .menu-card-orange,
 body.liquid-glass .more-menu-grid .menu-card-cyan,
-body.liquid-glass .more-menu-grid .menu-card-emerald {
+body.liquid-glass .more-menu-grid .menu-card-emerald,
+body.liquid-glass .more-menu-grid .menu-card-performance {
   background-color: var(--glass-tint);
   background-image:
     radial-gradient(circle at 88% -8%, var(--menu-glow), transparent 55%),
@@ -3342,11 +3351,55 @@ body.liquid-glass .more-menu-grid .menu-card-emerald {
 .more-menu-grid .menu-card-orange  { --menu-glow: rgba(249, 115, 22, .38); --menu-glow-low: rgba(234, 88, 12,  .16); }
 .more-menu-grid .menu-card-cyan    { --menu-glow: rgba(14, 165, 233, .38); --menu-glow-low: rgba(2, 132, 199,  .16); }
 .more-menu-grid .menu-card-emerald { --menu-glow: rgba(16, 185, 129, .38); --menu-glow-low: rgba(5, 150, 105,  .16); }
+.more-menu-grid .menu-card-performance { --menu-glow: rgba(249, 115, 22, .38); --menu-glow-low: rgba(250, 204, 21, .16); }
 
 body.liquid-glass:not(.dark) .more-menu-grid .menu-card-violet  { --menu-glow: rgba(139, 92, 246, .26); --menu-glow-low: rgba(124, 58, 237, .12); }
 body.liquid-glass:not(.dark) .more-menu-grid .menu-card-orange  { --menu-glow: rgba(249, 115, 22, .24); --menu-glow-low: rgba(234, 88, 12,  .10); }
 body.liquid-glass:not(.dark) .more-menu-grid .menu-card-cyan    { --menu-glow: rgba(14, 165, 233, .24); --menu-glow-low: rgba(2, 132, 199,  .10); }
 body.liquid-glass:not(.dark) .more-menu-grid .menu-card-emerald { --menu-glow: rgba(16, 185, 129, .24); --menu-glow-low: rgba(5, 150, 105,  .10); }
+body.liquid-glass:not(.dark) .more-menu-grid .menu-card-performance { --menu-glow: rgba(249, 115, 22, .24); --menu-glow-low: rgba(250, 204, 21, .10); }
+
+.more-menu-grid .menu-card-performance.active {
+  border-color: color-mix(in srgb, var(--success) 62%, var(--glass-edge));
+  box-shadow: var(--glass-shadow), var(--glass-inner), 0 0 0 2px color-mix(in srgb, var(--success) 30%, transparent);
+}
+
+body.performance-mode .liquid-bg .lq-silk,
+body.performance-mode .liquid-bg .lq-aurora,
+body.performance-mode .liquid-bg .lq-orb,
+body.performance-mode .logo-mark,
+body.performance-mode .splash-loader::after,
+body.performance-mode .primary-button::after,
+body.performance-mode .cloud-status.syncing::before,
+body.performance-mode .cloud-status.connecting::before,
+body.performance-mode .identity-status[data-status="connecting"] .status-dot,
+body.performance-mode .identity-status[data-status="syncing"] .status-dot {
+  animation-play-state: paused !important;
+}
+
+body.performance-mode .tab-page,
+body.performance-mode .filters-panel,
+body.performance-mode .modal-card,
+body.performance-mode .success-card,
+body.performance-mode .toast,
+body.performance-mode .undo-toast,
+body.performance-mode .category-pill.active {
+  animation-duration: .01ms !important;
+  animation-iteration-count: 1 !important;
+}
+
+body.performance-mode button,
+body.performance-mode .expense-card,
+body.performance-mode .category-pill,
+body.performance-mode .menu-card,
+body.performance-mode .nav-button {
+  transition-duration: .01ms !important;
+  will-change: auto !important;
+}
+
+body.performance-mode .liquid-bg {
+  transform: none;
+}
 
 /* Hover lift on capable devices (no jitter on touch). */
 @media (hover: hover) and (pointer: fine) {
