@@ -1,5 +1,8 @@
 const STORAGE_KEY = "hisabnikash_state_v1";
-const MONTH_NAMES = ["জানুয়ারি", "ফেব্রুয়ারি", "মার্চ", "এপ্রিল", "মে", "জুন", "জুলাই", "আগস্ট", "সেপ্টেম্বর", "অক্টোবর", "নভেম্বর", "ডিসেম্বর"];
+const MONTH_NAMES = {
+  bn: ["জানুয়ারি", "ফেব্রুয়ারি", "মার্চ", "এপ্রিল", "মে", "জুন", "জুলাই", "আগস্ট", "সেপ্টেম্বর", "অক্টোবর", "নভেম্বর", "ডিসেম্বর"],
+  en: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+};
 const CATEGORY_COLORS = ["#4CAF50", "#2196F3", "#FF9800", "#F44336", "#9C27B0", "#00BCD4", "#8BC34A", "#E91E63", "#795548", "#3F51B5", "#009688", "#FFC107", "#607D8B", "#673AB7", "#CDDC39"];
 const THEMES = {
   royal: { primary: "#7C3AED", secondary: "#EC4899", accent: "#F97316" },
@@ -23,6 +26,12 @@ const THEMES = {
   midnight: { primary: "#1E3A8A", secondary: "#312E81", accent: "#7C3AED" },
   slate: { primary: "#475569", secondary: "#64748B", accent: "#94A3B8" },
   aurora: { primary: "#06B6D4", secondary: "#8B5CF6", accent: "#EC4899" }
+};
+
+
+const THEME_LABELS = {
+  bn: { royal: "রয়্যাল", ocean: "ওশান", emerald: "এমেরাল্ড", sunset: "সানসেট", gold: "গোল্ড", rose: "রোজ", amethyst: "অ্যামেথিস্ট", sapphire: "স্যাফায়ার", cyan: "সায়ান", teal: "টিল", mint: "মিন্ট", lime: "লাইম", amber: "অ্যাম্বার", coral: "কোরাল", ruby: "রুবি", berry: "বেরি", grape: "গ্রেপ", indigo: "ইন্ডিগো", midnight: "মিডনাইট", slate: "স্লেট", aurora: "অরোরা" },
+  en: { royal: "Royal", ocean: "Ocean", emerald: "Emerald", sunset: "Sunset", gold: "Gold", rose: "Rose", amethyst: "Amethyst", sapphire: "Sapphire", cyan: "Cyan", teal: "Teal", mint: "Mint", lime: "Lime", amber: "Amber", coral: "Coral", ruby: "Ruby", berry: "Berry", grape: "Grape", indigo: "Indigo", midnight: "Midnight", slate: "Slate", aurora: "Aurora" }
 };
 
 const ICON_PATHS = {
@@ -67,26 +76,95 @@ function svgIcon(id, className = "ui-icon") {
   return `<svg class="${className}" viewBox="0 0 24 24" aria-hidden="true" focusable="false">${path}</svg>`;
 }
 
-const CATEGORIES = [
-  { id: "food", name: "খাবার", short: "খাবার" },
-  { id: "groceries", name: "বাজার", short: "বাজার" },
-  { id: "transport", name: "যাতায়াত", short: "যাতায়াত" },
-  { id: "rent", name: "বাসা ভাড়া", short: "ভাড়া" },
-  { id: "electricity", name: "বিদ্যুৎ বিল", short: "বিদ্যুৎ" },
-  { id: "water", name: "পানি বিল", short: "পানি" },
-  { id: "mobile", name: "মোবাইল / ইন্টারনেট", short: "মোবাইল" },
-  { id: "medicine", name: "ঔষধ / স্বাস্থ্য", short: "ঔষধ" },
-  { id: "clothing", name: "পোশাক", short: "পোশাক" },
-  { id: "education", name: "শিক্ষা", short: "শিক্ষা" },
-  { id: "entertainment", name: "বিনোদিন", short: "বিনোদিন" },
-  { id: "gifts", name: "উপহার", short: "উপহার" },
-  { id: "family", name: "পরিবার", short: "পরিবার" },
-  { id: "savings", name: "সঞ্চেয়ে / জমা", short: "সঞ্চেয়ে" },
-  { id: "others", name: "অন্যান্য", short: "অন্যান্য" }
-];
+const CATEGORY_LABELS = {
+  bn: {
+    food: ["খাবার", "খাবার"], groceries: ["বাজার", "বাজার"], transport: ["যাতায়াত", "যাতায়াত"], rent: ["বাসা ভাড়া", "ভাড়া"], electricity: ["বিদ্যুৎ বিল", "বিদ্যুৎ"], water: ["পানি বিল", "পানি"], mobile: ["মোবাইল / ইন্টারনেট", "মোবাইল"], medicine: ["ঔষধ / স্বাস্থ্য", "ঔষধ"], clothing: ["পোশাক", "পোশাক"], education: ["শিক্ষা", "শিক্ষা"], entertainment: ["বিনোদন", "বিনোদন"], gifts: ["উপহার", "উপহার"], family: ["পরিবার", "পরিবার"], savings: ["সঞ্চয় / জমা", "সঞ্চয়"], others: ["অন্যান্য", "অন্যান্য"]
+  },
+  en: {
+    food: ["Food & Meals", "Food"], groceries: ["Groceries", "Groc"], transport: ["Transport", "Trans"], rent: ["Rent", "Rent"], electricity: ["Electricity Bill", "Bill"], water: ["Water Bill", "Water"], mobile: ["Mobile / Internet", "Mobile"], medicine: ["Medicine / Health", "Health"], clothing: ["Clothing", "Cloth"], education: ["Education", "Edu"], entertainment: ["Entertainment", "Fun"], gifts: ["Gifts", "Gifts"], family: ["Family", "Family"], savings: ["Savings / Deposit", "Save"], others: ["Miscellaneous / Others", "Other"]
+  }
+};
+
+const UI_TEXT = {
+  bn: {
+    connected: "Connected", failed: "Failed", offline: "Offline", lastSync: "শেষ সিঙ্ক: {time}", noLastSync: "শেষ সিঙ্ক: —",
+    versionUpdating: "নতুন ভার্সন আপডেট হচ্ছে…", syncNotReady: "সিঙ্ক প্রস্তুত নয়।", syncPulled: "সিঙ্ক হয়েছে। নতুন ডাটা এসেছে।", syncSaved: "সেভ ডাটা সিঙ্ক হয়েছে।", syncFailed: "সিঙ্ক ব্যর্থ। আবার চেষ্টা করুন।",
+    invalidBudget: "সঠিক মাসিক বাজেট লিখুন।", budgetSet: "বাজেট সেট হয়েছে।", smoothOnToast: "স্মুথ মোড চালু: স্ক্রল দ্রুত হবে।", smoothOffToast: "অ্যানিমেশন আবার চালু।", noBudgetAlert: "এখন কোনো বাজেট সতর্কতা নেই।",
+    invalidAmount: "সঠিক টাকা লিখুন।", expenseUpdated: "খরচ আপডেট হয়েছে।", expenseSaved: "খরচ সেভ হয়েছে।", invalidMoney: "সঠিক টাকার পরিমাণ লিখুন।", moneyAdded: "এই মাসে টাকা যোগ হয়েছে।", settingsSaved: "সেটিংস সেভ হয়েছে।", saveSettings: "সেটিংস সেভ",
+    resetTitle: "এই মাসের ডাটা রিসেট করবেন?", resetCopy: "এতে এই মাসের সেভ খরচ মুছে যাবে এবং বাজেট রিসেট হবে।", reset: "রিসেট", languageSet: "ভাষা সেট হয়েছে: {language}।", securityOn: "সিকিউরিটি লক চালু।", securityOffToast: "সিকিউরিটি লক বন্ধ।",
+    calculatorInvalid: "ক্যালকুলেটরের ফল সঠিক নয়।", languageToggle: "ভাষা: {language}", securityToggle: "সিকিউরিটি লক: {state}", on: "চালু", off: "বন্ধ", spentPercent: "{percent}% খরচ",
+    noExpenseTitle: "এখনও কোনো খরচ নেই", noExpenseCopy: "{days} দিন বাকি আছে। প্রথম খরচ যোগ করলে ট্রেন্ড ও রিপোর্ট পরিষ্কার হবে।", addFirstExpense: "প্রথম খরচ যোগ করুন", noBudgetTitle: "বাজেট সেট করা হয়নি", noBudgetCopy: "মাসিক বাজেট দিলে বাকি টাকা, নিরাপদ দৈনিক খরচ এবং সতর্কতা দেখা যাবে।", setBudget: "বাজেট সেট করুন",
+    budgetExceeded: "বাজেট ছাড়িয়ে গেছে", spendingPressure: "খরচের চাপ বেশি", beCareful: "সতর্ক থাকুন", budgetSafe: "বাজেট নিরাপদ", dashboardCopy: "আজ খরচ {today}। {days} দিন বাকি, নিরাপদ দৈনিক খরচ {daily}।", viewReports: "রিপোর্ট দেখুন", addExpense: "খরচ যোগ করুন", instantInsight: "তাৎক্ষণিক ইনসাইট",
+    trend: "ট্রেন্ড", forecast: "ফোরকাস্ট", safePerDay: "নিরাপদ/দিন", alert: "সতর্কতা", budgetNeeded: "বাজেট দিন", overspendRisk: "ওভারস্পেন্ড ঝুঁকি", entries: "{count}টি এন্ট্রি • {total}", savedExpensesShowing: "সেভ খরচ দেখানো হচ্ছে", search: "সার্চ: {value}", dateFilter: "তারিখ ফিল্টার", amountFilter: "টাকার ফিল্টার",
+    noHistory: "খরচ পাওয়া যায়নি।", addFirstShort: "প্রথম খরচ যোগ", total: "মোট: {total}", categoryCount: "{count} ক্যাটাগরি", highestDay: "শীর্ষ দিন: {date}", highestDayEmpty: "শীর্ষ দিন: —", previousMonth: "গত মাস", noData: "ডাটা নেই", savingsRate: "সঞ্চয় হার", unusual: "অস্বাভাবিক", none: "নেই", action: "অ্যাকশন", categoryChange: "ক্যাটাগরি বদল", allCategories: "সেভ ক্যাটাগরি",
+    todayNoExpense: "আজ কোনো খরচ নেই।", noExpenseAdded: "এখনও কোনো খরচ যোগ হয়নি।", noDescription: "বিবরণ নেই", recurring: "বারবার", category: "ক্যাটাগরি", amount: "টাকা", description: "বিবরণ", date: "তারিখ", time: "সময়", editEntry: "এডিট এন্ট্রি", update: "আপডেট", newEntry: "নতুন এন্ট্রি", saveHome: "সেভ করে হোমে",
+    deleteExpenseTitle: "এই খরচ ডিলিট করবেন?", deleteExpenseCopy: "খরচটি মুছে যাবে, বাকি টাকা আবার ঠিক হবে।", delete: "ডিলিট", undoDone: "খরচ ফিরিয়ে আনা হয়েছে।", monthReset: "মাসের ডাটা রিসেট হয়েছে।", categoryNoData: "ক্যাটাগরি ডাটা নেই।", budgetTransactions: "বাজেটের {percent}% • {count}টি লেনদেন", emptyCopy: "ডাটা যোগ করলে এখানে পরিষ্কার বিশ্লেষণ দেখাবে।",
+    noTrend: "ট্রেন্ড নেই", increasing: "বাড়ছে", decreasing: "কমছে", stable: "স্থিতিশীল", notStarted: "খরচ শুরু হয়নি", withinBudget: "বাজেটের মধ্যে", exceedDays: "{days} দিনে ছাড়াবে", alreadyExceeded: "ইতিমধ্যে ছাড়িয়েছে", noBigChange: "বড় পরিবর্তন নেই", categoryIncreased: "{name} বেড়েছে {percent}%", categoryDecreased: "{name} কমেছে {percent}%",
+    backupRestored: "ব্যাকআপ রিস্টোর হয়েছে।", restoreFailed: "রিস্টোর ব্যর্থ। ব্যাকআপ ফাইল সঠিক নয়।", popupBlocked: "PDF এক্সপোর্টের জন্য পপআপ allow করুন।", pdfTitle: "হিসাব রিপোর্ট", pdfHeading: "হিসাব মাসিক রিপোর্ট - {month}", budget: "বাজেট", spent: "খরচ", remaining: "বাকি",
+    budgetOverToast: "বাজেট {amount} ছাড়িয়েছে।", budgetAlmostDone: "বাজেট প্রায় শেষ। বাকি {amount}।", budget75: "সতর্কতা: বাজেটের ২৫% বাকি।", budget50: "বাজেটের অর্ধেক খরচ হয়েছে।", budgetOverAlert: "বাজেট ছাড়িয়েছে — {amount} বেশি খরচ হয়েছে।", budget90Alert: "বাজেট প্রায় শেষ — বাকি {amount}।", budget75Alert: "বাজেট সতর্কতা: ৭৫% খরচ হয়েছে।", budget50Alert: "মনে রাখুন: বাজেটের অর্ধেক খরচ হয়েছে।",
+    savedTo: "{amount} {category}-এ সেভ হয়েছে।", goodNight: "শুভ রাত্রি", goodMorning: "শুভ সকাল", goodAfternoon: "শুভ দুপুর", goodEvening: "শুভ সন্ধ্যা", todaySuffix: " (আজ)", yesterdaySuffix: " (গতকাল)", noPreviousData: "আগের ডাটা নেই", sameAsLastMonth: "গত মাসের সমান", monthMoreLess: "গত মাসের চেয়ে {amount} {direction} খরচ", more: "বেশি", less: "কম", smoothOn: "স্মুথ মোড চালু", smoothMode: "স্মুথ মোড",
+    appDescription: "হিসাব একটি মোবাইল-ফার্স্ট মাসিক খরচ ট্র্যাকার।", appName: "হিসাব", setupTitle: "মাসিক বাজেট সেট করুন", onboardingBudget: "১. বাজেট", onboardingCategory: "২. ক্যাটাগরি", onboardingExpense: "৩. প্রথম খরচ", setupCopy: "আগে মাসিক বাজেট সেট করুন। এরপর ক্যাটাগরি বেছে প্রথম খরচ যোগ করুন।", setupBudgetLabel: "আপনার মাসিক বাজেট", custom: "নিজস্ব", carryForward: "গত মাসের বাকি টাকা যোগ করুন", startTracking: "শুরু করুন", thisMonth: "এই মাস", budgetAlerts: "বাজেট সতর্কতা", openSettings: "সেটিংস খুলুন", darkMode: "ডার্ক মোড", addMoney: "টাকা যোগ", edit: "এডিট", quickActions: "দ্রুত কাজ", money: "টাকা", reports: "রিপোর্ট", calc: "ক্যালক", today: "আজ", todayExpense: "আজকের খরচ", dailyAverage: "দৈনিক গড়", highestExpense: "সর্বোচ্চ খরচ", topCategory: "শীর্ষ ক্যাটাগরি", daysLeft: "দিন বাকি", spendingChart: "খরচের চিত্র", spendingHistory: "খরচের ইতিহাস", searchExpense: "খরচ খুঁজুন", sevenDays: "৭ দিন", highExpense: "বড় খরচ", clear: "ক্লিয়ার", filter: "ফিল্টার", close: "বন্ধ", from: "শুরু", to: "শেষ", min: "কম ৳", max: "বেশি ৳", sort: "সাজান", newest: "নতুন আগে", oldest: "পুরনো আগে", highest: "বেশি টাকা আগে", lowest: "কম টাকা আগে", saveFast: "দ্রুত সেভ", cancelEdit: "এডিট বাতিল", addMoneyTitle: "টাকা যোগ করুন", addToMonth: "এই মাসে যোগ হবে", optionalNote: "নোট (ঐচ্ছিক)", notePlaceholder: "বেতন, বোনাস, সঞ্চয়", compare: "বিশ্লেষণ", reportsTitle: "মাসিক রিপোর্ট", reportBudget: "মোট বাজেট", reportSpent: "মোট খরচ", categoryAnalysis: "ক্যাটাগরি বিশ্লেষণ", monthTrend: "মাসের ট্রেন্ড", topThree: "শীর্ষ ৩ একক খরচ", tools: "টুলস", morePage: "আরও", colors: "রং", accentColors: "অ্যাকসেন্ট রং", exportPdf: "PDF এক্সপোর্ট", calculator: "ক্যালকুলেটর", syncNow: "সিঙ্ক করুন", dataControl: "ডাটা কন্ট্রোল", settings: "সেটিংস", currencySymbol: "কারেন্সি চিহ্ন", resetMonth: "মাসের ডাটা রিসেট", cloudSync: "ক্লাউড সিঙ্ক", retrySync: "আবার সিঙ্ক করুন", backupData: "ডাটা ব্যাকআপ", restoreData: "ডাটা রিস্টোর", navHome: "হোম", navHistory: "ইতিহাস", navAdd: "যোগ", navReports: "রিপোর্ট", navMore: "আরও", modalTitle: "খরচের বিস্তারিত", modalEdit: "এডিট", modalDelete: "ডিলিট", confirmDefaultTitle: "আপনি নিশ্চিত?", confirmDefaultCopy: "এই কাজটি ফিরিয়ে নেওয়া যাবে না।", confirmCancel: "বাতিল", confirmAction: "ডিলিট", successTitle: "খরচ যোগ হয়েছে", undo: "ফিরিয়ে আনুন", amountKeypad: "টাকার কীপ্যাড", backspace: "এক ঘর মুছুন", quickCategories: "দ্রুত ক্যাটাগরি", onboardingSteps: "অনবোর্ডিং ধাপ", quickBudget: "দ্রুত বাজেট", budgetUsage: "বাজেট ব্যবহার",
+  },
+  en: {
+    connected: "Connected", failed: "Failed", offline: "Offline", lastSync: "Last sync: {time}", noLastSync: "Last sync: —",
+    versionUpdating: "Updating to the latest version…", syncNotReady: "Sync is not ready.", syncPulled: "Sync complete. New data arrived.", syncSaved: "Saved data synced.", syncFailed: "Sync failed. Try again.",
+    invalidBudget: "Enter a valid monthly budget.", budgetSet: "Budget set.", smoothOnToast: "Smooth Mode on: scrolling will be faster.", smoothOffToast: "Animations restored.", noBudgetAlert: "No budget alert right now.",
+    invalidAmount: "Enter a valid amount.", expenseUpdated: "Expense updated.", expenseSaved: "Expense saved.", invalidMoney: "Enter a valid amount.", moneyAdded: "Money added to this month.", settingsSaved: "Settings saved.", saveSettings: "Save Settings",
+    resetTitle: "Reset this month’s data?", resetCopy: "This will delete this month’s saved expenses and reset the budget.", reset: "Reset", languageSet: "Language set to {language}.", securityOn: "Security lock enabled.", securityOffToast: "Security lock disabled.",
+    calculatorInvalid: "Calculator result is not valid.", languageToggle: "Language: {language}", securityToggle: "Security lock: {state}", on: "On", off: "Off", spentPercent: "{percent}% spent",
+    noExpenseTitle: "No expenses yet", noExpenseCopy: "{days} days remaining. Add the first expense to unlock trends and reports.", addFirstExpense: "Add first expense", noBudgetTitle: "Budget is not set", noBudgetCopy: "Set a monthly budget to see remaining money, safe daily spend, and alerts.", setBudget: "Set budget",
+    budgetExceeded: "Budget exceeded", spendingPressure: "Spending pressure is high", beCareful: "Be careful", budgetSafe: "Budget is safe", dashboardCopy: "Today spent {today}. {days} days left, safe daily spend {daily}.", viewReports: "View reports", addExpense: "Add expense", instantInsight: "Immediate insight",
+    trend: "Trend", forecast: "Forecast", safePerDay: "Safe/day", alert: "Alert", budgetNeeded: "Set budget", overspendRisk: "Overspend risk", entries: "{count} entries • {total}", savedExpensesShowing: "Showing saved expenses", search: "Search: {value}", dateFilter: "Date filter", amountFilter: "Amount filter",
+    noHistory: "No expenses found.", addFirstShort: "Add first expense", total: "Total: {total}", categoryCount: "{count} categories", highestDay: "Top day: {date}", highestDayEmpty: "Top day: —", previousMonth: "Last month", noData: "No data", savingsRate: "Savings rate", unusual: "Unusual", none: "None", action: "Action", categoryChange: "Category change", allCategories: "All categories",
+    todayNoExpense: "No expenses today.", noExpenseAdded: "No expenses added yet.", noDescription: "No description", recurring: "Recurring", category: "Category", amount: "Amount", description: "Description", date: "Date", time: "Time", editEntry: "Edit entry", update: "Update", newEntry: "New entry", saveHome: "Save and Home",
+    deleteExpenseTitle: "Delete this expense?", deleteExpenseCopy: "This expense will be removed and remaining balance will update.", delete: "Delete", undoDone: "Expense restored.", monthReset: "Month data reset.", categoryNoData: "No category data.", budgetTransactions: "{percent}% of budget • {count} transactions", emptyCopy: "Add data to see clear insights here.",
+    noTrend: "No trend", increasing: "Increasing", decreasing: "Decreasing", stable: "Stable", notStarted: "Spending has not started", withinBudget: "Within budget", exceedDays: "Will exceed in {days} days", alreadyExceeded: "Already exceeded", noBigChange: "No big change", categoryIncreased: "{name} increased {percent}%", categoryDecreased: "{name} decreased {percent}%",
+    backupRestored: "Backup restored.", restoreFailed: "Restore failed. Backup file is invalid.", popupBlocked: "Allow popups to export PDF.", pdfTitle: "Hisab Report", pdfHeading: "Hisab Monthly Report - {month}", budget: "Budget", spent: "Spent", remaining: "Remaining",
+    budgetOverToast: "Budget exceeded by {amount}.", budgetAlmostDone: "Budget almost done. Remaining {amount}.", budget75: "Alert: 25% of budget remaining.", budget50: "Half of the budget has been spent.", budgetOverAlert: "Budget exceeded — {amount} overspent.", budget90Alert: "Budget almost done — remaining {amount}.", budget75Alert: "Budget alert: 75% spent.", budget50Alert: "Reminder: half of the budget has been spent.",
+    savedTo: "{amount} saved to {category}.", goodNight: "Good Night", goodMorning: "Good Morning", goodAfternoon: "Good Afternoon", goodEvening: "Good Evening", todaySuffix: " (Today)", yesterdaySuffix: " (Yesterday)", noPreviousData: "No previous data", sameAsLastMonth: "Same as last month", monthMoreLess: "You spent {amount} {direction} than last month", more: "more", less: "less", smoothOn: "Smooth Mode On", smoothMode: "Smooth Mode",
+    appDescription: "Hisab is a mobile-first monthly expense tracker.", appName: "Hisab", setupTitle: "Set Monthly Budget", onboardingBudget: "1. Budget", onboardingCategory: "2. Category", onboardingExpense: "3. First Expense", setupCopy: "Set a monthly budget first. Then choose a category and add your first expense.", setupBudgetLabel: "Your monthly budget", custom: "Custom", carryForward: "Add last month’s remaining balance", startTracking: "Start", thisMonth: "This Month", budgetAlerts: "Budget alerts", openSettings: "Open settings", darkMode: "Dark mode", addMoney: "Add Money", edit: "Edit", quickActions: "Quick actions", money: "Money", reports: "Reports", calc: "Calc", today: "Today", todayExpense: "Today’s Expense", dailyAverage: "Daily Average", highestExpense: "Highest Expense", topCategory: "Top Category", daysLeft: "Days Left", spendingChart: "Spending Chart", spendingHistory: "Expense History", searchExpense: "Search expenses", sevenDays: "7 days", highExpense: "High expense", clear: "Clear", filter: "Filter", close: "Close", from: "From", to: "To", min: "Min ৳", max: "Max ৳", sort: "Sort", newest: "Newest first", oldest: "Oldest first", highest: "Highest amount first", lowest: "Lowest amount first", saveFast: "Quick Save", cancelEdit: "Cancel Edit", addMoneyTitle: "Add Money", addToMonth: "Add to this month", optionalNote: "Note (optional)", notePlaceholder: "Salary, bonus, savings", compare: "Analysis", reportsTitle: "Monthly Report", reportBudget: "Total Budget", reportSpent: "Total Spent", categoryAnalysis: "Category Analysis", monthTrend: "Monthly Trend", topThree: "Top 3 Single Expenses", tools: "Tools", morePage: "More", colors: "Colors", accentColors: "Accent Colors", exportPdf: "Export PDF", calculator: "Calculator", syncNow: "Sync Now", dataControl: "Data Control", settings: "Settings", currencySymbol: "Currency symbol", resetMonth: "Reset Month Data", cloudSync: "Cloud Sync", retrySync: "Sync Again", backupData: "Backup Data", restoreData: "Restore Data", navHome: "Home", navHistory: "History", navAdd: "Add", navReports: "Reports", navMore: "More", modalTitle: "Expense Details", modalEdit: "Edit", modalDelete: "Delete", confirmDefaultTitle: "Are you sure?", confirmDefaultCopy: "This action cannot be undone.", confirmCancel: "Cancel", confirmAction: "Delete", successTitle: "Expense Added", undo: "Undo", amountKeypad: "Amount keypad", backspace: "Backspace", quickCategories: "Quick categories", onboardingSteps: "Onboarding steps", quickBudget: "Quick budget", budgetUsage: "Budget usage",
+  }
+};
+
+const CATEGORIES = Object.keys(CATEGORY_LABELS.en).map((id) => ({ id }));
 
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => Array.from(document.querySelectorAll(selector));
+
+function lang() {
+  return state?.settings?.language === "en" ? "en" : "bn";
+}
+
+function tr(key, values = {}) {
+  const dictionary = UI_TEXT[lang()] || UI_TEXT.bn;
+  let value = dictionary[key] || UI_TEXT.bn[key] || key;
+  Object.entries(values).forEach(([name, replacement]) => {
+    value = value.replaceAll(`{${name}}`, String(replacement));
+  });
+  return value;
+}
+
+function monthNames() {
+  return MONTH_NAMES[lang()] || MONTH_NAMES.bn;
+}
+
+function themeLabel(id) {
+  return THEME_LABELS[lang()]?.[id] || THEME_LABELS.en[id] || id;
+}
+
+function categoryLabel(id) {
+  const labels = CATEGORY_LABELS[lang()]?.[id] || CATEGORY_LABELS.bn[id] || CATEGORY_LABELS.en.others;
+  return { name: labels[0], short: labels[1] };
+}
+
+function localizeExpense(expense) {
+  const label = categoryLabel(expense.category);
+  return { ...expense, categoryName: label.name };
+}
+
+function languageName() {
+  return state.settings.language === "bn" ? "বাংলা" : "English";
+}
 
 const defaultState = {
   budgets: {},
@@ -119,7 +197,40 @@ let touchScrollTimer = null;
 
 document.addEventListener("DOMContentLoaded", init);
 
+
+function applyStaticText() {
+  document.documentElement.lang = lang();
+  document.title = tr("appName");
+  const description = document.querySelector('meta[name="description"]');
+  if (description) description.content = tr("appDescription");
+  document.querySelectorAll("[data-i18n]").forEach((node) => {
+    node.textContent = tr(node.dataset.i18n);
+  });
+  document.querySelectorAll("[data-i18n-placeholder]").forEach((node) => {
+    node.setAttribute("placeholder", tr(node.dataset.i18nPlaceholder));
+  });
+  document.querySelectorAll("[data-i18n-aria]").forEach((node) => {
+    node.setAttribute("aria-label", tr(node.dataset.i18nAria));
+  });
+  const ariaLabels = [
+    ["#alert-bell", "budgetAlerts"], ["[data-open-settings='profile']", "openSettings"], ["#theme-toggle", "darkMode"], ["#mini-spending-chart", "spendingChart"],
+    ["#amount-keypad", "amountKeypad"], ["[data-amount-key='back']", "backspace"], ["#quick-category-row", "quickCategories"], ["#accent-palette .theme-picker", "accentColors"],
+    [".bottom-nav", "navMore"], ["#close-expense-modal", "close"], [".identity-hero", "appName"]
+  ];
+  ariaLabels.forEach(([selector, key]) => {
+    const node = document.querySelector(selector);
+    if (node) node.setAttribute("aria-label", tr(key));
+  });
+  document.querySelectorAll("[data-theme-pick]").forEach((button) => {
+    const label = themeLabel(button.dataset.themePick);
+    button.setAttribute("aria-label", label);
+    const text = button.querySelector("span");
+    if (text) text.textContent = label;
+  });
+}
+
 function init() {
+  applyStaticText();
   hydrateSvgIcons();
   bindNavigation();
   bindSetup();
@@ -171,7 +282,7 @@ function registerServiceWorker() {
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (reloading) return;
     reloading = true;
-    showToast("নতুন ভার্সন আপডেট হচ্ছে…");
+    showToast(tr("versionUpdating"));
     setTimeout(() => window.location.reload(), 600);
   });
 }
@@ -299,7 +410,7 @@ function bindCloudSync() {
   syncButton?.addEventListener("click", async () => {
     if (!window.cloudSync) {
       applyStatus("offline");
-      showToast("সিঙ্ক প্রস্তুত নয়।", "warning");
+      showToast(tr("syncNotReady"), "warning");
       return;
     }
     const button = syncButton;
@@ -312,18 +423,18 @@ function bindCloudSync() {
       const remoteTs = Number(remote?.lastUpdatedAt) || 0;
       if (remote && remoteTs > localTsBefore) {
         replaceStateFromCloud(remote);
-        showToast("সিঙ্ক হয়েছে। নতুন ডাটা এসেছে।");
+        showToast(tr("syncPulled"));
       } else {
         state.settings.lastSyncedAt = Date.now();
         saveState();
         updateLastSyncTime();
-        showToast("সেভ ডাটা সিঙ্ক হয়েছে।");
+        showToast(tr("syncSaved"));
       }
       applyStatus("online");
     } catch (error) {
       console.warn("[cloud] sync now failed", error);
       applyStatus("failed");
-      showToast("সিঙ্ক ব্যর্থ। আবার চেষ্টা করুন।", "warning");
+      showToast(tr("syncFailed"), "warning");
     } finally {
       button.dataset.busy = "0";
       button.disabled = false;
@@ -338,16 +449,16 @@ function normalizeCloudStatus(s) {
 }
 
 function formatCloudStatus(s) {
-  if (s === "online") return "Connected";
-  if (s === "failed") return "Failed";
-  return "Offline";
+  if (s === "online") return tr("connected");
+  if (s === "failed") return tr("failed");
+  return tr("offline");
 }
 
 function updateLastSyncTime() {
   const target = $("#last-sync-time");
   if (!target) return;
   const ts = Number(state.settings.lastSyncedAt) || Number(state.lastUpdatedAt) || 0;
-  target.textContent = ts ? `শেষ সিঙ্ক: ${new Date(ts).toLocaleString("bn-BD", { dateStyle: "medium", timeStyle: "short" })}` : "শেষ সিঙ্ক: —";
+  target.textContent = ts ? tr("lastSync", { time: new Date(ts).toLocaleString(lang() === "bn" ? "bn-BD" : "en-US", { dateStyle: "medium", timeStyle: "short" }) }) : tr("noLastSync");
 }
 
 function syncSettingsForm() {
@@ -425,14 +536,14 @@ function bindSetup() {
   $("#start-tracking").addEventListener("click", () => {
     const amount = Number($("#setup-budget").value);
     if (!amount || amount <= 0) {
-      showToast("সঠিক মাসিক বাজেট লিখুন।", "warning");
+      showToast(tr("invalidBudget"), "warning");
       return;
     }
     setBudget(amount, $("#setup-carry-forward").checked);
     $("#setup-screen").classList.add("hidden");
     $("#main-app").classList.remove("hidden");
     renderAll();
-    showToast("বাজেট সেট হয়েছে।");
+    showToast(tr("budgetSet"));
   });
 }
 
@@ -451,7 +562,7 @@ function bindNavigation() {
     state.settings.performanceMode = !state.settings.performanceMode;
     saveState();
     applyTheme();
-    showToast(state.settings.performanceMode ? "স্মুথ মোড চালু: স্ক্রল দ্রুত হবে।" : "অ্যানিমেশন আবার চালু।");
+    showToast(state.settings.performanceMode ? tr("smoothOnToast") : tr("smoothOffToast"));
   });
 
   $("#accent-toggle")?.addEventListener("click", () => {
@@ -502,7 +613,7 @@ function bindNavigation() {
     const alert = $("#budget-alert");
     const hasAlert = alert.textContent.trim().length > 0;
     if (!hasAlert) {
-      showToast("এখন কোনো বাজেট সতর্কতা নেই।");
+      showToast(tr("noBudgetAlert"));
       return;
     }
     alert.classList.toggle("hidden");
@@ -554,7 +665,7 @@ function bindExpenseForm() {
     event.preventDefault();
     const amount = Number(amountInputRaw || $("#expense-amount").value);
     if (!amount || amount <= 0) {
-      showToast("সঠিক টাকা লিখুন।", "warning");
+      showToast(tr("invalidAmount"), "warning");
       return;
     }
 
@@ -573,11 +684,11 @@ function bindExpenseForm() {
     const editingId = $("#editing-expense-id").value;
     if (editingId) {
       state.expenses = state.expenses.map((item) => item.id === editingId ? expense : item);
-      showToast("খরচ আপডেট হয়েছে।");
+      showToast(tr("expenseUpdated"));
     } else {
       state.expenses.push(expense);
       state.settings.lastUsedCategory = category.id;
-      showToast("খরচ সেভ হয়েছে।");
+      showToast(tr("expenseSaved"));
       showSuccessOverlay(expense);
       saveState();
       resetExpenseForm();
@@ -636,14 +747,14 @@ function bindExpenseForm() {
     event.preventDefault();
     const amount = Number($("#money-amount").value);
     if (!addMoney(amount, $("#money-note").value)) {
-      showToast("সঠিক টাকার পরিমাণ লিখুন।", "warning");
+      showToast(tr("invalidMoney"), "warning");
       return;
     }
     $("#money-amount").value = "";
     $("#money-note").value = "";
     updateMoneyPreview();
     switchPage("home");
-    showToast("এই মাসে টাকা যোগ হয়েছে।");
+    showToast(tr("moneyAdded"));
   });
 
   $("#money-amount")?.addEventListener("input", updateMoneyPreview);
@@ -681,7 +792,7 @@ function bindSettings() {
     saveState();
     applyTheme();
     renderAll();
-    showToast("সেটিংস সেভ হয়েছে।");
+    showToast(tr("settingsSaved"));
   });
 
   $$(".theme-picker button").forEach((button) => {
@@ -694,9 +805,9 @@ function bindSettings() {
 
   $("#reset-month").addEventListener("click", () => {
     pendingDelete = { type: "reset" };
-    $("#confirm-title").textContent = "এই মাসের ডাটা রিসেট করবেন?";
-    $("#confirm-copy").textContent = "এতে এই মাসের সেভ খরচ মুছে যাবে এবং বাজেট রিসেট হবে।";
-    $("#confirm-action").textContent = "রিসেট";
+    $("#confirm-title").textContent = tr("resetTitle");
+    $("#confirm-copy").textContent = tr("resetCopy");
+    $("#confirm-action").textContent = tr("reset");
     $("#confirm-modal").classList.remove("hidden");
   });
 
@@ -706,14 +817,18 @@ function bindSettings() {
   $("#language-toggle")?.addEventListener("click", () => {
     state.settings.language = state.settings.language === "bn" ? "en" : "bn";
     saveState();
-    syncInputs();
-    showToast(`ভাষা সেট হয়েছে: ${state.settings.language === "bn" ? "বাংলা" : "English"}।`);
+    renderCategories();
+    applyStaticText();
+    applyTheme();
+    renderAll();
+    resetExpenseForm();
+    showToast(tr("languageSet", { language: languageName() }));
   });
   $("#security-toggle")?.addEventListener("click", () => {
     state.settings.securityLock = !state.settings.securityLock;
     saveState();
     syncInputs();
-    showToast(state.settings.securityLock ? "সিকিউরিটি লক চালু।" : "সিকিউরিটি লক বন্ধ।");
+    showToast(state.settings.securityLock ? tr("securityOn") : tr("securityOffToast"));
   });
 
   $("#export-pdf").addEventListener("click", exportPdf);
@@ -736,7 +851,7 @@ function bindCalculator() {
   $("#calculator-add-result").addEventListener("click", () => {
     const result = Number($("#calc-result").textContent.replaceAll(",", ""));
     if (!Number.isFinite(result)) {
-      showToast("ক্যালকুলেটরের ফল সঠিক নয়।", "warning");
+      showToast(tr("calculatorInvalid"), "warning");
       return;
     }
     resetExpenseForm();
@@ -799,6 +914,7 @@ function evaluateExpression(expression) {
 }
 
 function renderAll() {
+  applyStaticText();
   syncInputs();
   renderDashboard();
   if (activePage === "history") renderHistory();
@@ -818,8 +934,8 @@ function syncInputs() {
   $("#settings-currency-prefix").textContent = state.settings.currency;
   $("#settings-budget").value = budget.totalBudget || "";
   $("#settings-currency").value = state.settings.currency;
-  $("#language-toggle").textContent = `ভাষা: ${state.settings.language === "bn" ? "বাংলা" : "English"}`;
-  $("#security-toggle").textContent = `সিকিউরিটি লক: ${state.settings.securityLock ? "চালু" : "বন্ধ"}`;
+  $("#language-toggle").textContent = tr("languageToggle", { language: languageName() });
+  $("#security-toggle").textContent = tr("securityToggle", { state: state.settings.securityLock ? tr("on") : tr("off") });
   $$(".theme-picker button").forEach((button) => button.classList.toggle("active", button.dataset.themePick === state.settings.accentTheme));
   updateLastSyncTime();
   updateAmountPreview();
@@ -837,7 +953,7 @@ function renderDashboard() {
   balanceCard.classList.toggle("warning", spentPercent >= 50 && spentPercent < 75);
   balanceCard.classList.toggle("danger", spentPercent >= 75);
   $("#remaining-balance").textContent = money(summary.remaining);
-  $("#spent-percent").textContent = `${Math.round(spentPercent)}% খরচ`;
+  $("#spent-percent").textContent = tr("spentPercent", { percent: Math.round(spentPercent) });
   $("#total-budget").textContent = money(summary.budget);
   $("#total-spent").textContent = money(summary.spent);
   $("#balance-left").textContent = money(summary.remaining);
@@ -860,28 +976,28 @@ function renderDashboard() {
 function renderDashboardBrief(summary, todaySpent) {
   const daysLeft = daysRemainingInMonth();
   const percent = summary.budget ? (summary.spent / summary.budget) * 100 : 0;
-  let title = "এখনও কোনো খরচ নেই";
-  let copy = `${daysLeft} দিন বাকি আছে। প্রথম খরচ যোগ করলে ট্রেন্ড ও রিপোর্ট পরিষ্কার হবে।`;
-  let action = "প্রথম খরচ যোগ করুন";
+  let title = tr("noExpenseTitle");
+  let copy = tr("noExpenseCopy", { days: daysLeft });
+  let action = tr("addFirstExpense");
   let target = "add";
 
   if (!summary.budget) {
-    title = "বাজেট সেট করা হয়নি";
-    copy = "মাসিক বাজেট দিলে বাকি টাকা, নিরাপদ দৈনিক খরচ এবং সতর্কতা দেখা যাবে।";
-    action = "বাজেট সেট করুন";
+    title = tr("noBudgetTitle");
+    copy = tr("noBudgetCopy");
+    action = tr("setBudget");
     target = "more";
   } else if (summary.expenses.length) {
     const safeDaily = Math.max(0, summary.remaining) / Math.max(1, daysLeft || 1);
-    const pressure = percent >= 100 ? "বাজেট ছাড়িয়ে গেছে" : percent >= 85 ? "খরচের চাপ বেশি" : percent >= 70 ? "সতর্ক থাকুন" : "বাজেট নিরাপদ";
+    const pressure = percent >= 100 ? tr("budgetExceeded") : percent >= 85 ? tr("spendingPressure") : percent >= 70 ? tr("beCareful") : tr("budgetSafe");
     title = pressure;
-    copy = `আজ খরচ ${money(todaySpent)}। ${daysLeft} দিন বাকি, নিরাপদ দৈনিক খরচ ${money(safeDaily)}।`;
-    action = percent >= 85 ? "রিপোর্ট দেখুন" : "খরচ যোগ করুন";
+    copy = tr("dashboardCopy", { today: money(todaySpent), days: daysLeft, daily: money(safeDaily) });
+    action = percent >= 85 ? tr("viewReports") : tr("addExpense");
     target = percent >= 85 ? "reports" : "add";
   }
 
   $("#dashboard-brief").innerHTML = `
     <div>
-      <span>তাৎক্ষণিক ইনসাইট</span>
+      <span>${tr("instantInsight")}</span>
       <strong>${title}</strong>
       <p>${copy}</p>
     </div>
@@ -894,12 +1010,12 @@ function renderDashboardInsights(summary) {
   const safeDaily = Math.max(0, summary.remaining) / Math.max(1, daysRemainingInMonth() || 1);
   const percent = summary.budget ? (summary.spent / summary.budget) * 100 : 0;
   const trend = recentTrend(summary);
-  const alertText = percent >= 100 ? "বাজেট ছাড়িয়েছে" : percent >= 85 ? "ওভারস্পেন্ড ঝুঁকি" : percent >= 70 ? "সতর্ক থাকুন" : "বাজেট নিরাপদ";
+  const alertText = percent >= 100 ? tr("budgetExceeded") : percent >= 85 ? tr("overspendRisk") : percent >= 70 ? tr("beCareful") : tr("budgetSafe");
   $("#dashboard-insights").innerHTML = [
-    insightCard("ট্রেন্ড", trend),
-    insightCard("ফোরকাস্ট", summary.budget ? money(forecast) : "বাজেট দিন"),
-    insightCard("নিরাপদ/দিন", summary.budget ? money(safeDaily) : "—"),
-    insightCard("সতর্কতা", alertText, percent >= 85 ? "danger" : percent >= 70 ? "warning" : "success")
+    insightCard(tr("trend"), trend),
+    insightCard(tr("forecast"), summary.budget ? money(forecast) : tr("budgetNeeded")),
+    insightCard(tr("safePerDay"), summary.budget ? money(safeDaily) : "—"),
+    insightCard(tr("alert"), alertText, percent >= 85 ? "danger" : percent >= 70 ? "warning" : "success")
   ].join("");
 }
 
@@ -912,7 +1028,7 @@ function renderHistory() {
   renderHistoryCategoryBlocks(expenses);
 
   if (!expenses.length) {
-    container.innerHTML = emptyStateHtml("খরচ পাওয়া যায়নি।", "প্রথম খরচ যোগ", "add");
+    container.innerHTML = emptyStateHtml(tr("noHistory"), tr("addFirstShort"), "add");
     return;
   }
 
@@ -920,7 +1036,7 @@ function renderHistory() {
     <section class="history-date-group">
       <div class="date-divider">
         <span>${formatDateHeading(date)}</span>
-        <strong>মোট: ${money(sumExpenses(items))}</strong>
+        <strong>${tr("total", { total: money(sumExpenses(items)) })}</strong>
       </div>
       ${items.map(expenseCardHtml).join("")}
     </section>
@@ -932,8 +1048,8 @@ function renderHistorySummary(expenses) {
   const filters = activeFilterLabels();
   const total = sumExpenses(expenses);
   $("#history-filter-summary").innerHTML = `
-    <strong>${expenses.length}টি এন্ট্রি • ${money(total)}</strong>
-    <span>${filters.length ? filters.join(" • ") : "সেভ খরচ দেখানো হচ্ছে"}</span>
+    <strong>${tr("entries", { count: expenses.length, total: money(total) })}</strong>
+    <span>${filters.length ? filters.join(" • ") : tr("savedExpensesShowing")}</span>
   `;
 }
 
@@ -956,10 +1072,10 @@ function renderHistoryCategoryBlocks(expenses) {
 function activeFilterLabels() {
   const labels = [];
   const search = $("#search-expense").value.trim();
-  if (search) labels.push(`সার্চ: ${search}`);
+  if (search) labels.push(tr("search", { value: search }));
   if ($("#filter-category").value) labels.push(getCategory($("#filter-category").value).name);
-  if ($("#filter-from").value || $("#filter-to").value) labels.push("তারিখ ফিল্টার");
-  if ($("#filter-min").value || $("#filter-max").value) labels.push("টাকার ফিল্টার");
+  if ($("#filter-from").value || $("#filter-to").value) labels.push(tr("dateFilter"));
+  if ($("#filter-min").value || $("#filter-max").value) labels.push(tr("amountFilter"));
   return labels;
 }
 
@@ -970,8 +1086,8 @@ function renderReports() {
   $("#report-spent").textContent = money(summary.spent);
   $("#report-remaining").textContent = money(summary.remaining);
   $("#report-average").textContent = money(summary.dailyAverage);
-  $("#category-count").textContent = `${summary.categoryRows.length} ক্যাটাগরি`;
-  $("#highest-day").textContent = summary.highestDay ? `শীর্ষ দিন: ${shortDate(summary.highestDay.date)}` : "শীর্ষ দিন: —";
+  $("#category-count").textContent = tr("categoryCount", { count: summary.categoryRows.length });
+  $("#highest-day").textContent = summary.highestDay ? tr("highestDay", { date: shortDate(summary.highestDay.date) }) : tr("highestDayEmpty");
   $("#month-comparison").textContent = monthComparison(selectedMonth, summary.spent);
   renderReportInsights(summary);
   renderDonut(summary);
@@ -990,13 +1106,13 @@ function renderReportInsights(summary) {
   const exceedText = budgetExceedText(summary, forecast);
   const categoryChange = strongestCategoryChange(summary, previousKey);
   $("#report-insights").innerHTML = [
-    insightCard("গত মাস", previousSpent ? `${diff >= 0 ? "+" : "-"}${money(Math.abs(diff))}` : "ডাটা নেই", diff > 0 ? "warning" : "success"),
-    insightCard("সঞ্চেয়ে হার", summary.budget ? `${Math.round(savingsRate)}%` : "বাজেট দিন"),
-    insightCard("অস্বাভাবিক", unusual ? `${unusual.categoryName} ${money(unusual.amount)}` : "নেই"),
-    insightCard("অ্যাকশন", exceedText, forecast > summary.budget && summary.budget ? "danger" : "success")
+    insightCard(tr("previousMonth"), previousSpent ? `${diff >= 0 ? "+" : "-"}${money(Math.abs(diff))}` : tr("noData"), diff > 0 ? "warning" : "success"),
+    insightCard(tr("savingsRate"), summary.budget ? `${Math.round(savingsRate)}%` : tr("budgetNeeded")),
+    insightCard(tr("unusual"), unusual ? `${localizeExpense(unusual).categoryName} ${money(unusual.amount)}` : tr("none")),
+    insightCard(tr("action"), exceedText, forecast > summary.budget && summary.budget ? "danger" : "success")
   ].join("");
   if (categoryChange) {
-    $("#report-insights").insertAdjacentHTML("beforeend", insightCard("ক্যাটাগরি বদল", categoryChange, "warning"));
+    $("#report-insights").insertAdjacentHTML("beforeend", insightCard(tr("categoryChange"), categoryChange, "warning"));
   }
 }
 
@@ -1004,12 +1120,12 @@ function renderCategories() {
   $("#category-grid").innerHTML = CATEGORIES.map((category) => `
     <button class="category-pill${category.id === selectedCategory ? " active" : ""}" type="button" data-category="${category.id}">
       <span class="cat-icon">${svgIcon(category.id)}</span>
-      <small>${category.short}</small>
+      <small>${getCategory(category.id).short}</small>
     </button>
   `).join("");
   renderQuickCategories();
 
-  $("#filter-category").innerHTML = `<option value="">সেভ ক্যাটাগরি</option>${CATEGORIES.map((category) => `<option value="${category.id}">${category.name}</option>`).join("")}`;
+  $("#filter-category").innerHTML = `<option value="">${tr("allCategories")}</option>${CATEGORIES.map((category) => `<option value="${category.id}">${getCategory(category.id).name}</option>`).join("")}`;
 
   $("#category-grid").addEventListener("click", (event) => {
     const button = event.target.closest("[data-category]");
@@ -1042,7 +1158,7 @@ function selectCategory(id) {
 
 function renderExpenseList(container, expenses, compact = false) {
   if (!expenses.length) {
-    container.innerHTML = emptyStateHtml(compact ? "আজ কোনো খরচ নেই।" : "এখনও কোনো খরচ যোগ হয়নি।", "খরচ যোগ করুন", "add");
+    container.innerHTML = emptyStateHtml(compact ? tr("todayNoExpense") : tr("noExpenseAdded"), tr("addExpense"), "add");
     return;
   }
   container.innerHTML = expenses.map(expenseCardHtml).join("");
@@ -1050,13 +1166,14 @@ function renderExpenseList(container, expenses, compact = false) {
 }
 
 function expenseCardHtml(expense) {
-  const recurring = isRecurringExpense(expense) ? `<small class="recurring-badge">বারবার</small>` : "";
+  const localized = localizeExpense(expense);
+  const recurring = isRecurringExpense(expense) ? `<small class="recurring-badge">${tr("recurring")}</small>` : "";
   return `
     <article class="expense-card" data-expense-id="${expense.id}" tabindex="0">
       <div class="expense-icon">${svgIcon(expense.category)}</div>
       <div class="expense-main">
-        <strong>${escapeHtml(expense.categoryName)} ${recurring}</strong>
-        <span>${escapeHtml(expense.description || "বিবরণ নেই")}</span>
+        <strong>${escapeHtml(localized.categoryName)} ${recurring}</strong>
+        <span>${escapeHtml(expense.description || tr("noDescription"))}</span>
         <small>${formatDateTime(expense.date, expense.time)}</small>
       </div>
       <div class="expense-amount">${money(expense.amount)}</div>
@@ -1098,13 +1215,14 @@ function openExpenseModal(id) {
   const expense = state.expenses.find((item) => item.id === id);
   if (!expense) return;
   currentExpenseId = id;
+  const localized = localizeExpense(expense);
   $("#expense-details").innerHTML = `
     <div class="detail-grid">
-      <div><span>ক্যাটাগরি</span><strong class="detail-category">${svgIcon(expense.category)} ${escapeHtml(expense.categoryName)}</strong></div>
-      <div><span>টাকা</span><strong>${money(expense.amount)}</strong></div>
-      <div><span>বিবরণ</span><strong>${escapeHtml(expense.description || "বিবরণ নেই")}</strong></div>
-      <div><span>তারিখ</span><strong>${formatDateHeading(expense.date)}</strong></div>
-      <div><span>সময়</span><strong>${formatTime(expense.time)}</strong></div>
+      <div><span>${tr("category")}</span><strong class="detail-category">${svgIcon(expense.category)} ${escapeHtml(localized.categoryName)}</strong></div>
+      <div><span>${tr("amount")}</span><strong>${money(expense.amount)}</strong></div>
+      <div><span>${tr("description")}</span><strong>${escapeHtml(expense.description || tr("noDescription"))}</strong></div>
+      <div><span>${tr("date")}</span><strong>${formatDateHeading(expense.date)}</strong></div>
+      <div><span>${tr("time")}</span><strong>${formatTime(expense.time)}</strong></div>
     </div>
   `;
   $("#expense-modal").classList.remove("hidden");
@@ -1127,8 +1245,8 @@ function startEdit(id) {
   $("#expense-description").value = expense.description;
   $("#expense-date").value = expense.date;
   $("#expense-time").value = expense.time;
-  $("#expense-form-mode").textContent = "এডিট এন্ট্রি";
-  $("#save-expense").innerHTML = `${svgIcon("save", "ui-icon")}আপডেট`;
+  $("#expense-form-mode").textContent = tr("editEntry");
+  $("#save-expense").innerHTML = `${svgIcon("save", "ui-icon")}${tr("update")}`;
   $("#cancel-edit").classList.remove("hidden");
   $("#selected-category-name").textContent = getCategory(selectedCategory).name;
   $$(".category-pill").forEach((item) => item.classList.toggle("active", item.dataset.category === selectedCategory));
@@ -1139,8 +1257,8 @@ function resetExpenseForm() {
   $("#expense-form").reset();
   amountInputRaw = "";
   $("#editing-expense-id").value = "";
-  $("#expense-form-mode").textContent = "নতুন এন্ট্রি";
-  $("#save-expense").innerHTML = `${svgIcon("save", "ui-icon")}সেভ করে হোমে`;
+  $("#expense-form-mode").textContent = tr("newEntry");
+  $("#save-expense").innerHTML = `${svgIcon("save", "ui-icon")}${tr("saveHome")}`;
   $("#cancel-edit").classList.add("hidden");
   selectCategory(state.settings.lastUsedCategory || CATEGORIES[0].id);
   setCurrentDateTime();
@@ -1149,9 +1267,9 @@ function resetExpenseForm() {
 function requestDelete(id) {
   closeExpenseModal();
   pendingDelete = { type: "expense", id };
-  $("#confirm-title").textContent = "এই খরচ ডিলিট করবেন?";
-  $("#confirm-copy").textContent = "খরচটি মুছে যাবে, বাকি টাকা আবার ঠিক হবে।";
-  $("#confirm-action").textContent = "ডিলিট";
+  $("#confirm-title").textContent = tr("deleteExpenseTitle");
+  $("#confirm-copy").textContent = tr("deleteExpenseCopy");
+  $("#confirm-action").textContent = tr("delete");
   $("#confirm-modal").classList.remove("hidden");
 }
 
@@ -1177,7 +1295,7 @@ function undoDelete() {
   pendingDelete = null;
   $("#undo-toast").classList.add("hidden");
   renderAll();
-  showToast("খরচ ফিরিয়ে আনাা হয়েছে।");
+  showToast(tr("undoDone"));
 }
 
 function hideConfirm() {
@@ -1196,11 +1314,11 @@ function resetCurrentMonth() {
   saveState();
   $("#main-app").classList.add("hidden");
   $("#setup-screen").classList.remove("hidden");
-  showToast("মাসের ডাটা রিসেট হয়েছে।");
+  showToast(tr("monthReset"));
 }
 
 function getMonthSummary(key) {
-  const expenses = getExpensesForMonth(key).sort(byNewest);
+  const expenses = getExpensesForMonth(key).map(localizeExpense).sort(byNewest);
   const budget = Number(state.budgets[key]?.totalBudget) || 0;
   const spent = sumExpenses(expenses);
   const daysInMonth = getDaysInMonth(key);
@@ -1238,7 +1356,7 @@ function getMonthSummary(key) {
 }
 
 function getFilteredExpenses() {
-  let expenses = getExpensesForMonth(monthKey(new Date()));
+  let expenses = getExpensesForMonth(monthKey(new Date())).map(localizeExpense);
   const search = $("#search-expense").value.trim().toLowerCase();
   const category = $("#filter-category").value;
   const from = $("#filter-from").value;
@@ -1270,7 +1388,7 @@ function getFilteredExpenses() {
 function categoryTotals(expenses) {
   const rows = new Map();
   expenses.forEach((expense) => {
-    const current = rows.get(expense.category) || { id: expense.category, name: expense.categoryName, total: 0, count: 0 };
+    const current = rows.get(expense.category) || { id: expense.category, name: getCategory(expense.category).name, total: 0, count: 0 };
     current.total += Number(expense.amount || 0);
     current.count += 1;
     rows.set(expense.category, current);
@@ -1302,7 +1420,7 @@ function applyFilterPreset(preset) {
 function renderDonut(summary) {
   if (!summary.categoryRows.length) {
     $("#donut-chart").style.background = `conic-gradient(var(--line) 0 100%)`;
-    $("#category-breakdown").innerHTML = emptyStateHtml("ক্যাটাগরি ডাটা নেই।", "খরচ যোগ করুন", "add");
+    $("#category-breakdown").innerHTML = emptyStateHtml(tr("categoryNoData"), tr("addExpense"), "add");
     return;
   }
 
@@ -1323,7 +1441,7 @@ function renderDonut(summary) {
           <strong class="category-row-title">${svgIcon(row.id)} ${row.name}</strong>
           <strong>${money(row.total)}</strong>
         </div>
-        <small>বাজেটের ${Math.round(percent)}% • ${row.count}টি লেনদেন</small>
+        <small>${tr("budgetTransactions", { percent: Math.round(percent), count: row.count })}</small>
         <div class="progress-bar"><span style="width:${percent}%; background:${CATEGORY_COLORS[index % CATEGORY_COLORS.length]}"></span></div>
       </button>
     `;
@@ -1405,7 +1523,7 @@ function emptyStateHtml(message, action, target) {
     <div class="empty-state">
       ${svgIcon("empty", "ui-icon empty-icon")}
       <strong>${message}</strong>
-      <span>ডাটা যোগ করলে এখানে পরিষ্কার বিশ্লেষণ দেখাবে।</span>
+      <span>${tr("emptyCopy")}</span>
       <button class="ghost-button compact" type="button" data-quick-target="${target}">${action}</button>
     </div>
   `;
@@ -1428,10 +1546,10 @@ function recentTrend(summary) {
   }
   const recent = sumExpenses(last3.map((amount) => ({ amount })));
   const previous = sumExpenses(prev3.map((amount) => ({ amount })));
-  if (!recent && !previous) return "ট্রেন্ড নেই";
-  if (recent > previous * 1.12) return "বাড়ছে";
-  if (recent < previous * .88) return "কমছেে";
-  return "স্থিতিশীল";
+  if (!recent && !previous) return tr("noTrend");
+  if (recent > previous * 1.12) return tr("increasing");
+  if (recent < previous * .88) return tr("decreasing");
+  return tr("stable");
 }
 
 function mostUsedCategories() {
@@ -1444,7 +1562,7 @@ function isRecurringExpense(expense) {
   const base = (expense.description || expense.categoryName || "").trim().toLowerCase();
   if (!base) return false;
   return state.expenses.filter((item) => {
-    const itemBase = (item.description || item.categoryName || "").trim().toLowerCase();
+    const itemBase = (item.description || getCategory(item.category).name || "").trim().toLowerCase();
     return item.id !== expense.id && itemBase === base && Math.abs(Number(item.amount) - Number(expense.amount)) < 1;
   }).length >= 1;
 }
@@ -1456,12 +1574,12 @@ function unusualExpense(summary) {
 }
 
 function budgetExceedText(summary, forecast) {
-  if (!summary.budget) return "বাজেট দিন";
-  if (!summary.spent) return "খরচ শুরু হয়নি";
-  if (forecast <= summary.budget) return "বাজেটের মধ্যে";
+  if (!summary.budget) return tr("budgetNeeded");
+  if (!summary.spent) return tr("notStarted");
+  if (forecast <= summary.budget) return tr("withinBudget");
   const dailyAverage = Math.max(1, summary.dailyAverage);
   const daysToExceed = Math.max(0, Math.ceil((summary.budget - summary.spent) / dailyAverage));
-  return daysToExceed ? `${daysToExceed} দিনে ছাড়াবে` : "ইতিমধ্যে ছাড়িয়েছে";
+  return daysToExceed ? tr("exceedDays", { days: daysToExceed }) : tr("alreadyExceeded");
 }
 
 function strongestCategoryChange(summary, previousKey) {
@@ -1473,8 +1591,8 @@ function strongestCategoryChange(summary, previousKey) {
     return { name: row.name, pct: ((row.total - previous.total) / previous.total) * 100 };
   }).filter(Boolean).sort((a, b) => Math.abs(b.pct) - Math.abs(a.pct));
   const top = changes[0];
-  if (!top || Math.abs(top.pct) < 10) return "বড় পরিবর্তন নেই";
-  return `${top.name} ${top.pct > 0 ? "বেড়েছে" : "কমেছে"} ${Math.round(Math.abs(top.pct))}%`;
+  if (!top || Math.abs(top.pct) < 10) return tr("noBigChange");
+  return tr(top.pct > 0 ? "categoryIncreased" : "categoryDecreased", { name: top.name, percent: Math.round(Math.abs(top.pct)) });
 }
 
 function previousMonthKey(key) {
@@ -1500,9 +1618,9 @@ function restoreData(event) {
       state = normalizeState(JSON.parse(reader.result));
       saveState();
       renderAll();
-      showToast("ব্যাকআপ রিস্টোর হয়েছে।");
+      showToast(tr("backupRestored"));
     } catch {
-      showToast("রিস্টোর ব্যর্থ। ব্যাকআপ ফাইল সঠিক নয়।", "warning");
+      showToast(tr("restoreFailed"), "warning");
     } finally {
       event.target.value = "";
     }
@@ -1514,25 +1632,25 @@ function exportPdf() {
   const summary = getMonthSummary(monthKey(new Date()));
   const win = window.open("", "_blank");
   if (!win) {
-    showToast("PDF এক্সপোর্টের জুন্য পপআপ allow করুন।", "warning");
+    showToast(tr("popupBlocked"), "warning");
     return;
   }
   win.document.write(`
-    <html><head><title>হিসাব রিপোর্ট</title><style>
+    <html><head><title>${tr("pdfTitle")}</title><style>
       body{font-family:"Plus Jakarta Sans",Arial,sans-serif;padding:24px;color:#212121}
       h1{color:#4CAF50;font-family:"Times New Roman",Times,serif;text-align:center} table{width:100%;border-collapse:collapse;margin-top:18px}
       td,th{border:1px solid #ddd;padding:8px;text-align:left;vertical-align:top}
       .summary{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
       .summary div{padding:14px;border:1px solid #ddd;border-radius:12px}
     </style></head><body>
-      <h1>হিসাব মাসিক রিপোর্ট - ${monthLabelFromKey(summary.key)}</h1>
+      <h1>${tr("pdfHeading", { month: monthLabelFromKey(summary.key) })}</h1>
       <div class="summary">
-        <div><strong>বাজেট</strong><br>${money(summary.budget)}</div>
-        <div><strong>খরচ</strong><br>${money(summary.spent)}</div>
-        <div><strong>বাকি</strong><br>${money(summary.remaining)}</div>
+        <div><strong>${tr("budget")}</strong><br>${money(summary.budget)}</div>
+        <div><strong>${tr("spent")}</strong><br>${money(summary.spent)}</div>
+        <div><strong>${tr("remaining")}</strong><br>${money(summary.remaining)}</div>
       </div>
-      <table><thead><tr><th>তারিখ</th><th>সময়</th><th>ক্যাটাগরি</th><th>বিবরণ</th><th>টাকা</th></tr></thead><tbody>
-      ${summary.expenses.map((expense) => `<tr><td>${expense.date}</td><td>${formatTime(expense.time)}</td><td>${escapeHtml(expense.categoryName)}</td><td>${escapeHtml(expense.description || "")}</td><td>${money(expense.amount)}</td></tr>`).join("")}
+      <table><thead><tr><th>${tr("date")}</th><th>${tr("time")}</th><th>${tr("category")}</th><th>${tr("description")}</th><th>${tr("amount")}</th></tr></thead><tbody>
+      ${summary.expenses.map((expense) => `<tr><td>${expense.date}</td><td>${formatTime(expense.time)}</td><td>${escapeHtml(localizeExpense(expense).categoryName)}</td><td>${escapeHtml(expense.description || "")}</td><td>${money(expense.amount)}</td></tr>`).join("")}
       </tbody></table>
       <script>window.print();</script>
     </body></html>
@@ -1544,27 +1662,27 @@ function checkBudgetAlerts() {
   const summary = getMonthSummary(monthKey(new Date()));
   if (!summary.budget) return;
   const percent = (summary.spent / summary.budget) * 100;
-  if (percent >= 100) showToast(`বাজেট ${money(Math.abs(summary.remaining))} ছাড়িয়েছে।`, "danger");
-  else if (percent >= 90) showToast(`বাজেট প্রায় শেষ। বাকি ${money(summary.remaining)}।`, "danger");
-  else if (percent >= 75) showToast("সতর্কতা: বাজেটের ২৫% বাকি।", "warning");
-  else if (percent >= 50) showToast("বাজেটের অর্ধেক খরচ হয়েছে।", "warning");
+  if (percent >= 100) showToast(tr("budgetOverToast", { amount: money(Math.abs(summary.remaining)) }), "danger");
+  else if (percent >= 90) showToast(tr("budgetAlmostDone", { amount: money(summary.remaining) }), "danger");
+  else if (percent >= 75) showToast(tr("budget75"), "warning");
+  else if (percent >= 50) showToast(tr("budget50"), "warning");
 }
 
 function renderBudgetAlert(summary, percent) {
   const alert = $("#budget-alert");
   const dot = $("#alert-dot");
   let message = "";
-  if (summary.budget && percent >= 100) message = `বাজেট ছাড়িয়েছে — ${money(Math.abs(summary.remaining))} বেশি খরচ হয়েছে।`;
-  else if (summary.budget && percent >= 90) message = `বাজেট প্রায় শেষ — বাকি ${money(summary.remaining)}।`;
-  else if (summary.budget && percent >= 75) message = "বাজেট সতর্কতা: ৭৫% খরচ হয়েছে।";
-  else if (summary.budget && percent >= 50) message = "মনে রাখুন: বাজেটের অর্ধেক খরচ হয়েছে।";
+  if (summary.budget && percent >= 100) message = tr("budgetOverAlert", { amount: money(Math.abs(summary.remaining)) });
+  else if (summary.budget && percent >= 90) message = tr("budget90Alert", { amount: money(summary.remaining) });
+  else if (summary.budget && percent >= 75) message = tr("budget75Alert");
+  else if (summary.budget && percent >= 50) message = tr("budget50Alert");
   alert.textContent = message;
   alert.classList.toggle("hidden", !message);
   dot.classList.toggle("hidden", !message);
 }
 
 function showSuccessOverlay(expense) {
-  $("#success-copy").textContent = `${money(expense.amount)} saved to ${expense.categoryName}.`;
+  $("#success-copy").textContent = tr("savedTo", { amount: money(expense.amount), category: localizeExpense(expense).categoryName });
   $("#success-overlay").classList.remove("hidden");
   clearTimeout(successOverlayTimer);
   successOverlayTimer = setTimeout(() => $("#success-overlay").classList.add("hidden"), 1300);
@@ -1583,7 +1701,7 @@ function applyTheme() {
     performanceToggle.classList.toggle("active", !!state.settings.performanceMode);
     performanceToggle.setAttribute("aria-pressed", String(!!state.settings.performanceMode));
     const label = performanceToggle.querySelector("[data-performance-label]");
-    if (label) label.textContent = state.settings.performanceMode ? "স্মুথ মোড চালু" : "স্মুথ মোড";
+    if (label) label.textContent = state.settings.performanceMode ? tr("smoothOn") : tr("smoothMode");
   }
   $$(".theme-picker button").forEach((button) => button.classList.toggle("active", button.dataset.themePick === state.settings.accentTheme));
 }
@@ -1604,11 +1722,11 @@ function setCurrentDateTime() {
 
 function greeting() {
   const hour = new Date().getHours();
-  if (hour < 5) return "শুভ রাত্রি";
-  if (hour < 12) return "শুভ সকাল";
-  if (hour < 17) return "শুভ দুপুর";
-  if (hour < 21) return "শুভ সন্ধ্যা";
-  return "শুভ রাত্রি";
+  if (hour < 5) return tr("goodNight");
+  if (hour < 12) return tr("goodMorning");
+  if (hour < 17) return tr("goodAfternoon");
+  if (hour < 21) return tr("goodEvening");
+  return tr("goodNight");
 }
 
 function createId() {
@@ -1633,7 +1751,8 @@ function groupByDate(expenses) {
 }
 
 function getCategory(id) {
-  return CATEGORIES.find((category) => category.id === id) || CATEGORIES[0];
+  const category = CATEGORIES.find((item) => item.id === id) || CATEGORIES[0];
+  return { ...category, ...categoryLabel(category.id) };
 }
 
 function monthKey(date) {
@@ -1642,7 +1761,7 @@ function monthKey(date) {
 
 function monthLabelFromKey(key) {
   const [year, month] = key.split("-").map(Number);
-  return `${MONTH_NAMES[month - 1]} ${year}`;
+  return `${monthNames()[month - 1]} ${year}`;
 }
 
 function toDateInput(date) {
@@ -1683,13 +1802,13 @@ function formatDateHeading(dateString) {
   const date = new Date(`${dateString}T00:00:00`);
   const today = toDateInput(new Date());
   const yesterday = toDateInput(new Date(Date.now() - 86400000));
-  const suffix = dateString === today ? " (আজ)" : dateString === yesterday ? " (গতকাল)" : "";
-  return `${date.getDate()} ${MONTH_NAMES[date.getMonth()]} ${date.getFullYear()}${suffix}`;
+  const suffix = dateString === today ? tr("todaySuffix") : dateString === yesterday ? tr("yesterdaySuffix") : "";
+  return `${date.getDate()} ${monthNames()[date.getMonth()]} ${date.getFullYear()}${suffix}`;
 }
 
 function shortDate(dateString) {
   const date = new Date(`${dateString}T00:00:00`);
-  return `${date.getDate()} ${MONTH_NAMES[date.getMonth()].slice(0, 3)}`;
+  return `${date.getDate()} ${monthNames()[date.getMonth()].slice(0, 3)}`;
 }
 
 function formatTime(time) {
@@ -1708,10 +1827,10 @@ function monthComparison(key, spent) {
   const [year, month] = key.split("-").map(Number);
   const previousKey = monthKey(new Date(year, month - 2, 1));
   const previousSpent = sumExpenses(getExpensesForMonth(previousKey));
-  if (!previousSpent) return "আগের ডাটা নেই";
+  if (!previousSpent) return tr("noPreviousData");
   const diff = spent - previousSpent;
-  if (diff === 0) return "গত মাসের সমান";
-  return `গত মাসের চেয়ে ${money(Math.abs(diff))} ${diff > 0 ? "বেশি" : "কম"} খরচ`;
+  if (diff === 0) return tr("sameAsLastMonth");
+  return tr("monthMoreLess", { amount: money(Math.abs(diff)), direction: diff > 0 ? tr("more") : tr("less") });
 }
 
 function escapeHtml(value) {
