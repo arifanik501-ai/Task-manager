@@ -43,7 +43,7 @@ let unsubscribe;
 let pushTimer = null;
 let pendingPush = null;
 let lastRemoteSnapshot = null;
-let status = "connecting";
+let status = "offline";
 
 function newSessionId() {
   if (typeof crypto !== "undefined" && crypto.randomUUID) return "s-" + crypto.randomUUID();
@@ -77,7 +77,6 @@ function attachListener() {
     sharedRef,
     (snapshot) => {
       const value = snapshot.exists() ? snapshot.val() : null;
-      // Skip echoes of our own writes (same browser tab session).
       if (value && value._origin === sessionId) {
         if (status !== "online") setStatus("online");
         return;
@@ -119,7 +118,6 @@ function flushPush() {
   if (!pendingPush || !sharedRef) return Promise.resolve(false);
   const stateToPush = pendingPush;
   pendingPush = null;
-  setStatus("syncing");
   const payload = {
     ...stateToPush,
     _origin: sessionId,
@@ -156,7 +154,6 @@ function pushNow(stateObj) {
 
 async function pullNow() {
   if (!sharedRef) return null;
-  setStatus("syncing");
   try {
     const snapshot = await get(sharedRef);
     const value = snapshot.exists() ? snapshot.val() : null;
@@ -175,9 +172,6 @@ async function pullNow() {
 }
 
 async function syncNow(stateObj) {
-  // Push any pending writes (and the supplied state) immediately, then
-  // re-read the shared snapshot. The caller decides how to reconcile
-  // the returned value against local state via lastUpdatedAt.
   try { await pushNow(stateObj); } catch { /* surfaced via status */ }
   return pullNow();
 }
