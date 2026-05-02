@@ -625,6 +625,10 @@ body:not(.dark) .app-shell {
 }
 
 @media (max-width: 360px) {
+  .accent-theme-panel {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .quick-actions {
     gap: 8px;
   }
@@ -1405,6 +1409,47 @@ body:not(.dark) .donut-chart::after {
 [data-theme-pick="sunset"] { background: linear-gradient(145deg, #f97316, #ef4444); }
 [data-theme-pick="gold"] { background: linear-gradient(145deg, #f59e0b, #eab308); }
 [data-theme-pick="rose"] { background: linear-gradient(145deg, #ec4899, #f43f5e); }
+[data-theme-pick="amethyst"] { background: linear-gradient(145deg, #8b5cf6, #d946ef); }
+[data-theme-pick="sapphire"] { background: linear-gradient(145deg, #2563eb, #60a5fa); }
+[data-theme-pick="cyan"] { background: linear-gradient(145deg, #0891b2, #22d3ee); }
+[data-theme-pick="teal"] { background: linear-gradient(145deg, #0f766e, #2dd4bf); }
+[data-theme-pick="mint"] { background: linear-gradient(145deg, #22c55e, #86efac); }
+[data-theme-pick="lime"] { background: linear-gradient(145deg, #65a30d, #a3e635); }
+[data-theme-pick="amber"] { background: linear-gradient(145deg, #d97706, #fbbf24); }
+[data-theme-pick="coral"] { background: linear-gradient(145deg, #fb7185, #f97316); }
+[data-theme-pick="ruby"] { background: linear-gradient(145deg, #dc2626, #f43f5e); }
+[data-theme-pick="berry"] { background: linear-gradient(145deg, #be185d, #f472b6); }
+[data-theme-pick="grape"] { background: linear-gradient(145deg, #6d28d9, #c084fc); }
+[data-theme-pick="indigo"] { background: linear-gradient(145deg, #4f46e5, #818cf8); }
+[data-theme-pick="midnight"] { background: linear-gradient(145deg, #1e3a8a, #7c3aed); }
+[data-theme-pick="slate"] { background: linear-gradient(145deg, #475569, #94a3b8); }
+[data-theme-pick="aurora"] { background: linear-gradient(145deg, #06b6d4, #8b5cf6, #ec4899); }
+
+.accent-theme-panel {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.accent-theme-panel button {
+  width: auto;
+  min-height: 76px;
+  height: auto;
+  display: grid;
+  align-content: end;
+  justify-items: start;
+  padding: 10px;
+  border-radius: 18px;
+}
+
+.accent-theme-panel button span {
+  padding: 4px 7px;
+  color: #fff;
+  background: rgba(0, 0, 0, .24);
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .01em;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, .28);
+}
 
 .settings-actions {
   display: grid;
@@ -3400,6 +3445,14 @@ body:not(.dark) .liquid-bg .lq-vignette {
     inset 0 -1px 0 rgba(0, 0, 0, .14);
 }
 
+.more-menu-grid .menu-card-palette .menu-icon {
+  background: linear-gradient(145deg, #06b6d4, #8b5cf6, #ec4899);
+  box-shadow:
+    0 12px 22px rgba(139, 92, 246, .38),
+    inset 0 1px 0 rgba(255, 255, 255, .55),
+    inset 0 -1px 0 rgba(0, 0, 0, .14);
+}
+
 /* Soft chromatic corner wash baked into each card's background.
    Layers a coloured radial gradient on top of the existing glass
    tint — no extra DOM, no extra paint cost. */
@@ -3407,7 +3460,8 @@ body.liquid-glass .more-menu-grid .menu-card-violet,
 body.liquid-glass .more-menu-grid .menu-card-orange,
 body.liquid-glass .more-menu-grid .menu-card-cyan,
 body.liquid-glass .more-menu-grid .menu-card-emerald,
-body.liquid-glass .more-menu-grid .menu-card-performance {
+body.liquid-glass .more-menu-grid .menu-card-performance,
+body.liquid-glass .more-menu-grid .menu-card-palette {
   background-color: var(--glass-tint);
   background-image:
     radial-gradient(circle at 88% -8%, var(--menu-glow), transparent 55%),
@@ -3419,12 +3473,14 @@ body.liquid-glass .more-menu-grid .menu-card-performance {
 .more-menu-grid .menu-card-cyan    { --menu-glow: rgba(14, 165, 233, .38); --menu-glow-low: rgba(2, 132, 199,  .16); }
 .more-menu-grid .menu-card-emerald { --menu-glow: rgba(16, 185, 129, .38); --menu-glow-low: rgba(5, 150, 105,  .16); }
 .more-menu-grid .menu-card-performance { --menu-glow: rgba(249, 115, 22, .38); --menu-glow-low: rgba(250, 204, 21, .16); }
+.more-menu-grid .menu-card-palette { --menu-glow: rgba(139, 92, 246, .38); --menu-glow-low: rgba(236, 72, 153, .16); }
 
 body.liquid-glass:not(.dark) .more-menu-grid .menu-card-violet  { --menu-glow: rgba(139, 92, 246, .26); --menu-glow-low: rgba(124, 58, 237, .12); }
 body.liquid-glass:not(.dark) .more-menu-grid .menu-card-orange  { --menu-glow: rgba(249, 115, 22, .24); --menu-glow-low: rgba(234, 88, 12,  .10); }
 body.liquid-glass:not(.dark) .more-menu-grid .menu-card-cyan    { --menu-glow: rgba(14, 165, 233, .24); --menu-glow-low: rgba(2, 132, 199,  .10); }
 body.liquid-glass:not(.dark) .more-menu-grid .menu-card-emerald { --menu-glow: rgba(16, 185, 129, .24); --menu-glow-low: rgba(5, 150, 105,  .10); }
 body.liquid-glass:not(.dark) .more-menu-grid .menu-card-performance { --menu-glow: rgba(249, 115, 22, .24); --menu-glow-low: rgba(250, 204, 21, .10); }
+body.liquid-glass:not(.dark) .more-menu-grid .menu-card-palette { --menu-glow: rgba(139, 92, 246, .24); --menu-glow-low: rgba(236, 72, 153, .10); }
 
 .more-menu-grid .menu-card-performance.active {
   border-color: color-mix(in srgb, var(--success) 62%, var(--glass-edge));
