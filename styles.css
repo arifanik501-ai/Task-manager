@@ -381,6 +381,63 @@ body:not(.dark) .app-shell {
   font-weight: 800;
 }
 
+.insight-brief {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  color: #fff;
+  background: rgba(11, 18, 45, .66);
+  box-shadow: 0 18px 36px rgba(8, 12, 36, .18);
+}
+
+body:not(.dark) .insight-brief {
+  color: var(--text);
+  background: var(--card);
+}
+
+.insight-brief span,
+.history-filter-summary span {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.insight-brief strong {
+  display: block;
+  margin-top: 4px;
+  font-size: 17px;
+  font-weight: 900;
+  letter-spacing: -.015em;
+}
+
+.insight-brief p {
+  margin: 6px 0 0;
+  color: rgba(255, 255, 255, .78);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+body:not(.dark) .insight-brief p {
+  color: var(--muted);
+}
+
+.compact-action {
+  width: auto;
+  min-width: 104px;
+  min-height: 42px;
+  padding: 0 14px;
+  border-radius: 14px;
+  white-space: nowrap;
+}
+
 .balance-card {
   padding: 22px 22px 20px;
   overflow: hidden;
@@ -888,6 +945,10 @@ body:not(.dark) .empty-state {
   margin: 16px 0;
 }
 
+#report-insights {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .insight-grid article {
   display: grid;
   gap: 5px;
@@ -988,6 +1049,57 @@ body:not(.dark) .insight-grid article {
   grid-template-columns: 1fr auto;
   gap: 10px;
   margin-bottom: 12px;
+}
+
+.history-filter-summary {
+  display: grid;
+  gap: 4px;
+  margin: 10px 0 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: rgba(127, 127, 127, .08);
+}
+
+.history-filter-summary strong {
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.history-category-blocks {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.history-category-blocks::-webkit-scrollbar {
+  display: none;
+}
+
+.history-category-blocks button {
+  flex: 0 0 auto;
+  display: grid;
+  gap: 3px;
+  min-width: 118px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  color: var(--text);
+  background: var(--card);
+  text-align: left;
+}
+
+.history-category-blocks span {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.history-category-blocks strong {
+  font-size: 14px;
+  font-weight: 900;
 }
 
 .search-box,
@@ -1217,10 +1329,21 @@ body:not(.dark) .insight-grid article {
 .form-actions {
   display: grid;
   gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-.form-actions:has(.ghost-button:not(.hidden)) {
-  grid-template-columns: auto 1fr;
+.form-actions:has(#cancel-edit:not(.hidden)) {
+  grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.form-actions .primary-button {
+  box-shadow: 0 18px 34px color-mix(in srgb, var(--secondary) 34%, transparent);
+}
+
+.form-actions .ghost-button:not(.hidden):not(#cancel-edit) {
+  color: var(--text);
+  background: rgba(127, 127, 127, .08);
+  box-shadow: none;
 }
 
 .month-picker {
@@ -1654,25 +1777,15 @@ body:not(.dark) .progress-bar {
   background: rgba(16, 185, 129, .14);
 }
 
-.cloud-status.connecting,
-.cloud-status.syncing {
+.cloud-status.offline {
   color: #f59e0b;
   background: rgba(245, 158, 11, .14);
 }
 
-.cloud-status.syncing::before,
-.cloud-status.connecting::before {
-  animation: cloudPulse 1.2s ease-in-out infinite;
-}
-
+.cloud-status.failed,
 .cloud-status.error {
   color: #ef4444;
   background: rgba(239, 68, 68, .14);
-}
-
-@keyframes cloudPulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: .35; transform: scale(.7); }
 }
 
 .cloud-sync-card .input-card {
@@ -2026,6 +2139,19 @@ body:not(.dark) .modal-card {
   .filter-sheet-head {
     align-items: center;
     justify-content: space-between;
+  }
+
+  .insight-brief {
+    grid-template-columns: 1fr;
+  }
+
+  .compact-action {
+    width: 100%;
+  }
+
+  .form-actions,
+  .form-actions:has(#cancel-edit:not(.hidden)) {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -3140,10 +3266,7 @@ body.liquid-glass .category-pill.active {
   .splash-loader::after,
   .primary-button::after,
   .category-pill.active,
-  .cloud-status.syncing::before,
-  .cloud-status.connecting::before,
-  .identity-status[data-status="connecting"] .status-dot,
-  .identity-status[data-status="syncing"] .status-dot {
+  .identity-status[data-status="offline"] .status-dot {
     animation: none !important;
   }
 
@@ -3517,11 +3640,14 @@ body:not(.dark) .liquid-bg .lq-vignette {
   box-shadow: 0 0 0 4px rgba(52, 211, 153, .32);
 }
 
-.identity-status[data-status="connecting"] .status-dot,
-.identity-status[data-status="syncing"] .status-dot {
+.identity-status[data-status="offline"] .status-dot {
   background: #fde047;
   box-shadow: 0 0 0 4px rgba(253, 224, 71, .28);
-  animation: cloudPulse 1.4s ease-in-out infinite;
+}
+
+.identity-status[data-status="failed"] .status-dot {
+  background: #f87171;
+  box-shadow: 0 0 0 4px rgba(248, 113, 113, .24);
 }
 
 .identity-status[data-status="error"] .status-dot {
@@ -3666,6 +3792,14 @@ body:not(.dark) .liquid-bg .lq-vignette {
     inset 0 -1px 0 rgba(0, 0, 0, .14);
 }
 
+.more-menu-grid .menu-card-data .menu-icon {
+  background: linear-gradient(145deg, #60a5fa, #7c3aed);
+  box-shadow:
+    0 12px 22px rgba(99, 102, 241, .38),
+    inset 0 1px 0 rgba(255, 255, 255, .55),
+    inset 0 -1px 0 rgba(0, 0, 0, .14);
+}
+
 .more-menu-grid .menu-card-emerald .menu-icon {
   background: linear-gradient(145deg, #34d399, #059669);
   box-shadow:
@@ -3696,6 +3830,7 @@ body:not(.dark) .liquid-bg .lq-vignette {
 body.liquid-glass .more-menu-grid .menu-card-violet,
 body.liquid-glass .more-menu-grid .menu-card-orange,
 body.liquid-glass .more-menu-grid .menu-card-cyan,
+body.liquid-glass .more-menu-grid .menu-card-data,
 body.liquid-glass .more-menu-grid .menu-card-emerald,
 body.liquid-glass .more-menu-grid .menu-card-performance,
 body.liquid-glass .more-menu-grid .menu-card-palette {
@@ -3708,6 +3843,7 @@ body.liquid-glass .more-menu-grid .menu-card-palette {
 .more-menu-grid .menu-card-violet  { --menu-glow: rgba(139, 92, 246, .42); --menu-glow-low: rgba(124, 58, 237, .18); }
 .more-menu-grid .menu-card-orange  { --menu-glow: rgba(249, 115, 22, .38); --menu-glow-low: rgba(234, 88, 12,  .16); }
 .more-menu-grid .menu-card-cyan    { --menu-glow: rgba(14, 165, 233, .38); --menu-glow-low: rgba(2, 132, 199,  .16); }
+.more-menu-grid .menu-card-data    { --menu-glow: rgba(99, 102, 241, .38); --menu-glow-low: rgba(124, 58, 237, .16); }
 .more-menu-grid .menu-card-emerald { --menu-glow: rgba(16, 185, 129, .38); --menu-glow-low: rgba(5, 150, 105,  .16); }
 .more-menu-grid .menu-card-performance { --menu-glow: rgba(249, 115, 22, .38); --menu-glow-low: rgba(250, 204, 21, .16); }
 .more-menu-grid .menu-card-palette { --menu-glow: rgba(139, 92, 246, .38); --menu-glow-low: rgba(236, 72, 153, .16); }
@@ -3715,6 +3851,7 @@ body.liquid-glass .more-menu-grid .menu-card-palette {
 body.liquid-glass:not(.dark) .more-menu-grid .menu-card-violet  { --menu-glow: rgba(139, 92, 246, .26); --menu-glow-low: rgba(124, 58, 237, .12); }
 body.liquid-glass:not(.dark) .more-menu-grid .menu-card-orange  { --menu-glow: rgba(249, 115, 22, .24); --menu-glow-low: rgba(234, 88, 12,  .10); }
 body.liquid-glass:not(.dark) .more-menu-grid .menu-card-cyan    { --menu-glow: rgba(14, 165, 233, .24); --menu-glow-low: rgba(2, 132, 199,  .10); }
+body.liquid-glass:not(.dark) .more-menu-grid .menu-card-data    { --menu-glow: rgba(99, 102, 241, .24); --menu-glow-low: rgba(124, 58, 237, .10); }
 body.liquid-glass:not(.dark) .more-menu-grid .menu-card-emerald { --menu-glow: rgba(16, 185, 129, .24); --menu-glow-low: rgba(5, 150, 105,  .10); }
 body.liquid-glass:not(.dark) .more-menu-grid .menu-card-performance { --menu-glow: rgba(249, 115, 22, .24); --menu-glow-low: rgba(250, 204, 21, .10); }
 body.liquid-glass:not(.dark) .more-menu-grid .menu-card-palette { --menu-glow: rgba(139, 92, 246, .24); --menu-glow-low: rgba(236, 72, 153, .10); }
@@ -3730,10 +3867,7 @@ body.performance-mode .liquid-bg .lq-orb,
 body.performance-mode .logo-mark,
 body.performance-mode .splash-loader::after,
 body.performance-mode .primary-button::after,
-body.performance-mode .cloud-status.syncing::before,
-body.performance-mode .cloud-status.connecting::before,
-body.performance-mode .identity-status[data-status="connecting"] .status-dot,
-body.performance-mode .identity-status[data-status="syncing"] .status-dot {
+body.performance-mode .identity-status[data-status="offline"] .status-dot {
   animation-play-state: paused !important;
 }
 
